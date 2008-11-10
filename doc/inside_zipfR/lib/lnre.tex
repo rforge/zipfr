@@ -1,0 +1,33 @@
+%%
+%%  INCLUDE: lnre.tex
+%%  
+%%  some special terminology and notation for lexical statistics and LNRE distributions
+%%
+
+
+%% \onetoS
+%% {1,...,S}, the set of population type indices
+\newcommand{\onetoS}{\set{1, \dots, S}}
+
+%% \sumtoS, \sumtoS[k]
+%% sum over all population types, with index variable i (default) or k
+\newcommand{\sumtoS}[1][i]{\sum_{#1 = 1}^S}
+
+%% \sumi, \sumj, \sumk, \sumi[n], ... 
+%% the usual summation over all types, with different variables
+\newcommand{\sumi}[1][S]{\sum_{i=1}^{#1}} 
+\newcommand{\sumj}[1][S]{\sum_{j=1}^{#1}} 
+\newcommand{\sumk}[1][S]{\sum_{k=1}^{#1}}
+
+%% \Vmr = V_{m,\rho}, \Vmr[\rho_1], \VmR = \Vmr[> \rho], \Rmr
+\newcommand{\Vmr}[1][\rho]{V_{m,#1}}
+\newcommand{\VmR}[1][\rho]{V_{m,> #1}}
+\newcommand{\Rmr}[1][\rho]{R_{m,#1}}
+
+
+
+
+%%% Local Variables: 
+%%% mode: plain-tex
+%%% TeX-master: t
+%%% End: 

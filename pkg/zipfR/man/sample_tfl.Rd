@@ -79,5 +79,3 @@ summary(MiniBrown.tfl)
 }
 
 
-}
-
