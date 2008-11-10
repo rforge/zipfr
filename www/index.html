@@ -1,0 +1,282 @@
+<?xml version='1.0' encoding='iso-8859-1'?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'>
+
+<head>
+<title>The zipfR Package Homepage</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="author" content="Marco Baroni and Stefan Evert" />
+  <meta name="description" content="Information about the zipfR package to study lexical frequency distributions in R" />
+  <meta name="keywords" content="Lexical Statistics, Zipf, Zipf's Law, LNRE, Word Frequency Distributions, NLP, Computational Linguistics, Corpus-based Linguistics, R" />
+  <meta name="robots" content="index" />
+  <meta name="robots" content="follow" />
+</head>
+
+<body>
+
+<table>
+  <tr>
+    <td valign="top">
+      <a name="top"><h1><em>zipfR</em>: user-friendly LNRE modelling in R</h1></a>
+      <ul>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#obtain">Obtaining <strong>zipfR</strong></a></li>
+        <li><a href="#start">Getting started</a></li>
+        <li><a href="#aux">Auxiliary scripts</a></li>
+        <li><a href="#counting_words">Counting Words (ESSLLI course)</a></li>
+        <li><a href="#contact">Contact information &amp; mailing list</a></li>
+        <li><a href="#refs">Background reading</a></li>
+        <li><a href="#versions">Old versions</a></li>
+      </ul>
+    </td>
+    <td valign="top" align="right" width="400">
+      <a href="materials/zipfR-poster.pdf" target="_blank">
+        <img src="zipfR_logo_shadow.320.png" alt="zipfR logo" border="0"/>
+      </a><br/>
+      <small>current version: <b>0.6-5</b> <i>(November 2008)</i> &mdash; now on R-Forge</small>
+    </td>
+  </tr>
+</table>
+
+<hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+
+<a name="intro"><h2>Introduction</h2></a>
+
+<p>The <strong>zipfR</strong> package implements &ldquo;Large Number of Rare Events&rdquo; (LNRE) models for type-token statistics on word frequencies and other type-rich distributions, whether linguistic or non-linguistic. It provides utilities for various kinds of analyses commonly used in lexical statistics, such as the extrapolation of vocabulary growth curves and frequency estimation for rare events, building on the powerful <a href="http://www.r-project.org/"><strong>R</strong></a> environment for statistical computing.</p>
+
+<p>Like R, <strong>zipfR</strong> is <em>free</em> and <em>open source</em>.</p>
+
+<p>A few examples of application areas where the <strong>zipfR</strong> functionalities can be useful:</p>
+<ul>
+  <li>Investigating the quantitative productivity of word formation processes and other linguistic phenomena</li>
+  <li>Estimating and comparing vocabulary size and other measures oflexical richness in language acquisition or stylometry studies</li>
+  <li>Estimating the number of types of a certain category in a large population based on a limited sample, e.g., the number of typos on the Web</li>
+  <li>Providing empirically supported Bayesian priors for lexical probabilities</li>
+</ul>
+
+<p><strong>zipfR</strong> is being developed by <a href="http://purl.org/stefan.evert/">Stefan Evert</a> and <a href="http://clic.cimec.unitn.it/marco/">Marco Baroni</a>.</p>
+
+
+<p>If you publish work based on <strong>zipfR</strong>, please quote this page and/or one of the following papers:</p>
+<ul>
+<li>Evert, Stefan and Baroni, Marco (2006). <a href="http://www.r-project.org/useR-2006/Slides/Evert+Baroni.pdf">The <em>zipfR</em> library: Words and other rare events in R</a>. Presentation at <i>useR! 2006: The Second R User Conference</i>, Vienna, Austria.</li>
+<li>Evert, Stefan and Baroni, Marco (2007). <a href="http://purl.org/stefan.evert/PUB/EvertBaroni2007.pdf"><i>zipfR</i>: Word frequency distributions in R</a>. In <i>Proceedings of the 45th Annual Meeting of the Association for Computational Linguistics, Posters and Demonstrations Session</i>, Prague, Czech Republic.</li>
+</ul>
+
+<p align="right"><small>
+    <a href="#top">Back to the top</a>
+</small></p>
+
+<hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+
+<a name="obtain"><h2>Obtaining <strong>zipfR</strong></h2></a>
+
+<p>
+  Source code and binary versions of the <strong>zipfR</strong> package can conveniently be downloaded from <a href="http://cran.r-project.org/">CRAN</a>, the Comprehensive R Archive Network, using R's built-in package manager. If you need help with installation from CRAN, please take a look at the <strong>zipfR</strong> tutorial available from the <a href="#start">Getting started</a> section.
+</p>
+
+<p>
+  Nightly builds of the cutting-edge version are available from the <a href="https://r-forge.r-project.org/">R-Forge</a> repository.  Note that these development builds may occasionally be buggy or unstable, so you should only use them if you feel comfortable as a beta tester (and it is highly recommended that you join the <a href="#contact">zipfR mailing list</a> in this case).  To install the cutting-edge version of <strong>zipfR</strong>, enter the <strong>R</strong> command
+</p>
+<p align="center">
+  <code>install.packages("zipfR", repos="http://R-Forge.R-project.org")</code>
+</p>
+<p>
+  or point your GUI package installer to the R-Forge repository at <code>http://R-Forge.R-project.org/</code>.
+</p>
+  
+<p align="right"><small>
+    <a href="#top">Back to the top</a>
+</small></p>
+
+<hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+
+<a name="start"><h2>Getting started</h2></a>
+
+<p>The best way to get started with <strong>zipfR</strong> is to install it and work your way through the tutorial.</p>
+
+<p align="center">
+  <a href="materials/zipfr-tutorial.pdf">Download the current version of the tutorial now!</a>
+</p>
+
+<p>
+  When you have finished the tutorial, you should browse the comprehensive package documentation to find out more about its functionalities. If you want to learn more about the motivation behind <strong>zipfR</strong>, the math and some applications, we recommend that you take a look at the materials from our ESSLLI course <a href="#counting_words"><i>Counting Words</i></a>. The papers listed in the <a href="#refs">Background reading</a> section below may also be of interest to you.
+</p>
+
+<p>
+  <a href="materials/zipfR_0.6-5.pdf">PDF version of the package documentation (version 0.6-5)</a>
+</p>
+
+<p align="right"><small>
+    <a href="#top">Back to the top</a>
+</small></p>
+
+<hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+
+<a name="aux"><h2>Auxiliary scripts</h2></a>
+
+<p>
+  <strong>zipfR</strong> accepts several input formats, including simple frequency lists and plain samples in one-token-per-line format. Thus, it should be easy to extract suitable input data using standard corpus processing tools.
+</p>
+
+<p>However, we also provide two Perl pre-processing scripts that might be useful for certain studies:</p>
+
+<p>
+  <a href="software/scripts/compute_emp_vgc.pl">compute_emp_vgc.pl</a>: This script takes a corpus in one-token-per-line format and computes its observed vocabulary and hapax growth curves (observed growth curves cannot be generated from frequency lists, since they require information on the ordering of the tokens in the input). Note that the Perl script is more efficient for large corpora than the built-in <strong>zipfR</strong> functions.
+</p>
+
+<p>
+  <a href="software/scripts/randomization_experiments.pl">randomization_experiments.pl</a>: This script takes a <a href="http://cwb.sourceforge.net/">CWB</a>-encoded corpus as input and computes spectra and vocabulary growth curves for multiple randomizations of arbitrary text segments (e.g. sentences or documents). The script is meant for rather advanced tests of the randomness assumption lying behind LNRE modeling and for handling large corpora. Most users will have no use for it.
+</p>
+
+<p align="right"><small>
+    <a href="#top">Back to the top</a>
+</small></p>
+
+<hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+
+<a name="counting_words"><h2>Counting Words (introductory course at ESSLLI '06)</h2></a>
+
+<p>
+  At ESSLLI '06 we taught an introductory course on lexical statistics entitled <i>Counting Words</i>. Besides giving a basic overview of the methodology of lexical statistics and its applications, we described (part of) the mathematical theory underlying the <strong>zipfR</strong> package and demonstrated its usage. In a practical session, participants were able to perform their own analyses with a beta release of <strong>zipfR</strong> (version 0.5-0).
+</p>
+
+<p>
+  You can download the class materials using the links below (the &ldquo;slides&rdquo; version makes for better on-screen reading, while the &ldquo;handout&rdquo; version is more suitable for printing):
+</p>
+<ul>
+  <li>
+    Introduction and motivation: 
+    <ahref="materials/ESSLLI/01_introduction.slides.pdf">slides</a>;
+    <a href="materials/ESSLLI/01_introduction.handout.pdf">handout</a>
+  </li>
+  <li>
+    Type-rich population and samples:
+    <a href="materials/ESSLLI/02_population_samples.slides.pdf">slides</a>;
+    <a href="materials/ESSLLI/02_population_samples.handout.pdf">handout</a>
+  </li>
+  <li>
+    LNRE modeling:
+    <a href="materials/ESSLLI/03_lnre_modeling.slides.pdf">slides</a>;
+    <a href="materials/ESSLLI/03_lnre_modeling.handout.pdf">handout</a>
+  </li>
+  <li>
+    The zipfR toolkit:
+    <a href="materials/ESSLLI/04_zipfr.slides.pdf">slides</a>;
+    <a href="materials/ESSLLI/04_zipfr.handout.pdf">handout</a>
+  </li>
+  <li>
+    Pre-processing and non-randomness:
+    <a href="materials/ESSLLI/05_preprocessing_randomness.slides.pdf">slides</a>;
+    <a href="materials/ESSLLI/05_preprocessing_randomness.handout.pdf">handout</a>
+  </li>
+  <li>
+    References:
+    <a href="materials/ESSLLI/cw-refs.pdf">handout</a>
+  </li>
+</ul>
+
+<p align="right"><small>
+    <a href="#top">Back to the top</a>
+</small></p>
+
+<hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+
+<a name="contact"><h2>Contact information &amp; <i>zipfR</i> mailing list</h2></a>
+
+<p>
+  We would love to hear from you: feedback, feature requests, offers to collaborate on the development of the toolkit, invitations, money, &hellip; <code>&nbsp;;-)</code>
+</p>
+
+<p>
+  Stefan Evert (Institute of Cognitive Science, University of Osnabr&uuml;ck):<br />
+  <i>stefan evert AT uos de</i> <code>|</code> <a href="http://purl.org/stefan.evert/">http://purl.org/stefan.evert/</a>
+</p>
+
+<p>
+  Marco Baroni (CIMeC, University of Trento):<br />
+  <i>marco baroni AT unitn it</i> <code>|</code> <a href="http://clic.cimec.unitn.it/marco/">http://clic.cimec.unitn.it/marco/</a>
+</p>
+
+<p>
+  A mailing list for <strong>zipfR</strong> users is currently being set up.
+</p>
+
+<p align="right"><small>
+    <a href="#top">Back to the top</a>
+</small></p>
+
+<hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+
+<a name="refs"><h2>Background reading</h2></a>
+
+<p>
+  H. Baayen (2001). <i>Word frequency distributions</i>. Kluwer, Dordrecht (the companion LEXSTATS toolkit for LNRE analysis is available 
+<a href="http://www.mpi.nl/world/persons/private/baayen/software.html">here</a>).
+</p>
+
+<p>
+  M. Baroni (2008).  <a href="http://sslmit.unibo.it/~baroni/publications/hsk_39_dist_rev2.pdf">Distributions in text</a>. In Anke L&uuml;deling and Merja Kytö (eds.), <i>Corpus Linguistics: An International Handbook</i>. Berlin: Mouton de Gruyter.
+</p>
+
+<p>
+  S. Evert (2004a). <a href="http://purl.org/stefan.evert/PUB/Evert2004a.pdf">A simple LNRE model for random character sequences</a>. In <i>Proceedings of JADT 2004</i>, 411-422.
+</p>
+
+<p>
+  S. Evert (2004b, published 2005). <a href="http://elib.uni-stuttgart.de/opus/volltexte/2005/2371">The statistics of word cooccurrences: Word pairs and collocations</a>. Ph.D. thesis, Institut für maschinelle Sprachverarbeitung, University of Stuttgart.
+</p>
+
+<p>
+  S. Evert and M. Baroni (2006a). <a href="http://sslmit.unibo.it/~baroni/publications/cl2005/cl-052-pap-final.pdf">Testing the extrapolation quality of word frequency models</a>. In <i>Proceedings of Corpus Linguistics 2005</i>, Birmingham, UK.
+</p>
+
+<p>
+  S. Evert and M. Baroni (2006b). <a href="http://www.r-project.org/useR-2006/Slides/Evert+Baroni.pdf">The zipfR library: Words and other rare events in R</a>. Presentation at <i>useR! 2006: The Second R User Conference</i>, Vienna, Austria.
+</p>
+
+<p>
+  Baroni, Marco and Evert, Stefan (2007). <a href="http://purl.org/stefan.evert/PUB/BaroniEvert2007.pdf">Words and echoes: Assessing and mitigating the non-randomness problem in word frequency distribution modeling</a>. In <i>Proceedings of the 45th Annual Meeting of the Association for Computational Linguistics</i>, Prague, Czech Republic.
+</p>
+
+<p>
+  Evert, Stefan and Baroni, Marco (2007). <a href="http://purl.org/stefan.evert/PUB/EvertBaroni2007.pdf"><i>zipfR</i>: Word frequency distributions in R</a>. In <i>Proceedings of the 45th Annual Meeting of the Association for Computational Linguistics, Posters and Demonstrations Session</i>, Prague, Czech Republic.
+  [<a href="materials/zipfR-poster.pdf" target="_blank">poster</a>]
+</p>
+
+
+<p align="right"><small>
+    <a href="#top">Back to the top</a>
+</small></p>
+
+<hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+
+<a name="versions"><h2>Old versions</h2></a>
+
+<p>
+  Whenever possible, you should use the most recent version of the <b>zipfR</b> package from <a href="http://cran.r-project.org/">CRAN</a> or <a href="https://r-forge.r-project.org/">R-Forge</a> (see <a href="#obtain">installation instructions</a>).  Here, we provide source code packages of old versions as a fallback in case there are any incompatibilities with legacy platforms or existing <strong>R</strong> scripts.
+</p>
+
+<ul>
+  <li>
+    Version 0.6-3 (January 2007)<br />
+    <a href="software/zipfR_0.6-3.tar.gz">source code</a> &ndash;
+    <a href="materials/zipfR_0.6-3.pdf">PDF documentation</a>
+  </li>
+  <li>
+    Version 0.6 (first public release, August 2006)<br />
+    <a href="software/zipfR_0.6-0.tar.gz">source code</a> &ndash;
+    <a href="materials/zipfR_0.6-0.pdf">PDF documentation</a>
+  </li>
+</ul>
+
+
+<p align="right"><small>
+    <a href="#top">Back to the top</a>
+</small></p>
+
+<hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+
+</body>
+
+</html>
