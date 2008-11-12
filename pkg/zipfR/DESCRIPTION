@@ -12,4 +12,4 @@ Description: Statistical models and utilities for the analysis of word frequency
 	models for the distribution of word frequencies in a population.  (The name of this library 
 	derives from the most famous word frequency distribution, Zipf's law.)
 License: GPL
-URL: http://purl.org/stefan.evert/zipfR/
+URL: http://zipfR.R-Forge.R-project.org/
