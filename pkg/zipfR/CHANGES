@@ -1,5 +1,7 @@
 RECENT CHANGES to the 'zipfR' package:
 
+ - added citation details (inst/CITATION)
+
 Version 0.6-5
 
  - moved development to SVN repository on R-Forge
