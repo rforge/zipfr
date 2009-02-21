@@ -1,6 +1,6 @@
 read.vgc <- function (file)
 {
-  tmp <- read.delim(file)
+  tmp <- read.delim(auto.gzfile(file))
   vars <- colnames(tmp)
   if (!("N" %in% vars)) stop("required column 'N' missing from .vgc file ", file)
   if (!("V" %in% vars)) stop("required column 'V' missing from .vgc file ", file)

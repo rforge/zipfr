@@ -1,34 +1,39 @@
 RECENT CHANGES to the 'zipfR' package:
 
- - added citation details (inst/CITATION)
+  - file I/O automatically compresses/decompresses ".gz" files in functions
+    read.tfl(), read.spc(), read.vgc(), write.tfl(), write.spc(), write.vgc()
+  - dropped support for very old R versions (before 2.3.1 or so),
+    where read.delim() does not accept comment.char= option
+  - added citation details (file inst/CITATION), which can be displayed with
+    citation(package="zipfR")
 
 Version 0.6-5
 
- - moved development to SVN repository on R-Forge
+  - moved development to SVN repository on R-Forge
 
 Version 0.6-4
 
- - various bug fixes and minor improvements
- - improved robustness and tolerance for rounding errors in expected frequency spectra
+  - various bug fixes and minor improvements
+  - improved robustness and tolerance for rounding errors in expected frequency spectra
 
 Version 0.6-2
 
- - added function read.multiple.objects to do just that
+  - added function read.multiple.objects to do just that
 
 Version 0.6-1
 
- - bugfix: read.vgc() died on input files without at least a V1 column
+  - bugfix: read.vgc() died on input files without at least a V1 column
 
 Version 0.6-0
 
- - first public release on CRAN
- - improved parameter estimation, can be fine-tuned by users 
-   with choice of cost functions and minimization algorithms
- - default settings work well for most data sets
- - minor bug fixes and improved documentation
- - updated version of tutorial
+  - first public release on CRAN
+  - improved parameter estimation, can be fine-tuned by users 
+    with choice of cost functions and minimization algorithms
+  - default settings work well for most data sets
+  - minor bug fixes and improved documentation
+  - updated version of tutorial
 
 
 Version 0.5-0
 
- - first beta release of the zipfR toolkit
+  - first beta release of the zipfR toolkit

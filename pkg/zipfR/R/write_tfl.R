@@ -6,5 +6,5 @@ write.tfl <- function (tfl, file)
   if (attr(tfl, "incomplete"))
     warning("saving incomplete type frequency list, which cannot be restored from disk file!")
   
-  write.table(tfl, file=file, quote=FALSE, sep="\t", row.names=FALSE, col.names=TRUE)
+  write.table(tfl, file=auto.gzfile(file), quote=FALSE, sep="\t", row.names=FALSE, col.names=TRUE)
 }

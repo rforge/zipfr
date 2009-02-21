@@ -8,5 +8,5 @@ write.spc <- function (spc, file)
   if (attr(spc, "hasVariances"))
     warning("variance of expected vocabulary size cannot be saved to disk file!")
   
-  write.table(spc, file=file, quote=FALSE, sep="\t", row.names=FALSE, col.names=TRUE)
+  write.table(spc, file=auto.gzfile(file), quote=FALSE, sep="\t", row.names=FALSE, col.names=TRUE)
 }

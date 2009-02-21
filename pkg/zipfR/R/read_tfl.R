@@ -1,11 +1,6 @@
 read.tfl <- function (file)
 {
-  if ("comment.char" %in% names(formals(read.table))) { 
-    tmp <- read.delim(file, comment.char="") # works in R >= 2.3.1
-  }
-  else {
-    tmp <- read.delim(file) # R 2.1.x and earlier versions don't support comment.char (IIRC)
-  }
+  tmp <- read.delim(auto.gzfile(file), comment.char="") # comment.char= works in R >= 2.3.1
   vars <- colnames(tmp)
   if (!("f" %in% vars)) stop("required column 'f' missing from .tfl file ", file)
 

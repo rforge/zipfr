@@ -1,6 +1,6 @@
 read.spc <- function (file)
 {
-  tmp <- read.delim(file)
+  tmp <- read.delim(auto.gzfile(file))
   vars <- colnames(tmp)
   if (!("m" %in% vars)) stop("required column 'm' missing from .spc file ", file)
   if (!("Vm" %in% vars)) stop("required column 'Vm' missing from .spc file ", file)

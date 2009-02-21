@@ -4,5 +4,5 @@ write.vgc <- function (vgc, file)
   if ( (length(file) != 1) || (! is.character(file)) )
     stop("'file' argument must be a single character string")
   
-  write.table(vgc, file=file, quote=FALSE, sep="\t", row.names=FALSE, col.names=TRUE)
+  write.table(vgc, file=auto.gzfile(file), quote=FALSE, sep="\t", row.names=FALSE, col.names=TRUE)
 }
