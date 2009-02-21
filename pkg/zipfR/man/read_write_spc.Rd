@@ -22,9 +22,9 @@
 
 \arguments{
 
-  \item{file}{character string specifying the pathname of a disk
-    file. See section "Format" for a description of the required file
-    format}
+  \item{file}{character string specifying the pathname of a disk file.
+    Files with extension \code{.gz} will automatically be compressed/decompressed.
+    See section "Format" for a description of the required file format}
 
   \item{spc}{a frequency spectrum, i.e.\ an object of class
     \code{spc}}
@@ -39,6 +39,9 @@
 }
 
 \details{
+
+  If the filename \code{file} ends in the extension \code{.gz}, the disk file
+  will automatically be decompressed (\code{read.spc}) and compressed (\code{write.spc}).
 
   The \code{.spc} file format does not store the values of \code{N},
   \code{V} and \code{VV} explicitly.  Therefore, incomplete frequency

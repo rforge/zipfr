@@ -22,6 +22,7 @@
 \arguments{
 
   \item{file}{character string specifying the pathname of a disk file.
+    Files with extension \code{.gz} will automatically be compressed/decompressed.
     See section "Format" for a description of the required file format}
 
   \item{vgc}{a vocabulary growth curve, i.e.\ an object of class
@@ -36,11 +37,12 @@
   
 }
 
-%\details{
+\details{
 
-%  ~~ describe any details of the file format or file loading process ~~
-%  
-%}
+  If the filename \code{file} ends in the extension \code{.gz}, the disk file
+  will automatically be decompressed (\code{read.vgc}) and compressed (\code{write.vgc}).
+
+}
 
 \format{
  

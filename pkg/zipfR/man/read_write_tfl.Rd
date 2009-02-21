@@ -22,9 +22,9 @@
 
 \arguments{
 
-  \item{file}{character string specifying the pathname of a disk
-    file. See section "Format" for a description of the required file
-    format}
+  \item{file}{character string specifying the pathname of a disk file.
+    Files with extension \code{.gz} will automatically be compressed/decompressed.
+    See section "Format" for a description of the required file format}
 
   \item{tfl}{a type frequency list, i.e.\ an object of class \code{tfl}}
 
@@ -38,6 +38,9 @@
 }
 
 \details{
+
+  If the filename \code{file} ends in the extension \code{.gz}, the disk file
+  will automatically be decompressed (\code{read.tfl}) and compressed (\code{write.tfl}).
 
   The \code{.tfl} file format stores neither the values of \code{N} and
   \code{V} nor the range of type frequencies explicitly.  Therefore,
