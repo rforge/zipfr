@@ -11,5 +11,5 @@ Description: Statistical models and utilities for the analysis of word frequency
 	data and vocabulary growth curves.  The package also implements several statistical 
 	models for the distribution of word frequencies in a population.  (The name of this library 
 	derives from the most famous word frequency distribution, Zipf's law.)
-License: GPL
+License: GPL-3
 URL: http://zipfR.R-Forge.R-project.org/

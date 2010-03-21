@@ -2,7 +2,7 @@ EVm.lnre.gigp <- function (obj, m, N=NA, ...)
 {
   if (! inherits(obj, "lnre.gigp")) stop("argument must be object of class 'lnre.gigp'")
   if (missing(N)) stop("argument 'N' is required for 'lnre.gigp' objects")
-  if (!(is.numeric(N) && N >= 0)) stop("argument 'N' must be non-negative integer")
+  if (!(is.numeric(N) && all(N >= 0))) stop("argument 'N' must be non-negative integer")
   if (!(is.numeric(m) && all(m >= 1))) stop("argument 'm' must be positive integer")
 
   gamma <- obj$param$gamma

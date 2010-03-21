@@ -1,11 +1,20 @@
+TODO:
+
+  - write documentation for new posterior, Good-Turing, etc.
+
 RECENT CHANGES to the 'zipfR' package:
 
+  - posterior distribution for LNRE model as Bayesian prior, with density function
+    postdlnre(), including log-transformed version postldlnre(), as well as
+    cumulative probability postplnre() and quantiles postqlnre() where available
+  - Good-Turing estimates with gtlnre()
   - file I/O automatically compresses/decompresses ".gz" files in functions
     read.tfl(), read.spc(), read.vgc(), write.tfl(), write.spc(), write.vgc()
   - dropped support for very old R versions (before 2.3.1 or so),
     where read.delim() does not accept comment.char= option
   - added citation details (file inst/CITATION), which can be displayed with
     citation(package="zipfR")
+  - upgraded to GPL v3
 
 Version 0.6-5
 

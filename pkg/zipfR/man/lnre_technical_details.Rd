@@ -158,10 +158,12 @@
     \code{EVm.lnre.lognormal}).
 
     \item If possible, provide equations for the type density,
-    probability density, type distribution and distribution function of
+    probability density, type distribution, distribution function 
+    and posterior distribution of
     the new LNRE model, as implementations of the \code{tdlnre},
-    \code{dlnre}, \code{tplnre}/\code{tqlnre} and
-    \code{plnre}/\code{qlnre} methods for the new LNRE model class.  If
+    \code{dlnre}, \code{tplnre}/\code{tqlnre},
+    \code{plnre}/\code{qlnre} and \code{postplnre}/\code{postqlnre}
+    methods for the new LNRE model class.  If
     all these functions are defined, log-scaled densities and random
     number generation are automatically handled by generic
     implementations.

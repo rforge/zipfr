@@ -2,7 +2,7 @@ EVm.lnre.fzm <- function (obj, m, N=NA, ...)
 {
   if (! inherits(obj, "lnre.fzm")) stop("argument must be object of class 'lnre.fzm'")
   if (missing(N)) stop("argument 'N' is required for 'lnre.fzm' objects")
-  if (!(is.numeric(N) && N >= 0)) stop("argument 'N' must be non-negative integer")
+  if (!(is.numeric(N) && all(N >= 0))) stop("argument 'N' must be non-negative integer")
   if (!(is.numeric(m) && all(m >= 1))) stop("argument 'm' must be positive integer")
 
   alpha <- obj$param$alpha
