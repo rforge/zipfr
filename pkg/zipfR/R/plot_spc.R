@@ -89,10 +89,10 @@ plot.spc <- function(x, y, ...,
 
     if (!missing(legend)) {             # add legend if specified by user
       if (points) {
-        zipfR.legend(2, legend=legend, pch=pch, col=col)
+        legend("topright", inset=.02, bg="white", legend=legend, pch=pch, col=col)
       }
       else {
-        zipfR.legend(2, legend=legend, lty=lty, lwd=lwd, col=col)
+        legend("topright", inset=.02, bg="white", legend=legend, lty=lty, lwd=lwd, col=col)
       }
     }
   }

@@ -2,6 +2,6 @@
 
 .onLoad <- function (libname, pkgname)
 {
-  ## use quartz() device by default on the native Mac OS X version of R ("AQUA")
-  if (.Platform$GUI == "AQUA") zipfR.par(device="quartz")
+	## this used to switch to "quartz" as default plotting device in the R.app GUI on Mac OS X,
+	## which is now used by default whenever available (and selected directly in zipfR_par.R)
 }

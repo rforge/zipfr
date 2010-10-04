@@ -113,9 +113,9 @@
 
     \item{\code{device}}{plot device used by the \code{zipfR} plotutils
       (see \code{\link{zipfR.begin.plot}} for details).  Currently
-      supported devices are \code{x11} (the default), \code{eps},
+      supported devices are \code{x11} (default on most platforms), \code{eps},
       \code{pdf}, as well as \code{png} and \code{quartz} where
-      available.}
+      available (default on Mac OS X).}
 
     \item{\code{init.par}}{list of named graphics parameters passed to
       the \code{par} function whenever a new viewport is created with

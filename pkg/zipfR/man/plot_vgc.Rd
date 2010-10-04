@@ -134,7 +134,7 @@
 \seealso{
 
   \code{\link{vgc}}, \code{\link{lnre}}, \code{\link{lnre.vgc}},
-  \code{\link{plot.spc}}, \code{\link{zipfR.par}},
+  \code{\link{plot.tfl}}, \code{\link{plot.spc}}, \code{\link{zipfR.par}},
   \code{\link{zipfR.plotutils}}
 
 }

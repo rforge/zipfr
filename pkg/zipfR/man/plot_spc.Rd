@@ -111,7 +111,7 @@
 \seealso{
 
   \code{\link{spc}}, \code{\link{lnre}}, \code{\link{lnre.spc}},
-  \code{\link{plot.vgc}}, \code{\link{zipfR.par}},
+  \code{\link{plot.tfl}}, \code{\link{plot.vgc}}, \code{\link{zipfR.par}},
   \code{\link{zipfR.plotutils}}
 
 }

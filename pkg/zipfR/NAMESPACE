@@ -16,9 +16,9 @@ export(lnre.spc, lnre.vgc)
 
 export(N, V, Vm, EV, EVm, VV, VVm)
 
-export(zipfR.par, zipfR.legend)
+export(zipfR.par)
 export(zipfR.begin.plot, zipfR.end.plot, zipfR.pick.device)
-export(plot.spc, plot.vgc)
+export(plot.spc, plot.tfl, plot.vgc)
 
 export(tdlnre, ltdlnre, tplnre, tqlnre)
 export(dlnre, ldlnre, plnre, qlnre)
@@ -27,6 +27,7 @@ export(rlnre)
 export(read.multiple.objects)
 
 S3method(plot, spc)
+S3method(plot, tfl)
 S3method(plot, vgc)
 
 S3method(print, spc)

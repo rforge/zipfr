@@ -8,7 +8,7 @@ read.multiple.objects <- function (directory, prefix, class=c("spc", "vgc", "tfl
   files <- list.files(directory,pattern=paste("^",prefix,"[\\.]",".+","[\\.]",class,"$",sep=""))
   file.number = length(files)
   if (file.number==0) {
-    stop("no file matching pattern ",prefix,".X.",class," found")
+    stop("no file matching pattern ",prefix,".*.",class," found")
   }
 
   # now, we go through the list of files and read them to a list

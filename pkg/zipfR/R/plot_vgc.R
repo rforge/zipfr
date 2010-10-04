@@ -143,7 +143,7 @@ plot.vgc <- function (x, y, ...,
   }
   
   if (!missing(legend)) {             # add legend if specified by user
-    zipfR.legend(3, legend=legend, lty=lty, lwd=lwd, col=col)
+    legend("bottomright", inset=.02, bg="white", legend=legend, lty=lty, lwd=lwd, col=col)
   }
   
 }

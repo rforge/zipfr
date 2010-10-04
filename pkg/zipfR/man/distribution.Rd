@@ -182,7 +182,7 @@ y.zm <- ltdlnre(ZM, x)
 y.fzm <- ltdlnre(FZM, x)
 \dontrun{plot(x, y.zm, type="l", lwd=2, col="red", log="x", ylim=c(0,14000))}
 \dontrun{lines(x, y.fzm, lwd=2, col="blue")}
-\dontrun{zipfR.legend(2, legend=c("ZM", "fZM"), lwd=3, col=c("red", "blue"))}
+\dontrun{legend("topright", legend=c("ZM", "fZM"), lwd=3, col=c("red", "blue"))}
 
 ## probability pi_k of k-th type according to FZM model
 k <- 10

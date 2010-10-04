@@ -56,7 +56,7 @@ zipfR.par <- function (..., bw.mode=FALSE)
 .PAR$bw <- FALSE
 
 ## for the zipfR plotutils functions
-.PAR$device <- "x11"
+.PAR$device <- if (capabilities()["aqua"]) "quartz" else "x11"
 .PAR$init.par <- list()
 .PAR$width <- 6
 .PAR$height <- 6

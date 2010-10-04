@@ -124,8 +124,8 @@
 
 \seealso{
 
-  \code{\link{read.tfl}}, \code{\link{write.tfl}},
- \code{\link{sample.tfl}}, \code{\link{spc2tfl}}, \code{\link{tfl2spc}}
+  \code{\link{read.tfl}}, \code{\link{write.tfl}}, \code{\link{plot.tfl}},
+  \code{\link{sample.tfl}}, \code{\link{spc2tfl}}, \code{\link{tfl2spc}}
 
   Generic methods supported by \code{tfl} objects are
   \code{\link{print}}, \code{\link{summary}}, \code{\link{N}},
