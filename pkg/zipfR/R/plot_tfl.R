@@ -46,7 +46,6 @@ plot.tfl <- function (x, y, ...,
   ## choose suitable ranges on the axes, unless specified by user
   if (missing(xlim)) xlim <- c(min.rank, max.rank)
   if (missing(ylim)) ylim <- if (y.log) c(2/3, 1.5*f.max) else c(0, 1.05 * f.max)
-  print(c(f.max, ylim))
 
   ## set up plotting region and labels
   plot(1, 1, type="n", xlim=xlim, ylim=ylim, log=log, xaxs="r", yaxs="i",

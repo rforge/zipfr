@@ -4,7 +4,7 @@ postdlnre.lnre <- function (model, x, m, N, ...) {
   if (!(is.numeric(m) && all(m >= 1))) stop("argument 'm' must be positive integer")
 
   factor <- exp( m * log(N * x) - N * x - Cgamma(m + 1, log=TRUE) ) # = (Nx)^m * exp(-Nx) / m!
-  factor * dlnre(model, x) / EVm(model, m, N)
+  factor * tdlnre(model, x) / EVm(model, m, N) ## ******* was dlnre(), but shouldn't this be tdlnre() instead?? *******
 }
 
 postldlnre.lnre <- function (model, x, m, N, base=10, log.x=FALSE, ...)

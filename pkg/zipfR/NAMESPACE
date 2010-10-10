@@ -23,6 +23,7 @@ export(plot.spc, plot.tfl, plot.vgc)
 export(tdlnre, ltdlnre, tplnre, tqlnre)
 export(dlnre, ldlnre, plnre, qlnre)
 export(rlnre)
+export(postdlnre, postldlnre, postplnre, postqlnre)
 
 export(read.multiple.objects)
 
@@ -98,3 +99,13 @@ S3method(qlnre, lnre.fzm)
 S3method(ltdlnre, lnre)
 S3method(ldlnre, lnre)
 S3method(rlnre, lnre)
+
+S3method(postdlnre, lnre.zm)
+S3method(postdlnre, lnre.fzm)
+S3method(postdlnre, lnre.gigp)
+
+S3method(postplnre, lnre.zm)
+S3method(postplnre, lnre.fzm)
+
+S3method(postqlnre, lnre.zm)
+S3method(postqlnre, lnre.fzm)
