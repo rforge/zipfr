@@ -2,7 +2,7 @@
 
 \usepackage{vmargin}
 \setpapersize[portrait]{A4}
-\setmarginsrb{25mm}{10mm}{20mm}{20mm}% left, top, right, bottom
+\setmarginsrb{30mm}{10mm}{30mm}{20mm}% left, top, right, bottom
 {12pt}{15mm}% head heigth / separation
 {0pt}{15mm}% bottom height / separation
 %% \setmargnohfrb{30mm}{20mm}{20mm}{20mm}
@@ -11,55 +11,196 @@
 \setlength{\parskip}{\medskipamount}
 
 \usepackage[english]{babel}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 
-%% \usepackage[T1]{fontenc}
+\usepackage[T1]{fontenc}
 %% \usepackage{textcomp}  % this can break some outline symbols in CM fonts, use only if absolutely necessary
 
-%% \usepackage{lmodern}   % type1 computer modern fonts in T1 encoding
-%% \usepackage{ae}        % simulate T1 encoding for CM outline fonts 
-
-%% \usepackage{pslatex}   % use standard PostScript fonts with some adjustments
-%% \renewcommand{\familydefault}{\sfdefault}
-
+\usepackage{lmodern}   % type1 computer modern fonts in T1 encoding
 %% \usepackage{mathptmx}  % use Adobe Times as standard font with simulated math support
 %% \usepackage{mathpazo}  % use Adobe Palatino as standard font with simulated math support
-
-%% \usepackage{charter,helvet,courier}  % other font options (substitute only one of the families)
-%% \usepackage{avant}
 
 %% \usepackage{pifont}
 %% \usepackage{eucal}
 
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx,rotating}
-%% \usepackage[monochrome]{color}
 \usepackage{array,hhline,booktabs}
 \usepackage{xspace}
-%% \usepackage{url}
+\usepackage{url}
 %% \usepackage{ifthen,calc,hyphenat}
-%% \usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade,xcolor,colortbl}
 
-%% \usepackage{natbib}
-%% \usepackage{natbib-url}         % hacked version of url.sty, fixes line-breaking bug
-%% \bibpunct{(}{)}{;}{a}{}{,}
+\usepackage{xcolor,tikz}
+\usepackage[textwidth=25mm,textsize=small,colorinlistoftodos,backgroundcolor=orange!80]{todonotes} % [disable] to hide all TODOs
+
+\usepackage{natbib}
+\bibpunct{(}{)}{;}{a}{}{,}
 
 \input{lib/math.tex}
 \input{lib/stat.tex}
 \input{lib/lnre.tex}
 
 \title{Inside \emph{zipfR}}
-\author{Stefan Evert}
-\date{Unsorted notes, 2 September 2007}
+\author{Stefan Evert\\ \url{http://purl.org/stefan.evert/}}
+\date{Unsorted notes\\typeset on \today}
 
 \begin{document}
+\maketitle
+
+\listoftodos
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Notes and ideas}
+\label{sec:notes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Mathematics and implementation}
+\label{sec:notes:math}
+
+\begin{itemize}
+
+\item LNRE model fit may be affected by a small number of very high-frequency types, esp.\ ``echo'' tokens \citep{Baroni:Evert:07a} or the ``other'' type when modelling vocabulary growth wrt.\ all tokens (\emph{external productivity}).  It would probably be useful to separate the most frequent types, estimate their occurrence probabilities directly (MLE are reliable barring non-randomness effects), and apply the LNRE model only to the remaining vocabulary.  This should present no major mathematical obstacles, but will have to be taken into account throughout the implementation (expectations, variances, chi-squared statistics, etc.).
+
+\item Standard LNRE fitting uses only the low end of the frequency spectrum and may produce an unsatisfactory fit for the ``middle range'' of the Zipf ranking.  If we want to account for these data as well -- esp.\ in connection with mixture models (Sec.~\ref{sec:models:mixtures}) and gZM (Sec.~\ref{sec:models:gzm}) -- a different goodness-of-fit goal function will be needed for parameter estimation.  
+
+  One possibility is to pool multiple frequency classes together, e.g.\ on a logarithmic scale: $m=1,\ldots,10$, $m=11\ldots 14$, $m=15\ldots 20$, $m=21\ldots 50$, $m=51\ldots 100$, $m=101\ldots 1000$, etc.; granularity will have to be adjusted to the available data, of course.  Assuming the usual multivariate Gaussian joint distriubtion for the original frequency spectrum, the pooled frequency spectrum should also be multivariate Gaussian as a linear map of the original spectrum.  Expectations, variances and covariances should be straightforward, although care has to be taken to avoid performance and/or numerical accuracy issues.\todo{Are there simplified equations for expectations and (co)variances of a pooled frequency spectrum?}
+
+\item Sometimes it would be useful to fit a LNRE model to multiple frequency spectra. E.g.\ for Gordon Pipa's neural spiking data, where it is plausible that trials for the same condition follow the same Zipfian distribution, but data cannot be pooled directly; or to avoid overfitting of non-random data by parallel parameter estimation from frequency spectra at different sample sizes.  Such \emph{co-estimation} \todo{Is ``co-estimation'' an appropriate term?} should be relatively straightforward to implement by adding up cost functions (perhaps with suitable scaling to account for different sample sizes), but custom estimators available for some of the models can no longer be used.
+
+\item One problem of the fZM implementation may be numerical accuracy due to cancellation when ``short'' Gamma integrals are calculated as differences between incomplete Gamma functions, esp.\ on very small or otherwise extreme samples.  This will become much more virulent for gZM models with many components.  Suggest a two-step strategy:
+  \begin{enumerate}
+  \item Encapsulate finite Gamma integrals into a helper function, which estimates cancellation errors and collects statistics.  This should be controlled by a global \texttt{debug} option for \emph{zipfR} (set with \texttt{zipfR.par()}).
+  \item Implement more accurate algorithm for finite Gamma integrals.  So far, the only solution seems to be numeric integration, which is easy and accurate for monotonic functions (possibly splitting integrand into monotonic parts).  Code might be implemented in R (using standard numeric integration functions) for preliminary testing.
+  \item Reimplement numeric integration in C; for better efficiency and accuracy on ``long'' Gamma integrals, might compute incomplete Gamma function first and run numeric integration only when estimated cancellation error exceeds a pre-defined threshold (also set with \texttt{zipfR.par()}).
+  \end{enumerate}
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Thoughts on goals and applications of LNRE modelling}
+\label{sec:notes:goals-applications}
+
+\begin{itemize}
+
+\item Most research on Zipf's law (both Zipf himself and more recent work by physicists) focuses on middle-range frequency ranks, which are highlighted in a logarithmic rank-frequency graph.  By contrast, LNRE models \citep{Khmaladze:87,Baayen:01} based on truncated frequency spectra are only interested in the lowest-frequency types.  Note that for typical applications -- productivity, vocabulary growth, estimation of vocabulary diversity, adjusted significance tests -- only such lowest-frequency types are of major concern, as probability estimates for middle- and high-frequency data can be obtained directly from any sizable corpus.  This is explains why most LNRE models find Zipf slows $a \gg 1$ rather than $a\approx 1$ as observed by Zipf and related work.
+
+\end{itemize}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The mathematics of LNRE modelling}
+\label{sec:lnre}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Specific LNRE models}
+\label{sec:models}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Zipf-Mandelbrot (ZM)}
+\label{sec:models:zm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Finite Zipf-Mandelbrot (fZM)}
+\label{sec:models:fzm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Generalised Zipf-Mandelbrot (gZM)}
+\label{sec:models:gzm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Generalised Inverse Gauss-Poisson (GIGP)}
+\label{sec:models:gigp}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Montemurro / Tsallis}
+\label{sec:models:montemurro}
+
+Based on original research by Tsallis, \todo{Insert references to Tsallis} \citet{Montemurro:01} proposes the following type density function:
+\begin{equation}
+  \label{eq:models:montemurro:1}
+  g(\pi) = C \left( \mu \pi^R + (\lambda - \mu) \pi^Q  \right)^{-1}
+\end{equation}
+with parameters $1 < R < Q$ and $\mu, \lambda\in \setR$, normalising constant $C$ and possible restriction to a suitable region $A\leq \pi\leq B$.  Eq.~(\ref{eq:models:montemurro:1}) is derived from a differential equation for the rank-frequency relationship, which does not have a closed-form rank-frequency solution in the general case.  See Sec.~\ref{sec:lit:ext:Montemurro2001} for motivation and details.
+
+It will be difficult to obtain closed-form solutions for $\Exp{V}, \Exp{V_m}$ and other relevant quantities from Eq.~(\ref{eq:models:montemurro:1}), and numerical integration may often be required.
+
+Montemurro's LNRE model can be thought of as a smooth interpolation between two power laws with different slopes that hold in different frequency ranges.  Therefore, a two-segment gZM model (Sec.~\ref{sec:models:gzm}) or a mixture of two ZM/gZM models (Sec.~\ref{sec:models:mixtures}) should give an approximation to Eq.~(\ref{eq:models:montemurro:1}), but will be much easier to handle mathematically (closed-form solutions, numerical accuracy).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Mixture models}
+\label{sec:models:mixtures}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Literature review}
+\label{sec:literature}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Extensions of Zipf's law}
+\label{sec:lit:extensions}
+
+\subsubsection{\cite{Montemurro:01}}
+\label{sec:lit:ext:Montemurro2001}
+
+\citet{Montemurro:01} proposes an extension to Zipf's law that results in a better empirical fit for higher ranks (i.e., low-frequency data), while Zipf-Mandelbrot only improves the fit for low ranks.  Based on all-words Zipf rankings for various literary corpora compiled from Gutenberg e-texts, he observes that the original form of Zipf's law (with $a\approx 1$) only seems to hold for a ``middle range'' of frequency ranks, $r\approx 100 \ldots 2000 / 6000$ (depending on corpus size).  He further claims that higher ranks follow a similar power law with steeper slope ($a \approx 2 \ldots 3$).
+
+In the following, notation has been adjusted to \emph{zipfR} conventions:
+\begin{itemize}
+\item $r$ = Zipf rank (original: $s$)
+\item $p_r$ = relative frequency of $r$-th type in Zipf ranking (original: $f(s)$)
+\item $Q, R$ = Zipf slopes (original: $q, r$) 
+\end{itemize}
+
+Noting that the Zipf-Mandelbrot law can be derived from a differential equation
+\begin{equation}
+  \label{eq:lit:ext:Montemurro2001:1}
+  \frac{dp}{dr} = -\lambda p^Q
+\end{equation}
+(Eq.~(3), p.~572), he derives a generalisation from the differential equation
+\begin{equation}
+  \label{eq:lit:ext:Montemurro2001:2}
+  \frac{dp}{dr} = -\lambda p^R - (\lambda - \mu) p^Q
+\end{equation}
+(Eq.~(4), p.~572).  There are closed-form solutions for the special cases $R = Q = 1$ (Zipf-Mandelbrot) and $R = 1, Q > 1$ (Zipf's law in middle range, steeper slope for higher ranks), but not for the general case $1 < R < Q$ (p.~573).  
+
+Empirically, a good fit is obtained for literary corpora from single authors, using the closed form solution with $R = 1, Q > 1$:
+\begin{equation}
+  \label{eq:lit:ext:Montemurro2001:3}
+  p_r = \left( 1 - \frac{\lambda}{\mu} + \frac{\lambda}{\mu} e^{(Q-1) \mu r} \right)^{-\frac1{Q-1}}
+\end{equation}
+(Eq.~(6), p.~573).  For larger, composite corpora, the general form $1 < R < Q$ seems to be required.
+
+The differential equation (\ref{eq:lit:ext:Montemurro2001:2}) and its various closed-form or implicit solutions are attributed to Constantino Tsallis:\todo{Find papers by Tsallis \& Denisov}
+\begin{itemize}
+\item Tsallis/Bemski/Mendes (1999), \emph{Phys Lett A} \textbf{257}, 93
+\item Tsallis (1988), \emph{J Stat Phys} \textbf{52}, 479 --- underlying framework of statistical mechanics
+\item Montemurro says that Tsallis has suggested application to linguistic data in ``private communication''
+\item Denisov (1997), \emph{Phys Lett A} \textbf{235}, 447 --- relates Zipf-Mandelbrot law to ``fractal structure of symbolic sequences with long-range correlations'' (p.~572)
+\end{itemize}
+
+Montemurro notes that with some approximations, the general case can be expressed in closed form as a type density function (which he awkwardly refers to as a ``probability density''), resulting in the LNRE model:
+\begin{equation}
+  \label{eq:lit:ext:Montemurro2001:4}
+  g(\pi) \propto \left( \mu \pi^R + (\lambda-\mu) \pi^Q \right)^{-1}
+\end{equation}
+See Sec.~\ref{sec:models:montemurro} for more information on this LNRE model.
+
+Montemurro postulates that the two power laws may correspond to ``general'' and ``specialised'' vocabulary without further evidence: ``This suggests \ldots\ the vocabularies can be divided into two parts of distinct nature: one of basic usage \dots, and a second part containing more specific words with a less flexible syntactic function.'' (p.~571, citing then unpublished work by Ferrer \& Solé).  If we accept this claim, a linear mixture model (Sec.~\ref{sec:models:mixtures}) would be much more appropriate than a hard split at rank $r\approx 2000 \ldots 6000$.
+
+There is a completely unfounded claim at the end of the paper that ``it seems quite plausible that there may be a deep connection between differential equation (4) and the actual processes underlying the generation of syntactic language.'' (p.~577).
 
 
 %% \renewcommand{\bibsection}{}    % avoid (or change) section heading 
-%% \bibliographystyle{apalike}
-%% \bibliographystyle{natbib-stefan}
-%% \bibliography{stefan,diss}  
+\bibliographystyle{natbib-stefan}
+\bibliography{stefan-literature,stefan-publications}  
 
 \end{document}
