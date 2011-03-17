@@ -24,8 +24,11 @@ export(tdlnre, ltdlnre, tplnre, tqlnre)
 export(dlnre, ldlnre, plnre, qlnre)
 export(rlnre)
 export(postdlnre, postldlnre, postplnre, postqlnre)
+export(gtlnre)
 
 export(read.multiple.objects)
+export(lnre.bootstrap)
+
 
 S3method(plot, spc)
 S3method(plot, tfl)
