@@ -18,7 +18,7 @@ export(N, V, Vm, EV, EVm, VV, VVm)
 
 export(zipfR.par)
 export(zipfR.begin.plot, zipfR.end.plot, zipfR.pick.device)
-export(plot.spc, plot.tfl, plot.vgc)
+# export(plot.spc, plot.tfl, plot.vgc)
 
 export(tdlnre, ltdlnre, tplnre, tqlnre)
 export(dlnre, ldlnre, plnre, qlnre)
@@ -43,6 +43,8 @@ S3method(summary, spc)
 S3method(summary, tfl)
 S3method(summary, vgc)
 S3method(summary, lnre)
+
+S3method(confint, lnre)
 
 S3method(N, spc)
 S3method(N, tfl)

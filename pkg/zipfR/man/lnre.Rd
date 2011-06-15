@@ -17,7 +17,8 @@
        cost=c("chisq", "linear", "smooth.linear", "mse", "exact"),
        m.max=15,
        method=c("Custom", "NLM", "Nelder-Mead", "SANN"),
-       exact=TRUE, sampling=c("Poisson", "multinomial"), 
+       exact=TRUE, sampling=c("Poisson", "multinomial"),
+       bootstrap=0, verbose=TRUE,
        \dots)
 
 }
@@ -61,6 +62,16 @@
     default and should be unproblematic for sample sizes \eqn{N \ge
     10000}.  \bold{NB:} The \code{multinomial} sampling option has not
     been implemented yet.}
+  
+  \item{bootstrap}{number of bootstrap samples used to estimate confidence
+    intervals for estimated model parameters.  Recommended values are
+    \code{bootstrap=100} or \code{bootstrap=200}.  Bootstrapping can be very
+    time-consuming and should only be used if the underlying sample size
+    isn't too large (roughly, up to 1 million tokens).  See
+    \code{\link{lnre.bootstrap}} for further information and warnings.}
+
+  \item{verbose}{if \code{TRUE}, a progress bar will be shown in the R console
+    during the bootstrapping procedure}
 
   \item{\dots}{all further named arguments are interpreted as parameter
     values for the chosen LNRE model (see the respective manpages for
@@ -246,6 +257,11 @@
   applied to LNRE models with estimated parameters and return
   information about the observed frequency spectrum used for parameter
   estimation.
+  
+  If bootstrapping samples have been generated (\code{bootstrap > 0}), 
+  confidence intervals for the model parameters can be determined with
+  \code{\link{confint.lnre}}.  See \code{\link{lnre.bootstrap}} for 
+  more information on the bootstrapping procedure and implementation.
 
   The \code{\link{lnre.details}} manpage gives details about the
   implementation of LNRE models and the internal structure of

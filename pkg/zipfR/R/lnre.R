@@ -4,6 +4,7 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
                   m.max=15, 
                   method=c("Custom", "NLM", "Nelder-Mead", "SANN"),
                   exact=TRUE, sampling=c("Poisson", "multinomial"),
+                  bootstrap=0, verbose=TRUE,
                   ...)
 {
   type <- match.arg(type)
@@ -43,8 +44,7 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
 
   if (length(missing.param) > 0) {
     ## incomplete model -> estimate parameters from observed frequency spectrum
-    if (missing(spc))
-      stop("parameter(s) ", paste(missing.param, collapse=", ")," not specified")
+    if (missing(spc)) stop("parameter(s) ", paste(missing.param, collapse=", ")," not specified")
     if (debug) {
       cat("Estimating parameter(s) <", missing.param, "> from observed spectrum.\n")
       cat("Default values for other parameters:\n")
@@ -63,10 +63,15 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
     }
     
     model$spc <- spc
+    
+    if (bootstrap > 0) {
+      model$bootstrap <- lnre.bootstrap(model, N(spc), ESTIMATOR=lnre, STATISTIC=identity, replicates=bootstrap, debug=FALSE, verbose=verbose, type=type, cost=cost, m.max=m.max, method=method, exact=exact, sampling=sampling, ...)
+    }
   }
   else {
     ## all parameters specified -> no estimation necessary
     if (! missing(spc)) warning("no use for observed frequency spectrum 'spc' (ignored)")
+    if (bootstrap > 0) warning("can't bootstrap fully specified model (skipped)")
     ## parameter values have already been set in constructor call above
   }
 

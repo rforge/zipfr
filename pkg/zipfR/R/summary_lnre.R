@@ -10,6 +10,8 @@ summary.lnre <- function (object, ...)
   cat(", ");
   if (object$exact) cat("with exact calculations.") else cat("approximations are allowed.")
   cat("\n")
+  
+  if ("bootstrap" %in% names(object)) cat("Bootstrapping data available for", length(object$bootstrap), "replicates\n")
 
   cat("\n")
 
