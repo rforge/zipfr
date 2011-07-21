@@ -7,6 +7,8 @@ tfl <- function  (f, k=1:length(f), type=NULL, f.min=min(f), f.max=max(f),
   if (length(k) != length(f)) stop("'k' and 'f' must have the same length")
   hasTypes <- !is.null(type)
   if (hasTypes && length(type) != length(k)) stop("'type' must have the same length as 'k' and 'f'")
+
+  f <- as.double(f)         # make sure there are no integer overflows
   
   if (delete.zeros) {
     idx <- f == 0
@@ -22,7 +24,10 @@ tfl <- function  (f, k=1:length(f), type=NULL, f.min=min(f), f.max=max(f),
     if (incomplete) stop("'N' and 'V' must be specified for incomplete spectrum")
     N <- sum(f)
     V <- sum(f > 0)
-  }
+  } else {
+    N <- as.double(N)
+    V <- as.double(V)
+  } 
   
   ## limit frequencies to specified range
   if (missing(f.min) & length(f) == 0) f.min <- 0 # avoid warnings for empty TFLs 

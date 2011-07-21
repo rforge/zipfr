@@ -14,8 +14,12 @@ spc <- function (Vm, m=1:length(Vm), VVm=NULL, N=NA, V=NA, VV=NA,
   if (variances && missing(VV)) warning("if variances are present, 'VV' should also be specified")
   if (! is.integer(m)) {
     if (any(m != floor(m))) stop("class sizes 'm' must be integer values")
-    m <- as.integer(m)
+    m <- floor(m)
   }
+
+  m <- as.double(m)         # make sure there are no integer overflows
+  Vm <- as.double(Vm)
+  if (variances) VVm <- as.double(VVm)
   
   # remove empty frequency classes for compact storage
   idx <- (Vm != 0)
@@ -29,6 +33,9 @@ spc <- function (Vm, m=1:length(Vm), VVm=NULL, N=NA, V=NA, VV=NA,
   if (missing(N)) {
     N <- sum(m * Vm)
     V <- sum(Vm)
+  } else {
+    N <- as.double(N)
+    V <- as.double(V)
   }
 
   # remove any frequency classes above m.max from the spectrum
@@ -65,7 +72,7 @@ spc <- function (Vm, m=1:length(Vm), VVm=NULL, N=NA, V=NA, VV=NA,
   attr(spc, "V") <- V
   attr(spc, "expected") <- expected
   attr(spc, "hasVariances") <- variances
-  if (variances) attr(spc, "VV") <- VV 
+  if (variances) attr(spc, "VV") <- as.double(VV)
   
   class(spc) <- c("spc", class(spc))
   spc
