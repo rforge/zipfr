@@ -36,7 +36,7 @@ lnre.goodness.of.fit <- function(model, spc, n.estimated=0, m.max=15)
 
   ## compute chi-squared statistic X2 = err.vec %*% R^(-1) %*% err.vec
   x2 <- t(err.vec) %*% solve(R, err.vec)   # (p. 119, (3.59)) -- solve(R, e) returns R^(-1) %*% e, but should be more accurate and stable
-  p <- pchisq(x2, df=df, lower=FALSE)   # x2 has this chi-squared distribution under H0 (p. 119f, following (3.59))
+  p <- pchisq(x2, df=df, lower.tail=FALSE) # x2 has this chi-squared distribution under H0 (p. 119f, following (3.59))
 
   result <- data.frame(X2=x2, df=df, p=p)
   rownames(result) <- ""

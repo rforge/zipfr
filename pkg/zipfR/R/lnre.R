@@ -54,11 +54,11 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
     if (cost == "exact") m.max <- max(length(missing.param) - 1, 1)
       
     if (method == "Custom") { # custom estimation uses method call to fall back on default automatically
-      model <- estimate.model(model, spc=spc, param=missing.param, debug=debug,
+      model <- estimate.model(model, spc=spc, param.names=missing.param, debug=debug,
                               method=method, cost.function=cost.function, m.max=m.max)
     }
     else {
-      model <- estimate.model.lnre(model, spc=spc, param=missing.param, debug=debug,
+      model <- estimate.model.lnre(model, spc=spc, param.names=missing.param, debug=debug,
                                    method=method, cost.function=cost.function, m.max=m.max)
     }
     

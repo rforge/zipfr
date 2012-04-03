@@ -15,12 +15,12 @@ Rgamma <- function (a, x, lower=TRUE, log=!missing(base), base=exp(1))
 {
   if (log) {
     if (missing(base)) {
-      pgamma(x, shape=a, scale=1, lower.tail=lower, log=TRUE)
+      pgamma(x, shape=a, scale=1, lower.tail=lower, log.p=TRUE)
     } else {
-      pgamma(x, shape=a, scale=1, lower.tail=lower, log=TRUE) / log(base)
+      pgamma(x, shape=a, scale=1, lower.tail=lower, log.p=TRUE) / log(base)
     }
   } else {
-    pgamma(x, shape=a, scale=1, lower.tail=lower, log=FALSE)
+    pgamma(x, shape=a, scale=1, lower.tail=lower, log.p=FALSE)
   }
 }
 
@@ -28,12 +28,12 @@ Rgamma.inv <- function(a, y, lower=TRUE, log=!missing(base), base=exp(1))
 {
   if (log) {
     if (missing(base)) {
-      qgamma(y * log(base), shape=a, scale=1, lower.tail=lower, log=TRUE)
+      qgamma(y * log(base), shape=a, scale=1, lower.tail=lower, log.p=TRUE)
     } else {
-      qgamma(y, shape=a, scale=1, lower.tail=lower, log=TRUE)
+      qgamma(y, shape=a, scale=1, lower.tail=lower, log.p=TRUE)
     }
   } else {
-    qgamma(y, shape=a, scale=1, lower.tail=lower, log=FALSE)
+    qgamma(y, shape=a, scale=1, lower.tail=lower, log.p=FALSE)
   }
 }
 
@@ -72,12 +72,12 @@ Rbeta <- function (x, a, b, lower=TRUE, log=!missing(base), base=exp(1))
 {
   if (log) {
     if (missing(base)) {
-      pbeta(x, shape1=a, shape2=b, lower.tail=lower, log=TRUE)
+      pbeta(x, shape1=a, shape2=b, lower.tail=lower, log.p=TRUE)
     } else {
-      pbeta(x, shape1=a, shape2=b, lower.tail=lower, log=TRUE) / log(base)
+      pbeta(x, shape1=a, shape2=b, lower.tail=lower, log.p=TRUE) / log(base)
     }
   } else {
-    pbeta(x, shape1=a, shape2=b, lower.tail=lower, log=FALSE)
+    pbeta(x, shape1=a, shape2=b, lower.tail=lower, log.p=FALSE)
   }
 }
 
@@ -85,12 +85,12 @@ Rbeta.inv <- function (y, a, b, lower=TRUE, log=!missing(base), base=exp(1))
 {
   if (log) {
     if (missing(base)) {
-      qbeta(y, shape1=a, shape2=b, lower.tail=lower, log=TRUE)
+      qbeta(y, shape1=a, shape2=b, lower.tail=lower, log.p=TRUE)
     } else {
-      qbeta(y * log(base), shape1=a, shape2=b, lower.tail=lower, log=TRUE)
+      qbeta(y * log(base), shape1=a, shape2=b, lower.tail=lower, log.p=TRUE)
     }
   } else {
-    qbeta(y, shape1=a, shape2=b, lower.tail=lower, log=FALSE)
+    qbeta(y, shape1=a, shape2=b, lower.tail=lower, log.p=FALSE)
   }
 }
 
