@@ -4,8 +4,8 @@ Title: Statistical models for word frequency distributions
 Version: 0.6-6
 Depends: R (>= 2.10.1)
 Date: 2012-04-03
-Author: Stefan Evert <stefan.evert@uos.de>, Marco Baroni <marco.baroni@unitn.it>
-Maintainer: Stefan Evert <stefan.evert@uos.de>
+Author: Stefan Evert <stefan.evert@linguistik.uni-erlangen.de>, Marco Baroni <marco.baroni@unitn.it>
+Maintainer: Stefan Evert <stefan.evert@linguistik.uni-erlangen.de>
 Description: Statistical models and utilities for the analysis of word frequency distributions.
 	The utilities include functions for loading, manipulating and visualizing word frequency
 	data and vocabulary growth curves.  The package also implements several statistical 

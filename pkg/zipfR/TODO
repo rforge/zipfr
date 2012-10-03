@@ -1,0 +1,6 @@
+  - write/check documentation for bootstrapping and confidence intervals
+  - implement & document robust boostrapping confidence intervals (confint.lnre)
+  - write documentation for new posterior, Good-Turing, etc.
+  - complete implementation and documentation of posterior densities etc.
+  - auto.gzfile() helper no longer needed -> remove
+  - add encoding options to read.tfl
