@@ -14,9 +14,9 @@
 
 \usage{
 
-  read.tfl(file)
+  read.tfl(file, encoding="")
 
-  write.tfl(tfl, file)
+  write.tfl(tfl, file, encoding="")
 
 }
 
@@ -28,6 +28,8 @@
 
   \item{tfl}{a type frequency list, i.e.\ an object of class \code{tfl}}
 
+  \item{encoding}{if non-empty, specifies the character encoding of the disk
+    file to be read or written to.  See \code{\link{file}} for details.}
 }
 
 \value{

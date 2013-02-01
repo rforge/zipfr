@@ -1,6 +1,6 @@
-read.tfl <- function (file)
+read.tfl <- function (file, encoding="")
 {
-  tmp <- read.delim(auto.gzfile(file), as.is=TRUE, comment.char="")
+  tmp <- read.delim(auto.gzfile(file), as.is=TRUE, quote="", comment.char="", fileEncoding=encoding)
   vars <- colnames(tmp)
   if (!("f" %in% vars)) stop("required column 'f' missing from .tfl file ", file)
 
