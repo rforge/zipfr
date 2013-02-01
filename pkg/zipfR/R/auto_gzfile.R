@@ -1,16 +1,16 @@
 ##
 ## internal: automatically read/write compressed files based on filename extension (.gz)
 ##
-## This function returns either <filename> itself for an uncompressed file, or an unopened
-## gzfile() connection if <filename> ends in ".gz" (case-insensitive).
+## This function returns an unopened file() or gzfile() connection, depending on whether
+## <filename> ends in ".gz" (case-insensitive), with encoding set appropriately.
 ## It is safe to use file=auto.gzfile(filename) in read.table() and write.table().
 
-auto.gzfile <- function (filename) {
+auto.gzfile <- function (filename, encoding="") {
   stopifnot(length(filename) == 1, is.character(filename))
   if (length(grep("\\.gz$", filename, ignore.case=TRUE)) > 0) {
-    gzfile(filename)  # return connection to gzip-compressed file, which can be used for reading or writing
+    gzfile(filename, encoding="")  # return connection to gzip-compressed file, which can be used for reading or writing
   }
   else {
-    filename  # return filename (read.table and write.table will automatically open this file)
+    file(filename, encoding="")    # return file() connection for plain files
   }
 }
