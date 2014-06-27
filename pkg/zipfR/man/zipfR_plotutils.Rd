@@ -31,15 +31,15 @@
 
 \usage{
 
-  zipfR.pick.device(args=commandArgs())
+zipfR.pick.device(args=commandArgs())
 
-  zipfR.begin.plot(device=zipfR.par("device"), filename="",
-                   width=zipfR.par("width"), height=zipfR.par("height"),
-                   bg=zipfR.par("bg"), pointsize=zipfR.par("pointsize"))
+zipfR.begin.plot(device=zipfR.par("device"), filename="",
+                 width=zipfR.par("width"), height=zipfR.par("height"),
+                 bg=zipfR.par("bg"), pointsize=zipfR.par("pointsize"))
 
-  ## plotting commands go here
+## plotting commands go here
 
-  zipfR.end.plot()
+zipfR.end.plot(shutdown=FALSE)
 
 }
 
@@ -67,6 +67,9 @@
 
   \item{pointsize}{default point size for text in the plot}
 
+  \item{shutdown}{if set to FALSE (the default), on-screen plot devices
+    will be kept open for re-use in the next plot.  Specify \code{shutdown=TRUE}
+    to ensure that the screen device is closed after a series of related plots.} 
 }
 
 \details{
@@ -114,6 +117,12 @@
   matching supported graphics devices are found.  However, it is not an
   error to find no matching flag, and all unrecognized strings are
   silently ignored.
+  
+}
+
+\value{
+
+  \code{zipfR.begin.plot} invisibly returns the ID of the active plot device.
   
 }
 
