@@ -5,6 +5,10 @@ RECENT CHANGES to the 'zipfR' package:
     cumulative probability postplnre() and quantiles postqlnre() where available
   - Good-Turing estimates with gtlnre()
   - NB: these functions are only partially implemented so far
+
+Version 0.6-8
+
+  - zipfR tutorial has been rewritten as genuine package vignette
   - write.tfl() and read.tfl() now allow character encoding of the disk file to be
     declared; read.tfl() safely reads type strings containing quotes
   

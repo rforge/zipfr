@@ -10,9 +10,19 @@
 \alias{TigerPP.spc}
 \alias{TigerPP.emp.vgc}
 
-
-
 \title{Tiger NP and PP expansions (zipfR)}
+
+\usage{
+
+TigerNP.tfl
+TigerNP.spc
+TigerNP.emp.vgc
+
+TigerPP.tfl
+TigerPP.spc
+TigerPP.emp.vgc
+
+}
 
 \description{
 
@@ -26,23 +36,13 @@
 
 \examples{
 
-  data(TigerNP.tfl)
-  summary(TigerNP.tfl)
+TigerNP.tfl
+summary(TigerNP.spc)
+summary(TigerNP.emp.vgc)
 
-  data(TigerNP.spc)
-  summary(TigerNP.spc)
-
-  data(TigerNP.emp.vgc)
-  summary(TigerNP.emp.vgc)
-
-  data(TigerPP.tfl)
-  summary(TigerPP.tfl)
-
-  data(TigerPP.spc)
-  summary(TigerPP.spc)
-
-  data(TigerPP.emp.vgc)
-  summary(TigerPP.emp.vgc)
+TigerPP.tfl
+summary(TigerPP.spc)
+summary(TigerPP.emp.vgc)
 
 }
 
@@ -73,7 +73,7 @@
 \references{
 
 	Tiger Project:
-	\url{http://www.ims.uni-stuttgart.de/projekte/TIGER}
+	\url{http://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/tiger.html}
   
 }
 

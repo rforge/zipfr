@@ -71,7 +71,7 @@ check.par <- function (name, value) {
   }
   else if (name == "device") {
     supported <- c("x11", "png", "eps", "pdf")
-    if (.Platform$GUI == "AQUA") supported <- c("quartz", supported)
+    if (capabilities()["aqua"]) supported <- c("quartz", supported)
     value <- match.arg(value, supported)
   }
   else if (name == "init.par") {
