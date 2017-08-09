@@ -92,7 +92,7 @@
   }
   
   for \eqn{k = 1, \ldots, S}.  The parameters of the Zipf-Mandelbrot law
-  are \eqn{a > 1}, \eqn{b \ge 1} and \eqn{S} (see also Baayen 2001,
+  are \eqn{a > 1}, \eqn{b \ge 0} and \eqn{S} (see also Baayen 2001,
   101ff).  The fZM model is given by the \bold{type density function}
 
   \deqn{

@@ -7,6 +7,8 @@
 
 \description{
 
+  \bold{These functions are deprecated and should not be used in new code.}
+
   Conveniently create plots with different layout and in different
   output formats (both on-screen and various graphics file formats).
 
@@ -21,12 +23,11 @@
   scanning the specified vector for strings of the form \code{--pdf},
   \code{--eps}, etc.
   
-  \bold{NB:} These are advanced functions to fine-tune plotting
-  output. For basic plotting functionalities (that should be
-  sufficient in most cases) see \code{\link{plot.spc}} and
-  \code{\link{plot.vgc}} instead.
+  \bold{NB:} These are advanced functions intended to make it easier
+  to produce plots in different formats. Most users will only need
+  the basic plotting functionalities provided by \code{\link{plot.tfl}}, 
+  \code{\link{plot.spc}} and \code{\link{plot.vgc}}.
 
-  
 }
 
 \usage{
@@ -97,11 +98,17 @@ zipfR.end.plot(shutdown=FALSE)
   sufficient to switch from screen graphics to EPS files, or any other
   supported file format.
 
-  The factory-default graphics device is \code{x11}, which is available
-  on all major platforms (sometimes as an alias for a native device).
-  On Mac OS X, the Aqua GUI version of \R defaults to the \code{quartz}
-  device, which produces higher-quality images.
-
+  On-screen plotting devices are platform-dependent, and there may be
+  different devices available depending on which version of R is used.
+  For this reason, \code{zipfR.begin.plot} no longer allows users to
+  pick an on-screen device explicitly, but rather opens a default device
+  with \code{\link{dev.new}}. Note that this default device may write
+  output to a graphics file, but is usually set to a suitable on-screen
+  device in an interactive R session. In any case, users can change the
+  default by setting \code{options(device=...)}. For backwards-compatibility,
+  the device name \code{x11} (and \code{quartz} on macOS is accepted
+  for the default graphics device.
+  
   The \code{png} bitmap device may not be available on all platforms,
   and may also require access to an X server.  Since the width and
   height of a PNG device have to be specified in pixels rather than
@@ -135,11 +142,12 @@ zipfR.end.plot(shutdown=FALSE)
   
   \describe{
 
-    \item{\code{x11}}{X11 graphics device, available on all major
-      platforms (may be mapped to native device, e.g. in Windows)}
+    \item{\code{x11}}{opens the default graphic device set by
+      \code{\link{getOption}("device")}. In an interactive R sessions,
+      this will usually be a suitable on-screen device.}
 
-    \item{\code{quartz}}{high-quality graphics device with
-      anti-aliasing, available on Mac OS X only (Aqua GUI version)}
+    \item{\code{quartz}}{accepted as an alias for \code{x11} on
+      macOS platforms}
 
   }
 
@@ -163,12 +171,12 @@ zipfR.end.plot(shutdown=FALSE)
 
   \code{\link{zipfR.par}}, \code{\link{par}}
 
-  \code{\link{x11}}, \code{quartz}, \code{\link{postscript}},
+  \link{Devices}, \code{\link{dev.new}}, \code{\link{postscript}},
   \code{\link{pdf}} and \code{png} for more information about the
   supported graphics devices
 
-  \code{zipfR}-specific plotting commands are \code{\link{plot.spc}} and
-  \code{\link{plot.vgc}}
+  \code{zipfR}-specific plotting commands are \code{\link{plot.spc}}, 
+  \code{\link{plot.spc}} and \code{\link{plot.vgc}}
 
 }
 

@@ -1,10 +1,18 @@
 RECENT CHANGES to the 'zipfR' package:
 
+Work in progress:
   - posterior distribution for LNRE model as Bayesian prior, with density function
     postdlnre(), including log-transformed version postldlnre(), as well as
     cumulative probability postplnre() and quantiles postqlnre() where available
   - Good-Turing estimates with gtlnre()
-  - NB: these functions are only partially implemented so far
+
+Version 0.6-9
+
+  - maintenance release for compatibility with new CRAN checks and restrictions
+  - zipfR plotting utilities (zipfR.begin.plot, zipfR.end.plot, etc.) are deprecated;
+    device="x11" and device="quartz" now both open the default device with dev.new(),
+    which is not guaranteed to be an on-screen device
+  - update stale URLs and maintainer e-mail addresses
 
 Version 0.6-8
 

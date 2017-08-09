@@ -52,7 +52,7 @@ spc <- function (Vm, m=1:length(Vm), VVm=NULL, N=NA, V=NA, VV=NA,
     miss.V <- V - sum(Vm)
     if (miss.V < -1e-12 * V) stop("inconsistent data (V=",V," < sum(Vm)=",sum(Vm),")")
     # tolerant check for error condition miss.V * (m.max+1) > miss.N (because of rounding errors in expected frequency spectra)
-    if (miss.V * (m.max+1) - miss.N > 1e-12 * N) {
+    if (miss.V * (m.max+1) - miss.N > 1e-8 * N) {
       stop("inconsistent data (N=",N," should be at least ", sum(m * Vm) + miss.V * (m.max+1),")")
     }
   }

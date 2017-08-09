@@ -1,7 +1,7 @@
 \name{zipfR-package}
 \alias{zipfR-package}
 \alias{zipfR}
-\encoding{latin1}
+\encoding{utf8}
 \docType{package}
 \title{
 
@@ -19,9 +19,9 @@ in R.
 \details{
 
 The best way to get started with zipfR is to read the tutorial, which
-you can find via the HTML documentation (follow the Overview link);
+you can find as a package vignettte via the HTML documentation;
 you can also download it from
-\url{http://purl.org/stefan.evert/zipfR/}
+\url{http://zipfr.r-forge.r-project.org/#start}
 
 zipfR is released under the GNU General Public License
 (\url{http://www.gnu.org/copyleft/gpl.html})
@@ -31,44 +31,40 @@ zipfR is released under the GNU General Public License
 
 \seealso{
 
-	The zipfR tutorial: available from
-	\url{http://purl.org/stefan.evert/zipfR/} and via the HTML
-	documentation (by following the Overview link)
+  The zipfR tutorial: available as a package vignette and online from
+  \url{http://zipfr.r-forge.r-project.org/#start}.
 
-	Some good entry points into the zipfR documentation are
- 	 be \code{\link{spc}}, \code{\link{vgc}}, \code{\link{tfl}},
- 	 \code{\link{read.spc}}, \code{\link{read.tfl}},
- 	 \code{\link{read.vgc}}, \code{\link{lnre}},
- 	 \code{\link{lnre.vgc}}, \code{\link{plot.spc}},
- 	 \code{\link{plot.vgc}}
+  Some good entry points into the zipfR documentation are
+  be \code{\link{spc}}, \code{\link{vgc}}, \code{\link{tfl}},
+  \code{\link{read.spc}}, \code{\link{read.tfl}},
+  \code{\link{read.vgc}}, \code{\link{lnre}},
+  \code{\link{lnre.vgc}}, \code{\link{plot.spc}},
+  \code{\link{plot.vgc}}
 
-	 The same authors also develop the \code{corpora} library
-	 (available on CRAN) supporting simple inferential statistics
-	 for corpus analysis
+  Harald Baayen's LEXSTATS tools, which implement a wider range of LNRE models:
+  \url{http://extras.springer.com/2001/978-0-7923-7017-8/lexstats-2.0}
 
-	 Harald Baayen's LEXSTATS tools:
-	 \url{http://www.mpi.nl/world/persons/private/baayen/software.html}
-
-	 Stefan Evert's UCS tools:
-	 \url{http://collocations.de/}
+  Stefan Evert's UCS tools for collocation analysis, which include functions that have been integrated into 
+  \bold{zipfR}:
+  \url{http://collocations.de/software.html}
 
 }
 
-\author{ Stefan Evert <\email{stefan.evert@uos.de}> and Marco Baroni
+\author{ Stefan Evert <\email{stefan.evert@fau.de}> and Marco Baroni
 <\email{marco.baroni@unitn.it}>
 
-Maintainer: Stefan Evert <\email{stefan.evert@uos.de}>
+Maintainer: Stefan Evert <\email{stefan.evert@fau.de}>
 }
 
 \references{
 
-  zipfR Website: \url{http://purl.org/stefan.evert/zipfR/}
+  zipfR Website: \url{http://zipfR.r-forge.r-project.org/}
 
   Baayen, R. Harald (2001). \emph{Word Frequency Distributions.} Kluwer,
   Dordrecht.
 
   Baroni, Marco (to appear). Distributions in text. To appear in: A.
-  Lüdeling and M. Kytö (eds.), \emph{Corpus Linguistics. An
+  LÃ¼deling and M. KytÃ¶ (eds.), \emph{Corpus Linguistics. An
   International Handbook}, chapter 39. Mouton de Gruyter, Berlin.
 
   Evert, Stefan (2004). \emph{The Statistics of Word Cooccurrences: Word
@@ -86,7 +82,6 @@ Maintainer: Stefan Evert <\email{stefan.evert@uos.de}>
   Evert, Stefan and Baroni, Marco (2006). The zipfR library: Words and
   other rare events in R. \emph{useR! 2006: The second R user
   conference}.
-
 
 }
 

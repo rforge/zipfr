@@ -10,7 +10,8 @@
 
 \usage{
 
-  lnre.bootstrap(model, N, ESTIMATOR, STATISTIC, replicates=100, simplify=FALSE, verbose=TRUE, \dots)
+  lnre.bootstrap(model, N, ESTIMATOR, STATISTIC, replicates=100,
+                 simplify=TRUE, verbose=TRUE, seed=NULL, \dots)
 
 }
 
@@ -30,10 +31,12 @@
 
   \item{replicates}{a single positive integer, specifying the number of bootstrap samples to be generated}
 
-  \item{simplify}{if \code{TRUE}, attempt to combine bootstrapping results into vector, matrix or data frame (otherwise, returns list)}
+  \item{simplify}{if \code{TRUE}, use \code{rbind()} to combine list of results into a single data structure. In this case, the estimator should return either a vector of fixed length or a single-row data frame.}
 
   \item{verbose}{if \code{TRUE}, shows progress bar in R console during execution (which can take quite a long time)}
 
+  \item{seed}{a single integer value used to initialize the RNG in order to generate reproducible results}
+  
   \item{\dots}{any further arguments are passed through to the \code{ESTIMATOR} callback function}
 
 }

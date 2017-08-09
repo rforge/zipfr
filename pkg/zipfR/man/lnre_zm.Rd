@@ -81,7 +81,7 @@
     pi_k = C / (k + b)^a
   }
 
-  with parameters \eqn{a > 1} and \eqn{b \ge 1} (see also Baayen 2001,
+  with parameters \eqn{a > 1} and \eqn{b \ge 0} (see also Baayen 2001,
   101ff) as a LNRE model.  It is given by the \bold{type density
   function}
 

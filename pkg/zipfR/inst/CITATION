@@ -3,7 +3,7 @@ note <- sprintf("(R package version %s of %s)", meta$Version, meta$Date)
 
 bibentry("inproceedings",
   author = c(person("Stefan","Evert"), person("Marco","Baroni")),
-  title = "{\\em zipfR}: Word Frequency Distributions in {R}",
+  title = "\\emph{zipfR}: Word Frequency Distributions in {R}",
   booktitle = "Proceedings of the 45th Annual Meeting of the Association for Computational Linguistics, Posters and Demonstrations Sessions",
   address = "Prague, Czech Republic",
   year = "2007",

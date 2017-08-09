@@ -34,8 +34,8 @@ zipfR.begin.plot <- function (device=zipfR.par("device"), filename="",
     ## open new device of specified type with specified parameters
     png.res <- 150                        # default resolution for PNG files is 150 dpi
     switch(device,
-           x11 = X11(width=width, height=height, bg=bg, pointsize=pointsize),
-           quartz = quartz(width=width, height=height, bg=bg, pointsize=pointsize),
+           x11 = dev.new(width=width, height=height, bg=bg, pointsize=pointsize),
+           quartz = dev.new(width=width, height=height, bg=bg, pointsize=pointsize),
            png = png(filename=paste(filename, "png", sep="."), width=width*png.res, height=height*png.res, res=png.res, bg=bg, pointsize=pointsize),
            eps = postscript(file=paste(filename, "eps", sep="."), width=width, height=height, bg=bg, pointsize=pointsize, onefile=FALSE, horizontal=FALSE, paper="special"),
            pdf = pdf(file=paste(filename, "pdf", sep="."), width=width, height=height, bg=bg, pointsize=pointsize, onefile=FALSE, paper="special")
