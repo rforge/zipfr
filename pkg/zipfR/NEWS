@@ -6,7 +6,7 @@ Work in progress:
     cumulative probability postplnre() and quantiles postqlnre() where available
   - Good-Turing estimates with gtlnre()
 
-Version 0.6-9
+Version 0.6-10
 
   - maintenance release for compatibility with new CRAN checks and restrictions
   - zipfR plotting utilities (zipfR.begin.plot, zipfR.end.plot, etc.) are deprecated;
