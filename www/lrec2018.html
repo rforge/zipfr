@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+<title>LREC 2018 Tutorial</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="author" content="Stefan Evert" />
+  <meta name="description" content="LREC 2018 Tutorial: What every computational linguist should know about type-token distributions and Zipf's law" />
+  <meta name="keywords" content="Lexical Statistics, Zipf, Zipf's Law, LNRE, Word Frequency Distributions, NLP, Computational Linguistics, Corpus-based Linguistics, R" />
+  <meta name="robots" content="index, follow" />
+</head>
+
+<body>
+  <table width="100%">
+    <tr>
+      <td width="200px" align="left" valign="top"><a href="index.html"><img src="zipfR_logo_plain.320.png" width="150"/></a></td>
+      <td valign="top">
+        <h1 style="color:#3050A0">What Every Computational Linguist Should Know About Type-Token Distributions and Zipf&rsquo;s Law</h1>
+        <h2>Tutorial at LREC 2018 (Miyazaki) &mdash; <a href="https://registration.lrec-conf.org" target="_blank">Registration</a></h2>
+      </td>
+      <td width="200px" align="right" valign="top"><a href="http://lrec2018.lrec-conf.org/en/"><img src="materials/LREC2018/logo_lrec2018.png" width="200"/></a></td>
+  </table>
+
+  <hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+
+  <p>
+    This tutorial (i) introduces the mathematical foundations of statistical models of type-token distributions (known as LNRE models, for Large Number of Rare Events), including recent work on bootstrapped confidence sets and corrections for non-randomness; (ii) shows how to put these models to practical use in NLP tasks with the zipfR implementation, an add-on package for the widely-used statistical programming environment R; and (iii) discusses applications of type-token statistics with a particular focus on quantitative measures of productivity and type-richness.
+  </p>
+    
+  <p>
+    Its aim is to equip participants with the knowledge, skills and tools to deal properly with low-frequency data and highly skewed type-token distributions in their linguistic research and NLP applications.
+  </p>
+  
+  <hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+  <h3>Motivation</h3>
+  
+  <p>
+    Type-token statistics based on Zipf’s law play an important supporting role in many natural language processing tasks as well as in the linguistic analysis of corpus data.  On the one hand, type-token analysis has been applied to tasks such as Good-Turing smoothing, stylometrics and authorship attribution, patholinguistics, measuring morphological productivity , studies of the type-richness e.g. of an author’s vocabulary, as well as coverage estimates for treebank grammars and other language models.  On the other hand, virtually all probability estimates obtained from corpus data—ranging from psycholinguistic frequency norms over the collocational strength of multiword expressions to supervised and unsupervised training of statistical models—are affected by the skewed frequency distribution of natural language expressed by Zipf’s law.  Recent work has shown that the significance of low-frequency data can be overestimated substantially even by methods previously believed to be robust, such as the log-likelihood ratio.
+  </p>
+
+  <p>
+    However, many researchers are not familiar with the specialised mathematical techniques required for a statistical analysis of type-token distributions, in particular so-called LNRE models based on Zipfian type density functions (Baayen 2001).  Most off-the-shelf NLP software packages also fail to provide reliable estimation methods for Zipf-like frequency distributions and other necessary functionality.  As a result, arbitrary cutoff thresholds for low-frequency data are applied rather than adjusting statistical estimators; type-token analysis, if carried out at all, is based on intuitive, but problematic measures such as the type-token ratio (TTR); and empirical observations of coverage or vocabulary size cannot reliably be extrapolated to larger sample sizes.
+  </p>
+  
+  
+  <hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+ 
+</body>
+
+</html>
