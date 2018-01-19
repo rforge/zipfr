@@ -19,31 +19,74 @@
         <h1 style="color:#3050A0">What Every Computational Linguist Should Know About Type-Token Distributions and Zipf&rsquo;s Law</h1>
         <h2>Tutorial at LREC 2018 (Miyazaki) &mdash; <a href="https://registration.lrec-conf.org" target="_blank">Registration</a></h2>
       </td>
-      <td width="200px" align="right" valign="top"><a href="http://lrec2018.lrec-conf.org/en/"><img src="materials/LREC2018/logo_lrec2018.png" width="200"/></a></td>
+      <td width="200px" align="right" valign="top"><a href="http://lrec2018.lrec-conf.org/en/" target="_blank"><img src="materials/LREC2018/logo_lrec2018.png" width="200"/></a></td>
   </table>
 
   <hr size="2" noshade="noshade"/> <!-- ============================================================ -->
 
   <p>
-    This tutorial (i) introduces the mathematical foundations of statistical models of type-token distributions (known as LNRE models, for Large Number of Rare Events), including recent work on bootstrapped confidence sets and corrections for non-randomness; (ii) shows how to put these models to practical use in NLP tasks with the zipfR implementation, an add-on package for the widely-used statistical programming environment R; and (iii) discusses applications of type-token statistics with a particular focus on quantitative measures of productivity and type-richness.
+    This tutorial (i) introduces the mathematical foundations of statistical models of type-token distributions (known as LNRE models, for Large Number of Rare Events), including recent work on bootstrapped confidence sets and corrections for non-randomness; (ii) shows how to put these models to practical use in NLP tasks with the <a href="index.html"><em>zipfR</em></a> implementation, an add-on package for the widely-used statistical programming environment R; and (iii) discusses applications of type-token statistics with a particular focus on quantitative measures of productivity and type-richness. 
   </p>
     
   <p>
-    Its aim is to equip participants with the knowledge, skills and tools to deal properly with low-frequency data and highly skewed type-token distributions in their linguistic research and NLP applications.
+    Its aim is to equip participants with the knowledge, skills and tools to deal properly with low-frequency data and highly skewed type-token distributions in their linguistic research and NLP applications.  
+  </p>
+  
+  <p>
+    The tutorial takes place on Monday, 7 May 2018 (afternoon session) and will be taught by <a href="http://www.stefan-evert.de/" target="_blank">Stefan Evert</a> <img src="link_external_blue.png" alt="external link"/> (FAU Erlangen-Nürnberg).
   </p>
   
   <hr size="2" noshade="noshade"/> <!-- ============================================================ -->
   <h3>Motivation</h3>
   
   <p>
-    Type-token statistics based on Zipf’s law play an important supporting role in many natural language processing tasks as well as in the linguistic analysis of corpus data.  On the one hand, type-token analysis has been applied to tasks such as Good-Turing smoothing, stylometrics and authorship attribution, patholinguistics, measuring morphological productivity , studies of the type-richness e.g. of an author’s vocabulary, as well as coverage estimates for treebank grammars and other language models.  On the other hand, virtually all probability estimates obtained from corpus data—ranging from psycholinguistic frequency norms over the collocational strength of multiword expressions to supervised and unsupervised training of statistical models—are affected by the skewed frequency distribution of natural language expressed by Zipf’s law.  Recent work has shown that the significance of low-frequency data can be overestimated substantially even by methods previously believed to be robust, such as the log-likelihood ratio.
+    Type-token statistics based on Zipf’s law play an important supporting role in many natural language processing tasks as well as in the linguistic analysis of corpus data.  On the one hand, type-token analysis has been applied to tasks such as Good-Turing smoothing, stylometrics and authorship attribution, patholinguistics, measuring morphological productivity, studies of the type-richness e.g. of an author’s vocabulary, as well as coverage estimates for treebank grammars and other language models.  On the other hand, virtually all probability estimates obtained from corpus data—ranging from psycholinguistic frequency norms over the collocational strength of multiword expressions to supervised and unsupervised training of statistical models—are affected by the skewed frequency distribution of natural language expressed by Zipf’s law.  Recent work has shown that the significance of low-frequency data can be overestimated substantially even by methods previously believed to be robust, such as the log-likelihood ratio.
   </p>
 
   <p>
-    However, many researchers are not familiar with the specialised mathematical techniques required for a statistical analysis of type-token distributions, in particular so-called LNRE models based on Zipfian type density functions (Baayen 2001).  Most off-the-shelf NLP software packages also fail to provide reliable estimation methods for Zipf-like frequency distributions and other necessary functionality.  As a result, arbitrary cutoff thresholds for low-frequency data are applied rather than adjusting statistical estimators; type-token analysis, if carried out at all, is based on intuitive, but problematic measures such as the type-token ratio (TTR); and empirical observations of coverage or vocabulary size cannot reliably be extrapolated to larger sample sizes.
+    However, many researchers are not familiar with the specialised mathematical techniques required for a statistical analysis of type-token distributions, in particular so-called LNRE models based on Zipfian type density functions (<a href="http://www.springer.com/de/book/9780792370178" target="_blank">Baayen 2001</a> <img src="link_external_blue.png" alt="external link"/>).  Most off-the-shelf NLP software packages also fail to provide reliable estimation methods for Zipf-like frequency distributions and other necessary functionality.  As a result, arbitrary cutoff thresholds for low-frequency data are applied rather than adjusting statistical estimators; type-token analysis, if carried out at all, is based on intuitive, but problematic measures such as the type-token ratio (TTR); and empirical observations of coverage or vocabulary size cannot reliably be extrapolated to larger sample sizes.
   </p>
   
+  <hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+  <h3>Tutorial outline</h3>
   
+  <dl>
+    <dt><strong>Motivation</strong></dt>
+    <dd>
+      Introduction to Zipf's law and type-token distributions. Overview of applications and their requirements
+    </dd>
+
+    <dt><strong>Basic concepts &amp; notation</strong></dt>
+    <dd>
+      Type-frequency rankings, vocabulary growth curve, frequency spectrum, Zipf-Mandelbrot law. Overview of quantitative measures of lexical diversity and productivity.
+    </dd>
+    
+    <dt><strong>LNRE models</strong></dt>
+    <dd>
+      Statistical analysis of type-token distributions with LNRE models: type density function, expected frequency spectrum, asymptotic variance, goodness-of-fit, parameter estimation, confidence intervals and significance tests. LNRE models as a basis for parametric simulation studies.
+    
+    <dt><strong>Applications &amp; examples</strong></dt>
+    <dd>
+      Hands-on examples in R/<em>zipfR</em> for various applications, including coverage estimates (<em>How many typos are there on the internet?</em>), literary stylometry (<em>How many words did Shakespeare know?</em>), patholinguistics (<em>Is lexical diversity an early indicator of dementia?</em>), morphological productivity (<em>Which word-formation processes are productive?</em>) and Zipfian priors (<em>Good-Turing smoothing, properly chance-corrected association measures</em>).
+    </dd>
+
+    <dt><strong>Challenges</strong></dt>
+    <dd>
+      Problems affecting LNRE models: non-randomness of texts, deviations from the Zipf-Mandelbrot law, robustness of parameter estimation from small samples. Recent approaches for improving LNRE models and significance tests are discussed. 
+    </dd>
+  </dl> 
+  
+  <hr size="2" noshade="noshade"/> <!-- ============================================================ -->
+  <h3>Code &amp; data</h3>
+ 
+  <p>
+    Extensive hands-on examples will be demonstrated based on the LNRE implementation in the <a href="index.html"><em>zipfR</em></a> package for <a href="http://www.r-project.org/" target="_blank">R</a> <img src="link_external_blue.png" alt="external link"/>.  Since the tutorial does not leave enough room for a practice session, the full example code will be made available here for download with detailed explanations.
+  </p>
+  
+  <p>
+    All relevant data sets will be integrated into a new version of <em>zipfR</em> to be released shortly before the tutorial.
+  </p>
+ 
   <hr size="2" noshade="noshade"/> <!-- ============================================================ -->
  
 </body>
