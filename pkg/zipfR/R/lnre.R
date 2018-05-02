@@ -1,8 +1,8 @@
 lnre <- function (type=c("zm", "fzm", "gigp"),
                   spc=NULL, debug=FALSE,
-                  cost=c("chisq", "linear", "smooth.linear", "mse", "exact"),
-                  m.max=15, 
-                  method=c("Custom", "NLM", "Nelder-Mead", "SANN"),
+                  cost=c("gof", "chisq", "linear", "smooth.linear", "mse", "exact"),
+                  m.max=15, runs=5,
+                  method=c("Nelder-Mead", "NLM", "BFGS", "SANN", "Custom"),
                   exact=TRUE, sampling=c("Poisson", "multinomial"),
                   bootstrap=0, verbose=TRUE,
                   ...)
@@ -20,16 +20,19 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
   }
 
   cost.function <- switch(cost,         # implementation of chosen cost function
+                          gof=lnre.cost.gof,
                           chisq=lnre.cost.chisq,
                           linear=lnre.cost.linear,
                           smooth.linear=lnre.cost.smooth.linear,
                           mse=lnre.cost.mse,
-                          exact=lnre.cost.mse) # use MSE cost with adjusted value for m.max
+                          exact=lnre.cost.mse, # use MSE cost with adjusted value for m.max
+                          stop("internal error - can't find suitable cost function"))
 
   constructor <- switch(type,           # select appropriate constructor function
                         zm = lnre.zm,
                         fzm = lnre.fzm,
-                        gigp = lnre.gigp)
+                        gigp = lnre.gigp,
+                        stop("internal error - can't find suitable LNRE model constructor"))
 
   model <- constructor(param=user.param) # initialize model with user-specifid parameter values
   model$exact <- exact
@@ -50,22 +53,36 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
       cat("Default values for other parameters:\n")
       print(as.data.frame(model$param))
     }
-    ## adjust m.max for "exact" parameter estimation (to match V and first V_m exactly)
-    if (cost == "exact") m.max <- max(length(missing.param) - 1, 1)
+
+    if (cost == "exact") {
+      ## adjust m.max for "exact" parameter estimation (to match V and first V_m exactly)
+      m.max <- max(length(missing.param) - 1, 1)
+    }
+    else if (missing(m.max)) {
+      ## otherwise auto-adjust unspecified m.max to avoid low-frequency spectrum elements with poor normal approximation
+      keep <- Vm(spc, 1:m.max) >= 5
+      if (!all(keep)) {
+        new.max <- min(which(!keep)) - 1
+        new.max <- max(new.max, length(missing.param) + 2) # need at least as many spectrum elements as parameters to be estimated (better a few more)
+        m.max <- min(m.max, new.max)
+      }
+    }
       
     if (method == "Custom") { # custom estimation uses method call to fall back on default automatically
       model <- estimate.model(model, spc=spc, param.names=missing.param, debug=debug,
-                              method=method, cost.function=cost.function, m.max=m.max)
+                              method=method, cost.function=cost.function, m.max=m.max, runs=runs)
     }
     else {
       model <- estimate.model.lnre(model, spc=spc, param.names=missing.param, debug=debug,
-                                   method=method, cost.function=cost.function, m.max=m.max)
+                                   method=method, cost.function=cost.function, m.max=m.max, runs=runs)
     }
     
     model$spc <- spc
     
     if (bootstrap > 0) {
-      model$bootstrap <- lnre.bootstrap(model, N(spc), ESTIMATOR=lnre, STATISTIC=identity, replicates=bootstrap, debug=FALSE, verbose=verbose, type=type, cost=cost, m.max=m.max, method=method, exact=exact, sampling=sampling, ...)
+      model$bootstrap <- lnre.bootstrap(
+        model, N(spc), ESTIMATOR=lnre, STATISTIC=identity, replicates=bootstrap, simplify=FALSE, verbose=verbose,
+        type=type, cost=cost, m.max=m.max, method=method, exact=exact, sampling=sampling, debug=FALSE, ...)
     }
   }
   else {

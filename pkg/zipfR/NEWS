@@ -1,6 +1,16 @@
 RECENT CHANGES to the 'zipfR' package:
 
-Work in progress:
+Version 0.7:
+
+  - default minimization algorithm changed to "Nelder-Mead", since "Custom" often
+    failed to converge on problematic data sets
+  - new default cost function "gof" based on the multivariate chi-squared statistic,
+    which is closely related to maximum likelihood estimation
+  - parameter optimization now performs multiple runs with different random start
+    values by default, improving robustness of the parameter estimation
+  - lnre.bootstrap() performs parametric bootstrapping from an LNRE model
+  - bootstrapped confidence intervals for model parameters can be obtained with
+    confint() applied to an LNRE model object with bootstrap replicates
   - posterior distribution for LNRE model as Bayesian prior, with density function
     postdlnre(), including log-transformed version postldlnre(), as well as
     cumulative probability postplnre() and quantiles postqlnre() where available

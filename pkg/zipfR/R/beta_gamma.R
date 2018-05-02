@@ -28,9 +28,9 @@ Rgamma.inv <- function(a, y, lower=TRUE, log=!missing(base), base=exp(1))
 {
   if (log) {
     if (missing(base)) {
-      qgamma(y * log(base), shape=a, scale=1, lower.tail=lower, log.p=TRUE)
-    } else {
       qgamma(y, shape=a, scale=1, lower.tail=lower, log.p=TRUE)
+    } else {
+      qgamma(y * log(base), shape=a, scale=1, lower.tail=lower, log.p=TRUE)
     }
   } else {
     qgamma(y, shape=a, scale=1, lower.tail=lower, log.p=FALSE)

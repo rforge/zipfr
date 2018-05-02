@@ -1,9 +1,10 @@
 estimate.model.lnre.fzm <- function (model, spc, param.names,
                                      method, cost.function, m.max=15,
-                                     debug=FALSE, ...)
+                                     runs=1, debug=FALSE, ...)
 {
   if (! inherits(model, "lnre.fzm")) stop("argument must be object of class 'lnre.fzm'")
-
+  if (runs > 1) warning("multiple estimation runs not yet implemented for Custom method (please set runs=1)")
+  
   ## root function used to solve implicit equation E[V(N)] = V for B
   B.root.function <- function (B, N, V, model) {
     B <- B
@@ -116,7 +117,7 @@ estimate.model.lnre.fzm <- function (model, spc, param.names,
 
     model <- model$util$update(model, P.estimate, transformed=TRUE)
   }
-  else if (length(param.names) == 1) {  # one-dimensional minimization with NLM
+  else if (length(param.names) >= 1) {  # one-dimensional minimization with NLM
     result <- nlm(compute.cost, param.values, print.level=debug, stepmax=10, steptol=1e-12,
                   param.names=param.names, model=model, spc=spc, m.max=m.max, debug=debug)
 

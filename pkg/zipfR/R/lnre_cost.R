@@ -4,6 +4,33 @@
 
 ## common signature: lnre.cost(model, spc, m.max=15)
 
+## LIKELIHOOD / GOODNESS-OF-FIT (lnre.cost.gof)
+## compute goodness-of-fit statistic from multivariate chi-squared test
+##  - under the multivariate normal approximation, likelihood is a monotonic function of this statistic
+##  - no automatic adjustment of m.max to avoid inaccurate normal approximation for small E[Vm] and V[Vm]
+##  - see lnre.goodness.of.fit for explanation of the computation and references
+lnre.cost.gof <- function (model, spc, m.max=15)
+{
+  N <- N(spc)
+  V <- V(spc)
+  m.vec <- seq_len(m.max)
+  Vm <- Vm(spc, m.vec)
+  
+  E.Vm <- EVm(model, m.vec, N)
+  E.V <- EV(model, N)
+  E.Vm.2N <- EVm(model, seq_len(2 * m.max), 2 * N)
+  E.V.2N <- EV(model, 2 * N)
+ 
+  err.vec <- c(V, Vm) - c(E.V, E.Vm)
+  cov.Vm.Vk <- diag(E.Vm, nrow=m.max) -
+    outer(m.vec, m.vec, function (m, k) choose(m+k, m) * E.Vm.2N[m+k] / 2^(m+k))
+  cov.Vm.V <- E.Vm.2N[m.vec] / 2^(1:m.max)
+  R <- rbind(c(VV(model, N), cov.Vm.V),
+             cbind(cov.Vm.V, cov.Vm.Vk))
+  t(err.vec) %*% solve(R, err.vec)
+}
+
+
 ## CHI-SQUARED COST FUNCTION (lnre.cost.chisq)
 ## compute standard chi-squared statistic for observed data wrt. model
 ##  - observations are V_1, ..., V_m.max and V+ = V - (V_1 + ... + V_m.max)

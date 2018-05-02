@@ -46,12 +46,12 @@ lnre.bootstrap <- function (model, N, ESTIMATOR, STATISTIC, replicates=100, simp
 }
 
 ## ***TODO*** -- implement and document prediction intervals as predict.lnre method (? or in EV, EVm, ...)
-bootstrap.extrap <- function (model, replicates=100, ...) {
-  lnre.bootstrap(
-    model,
-    function (spc, ...) lnre(model$type, spc, ...),
-    function (m, ...) c(EV(m, 2*N(m)), EVm(m, 1, 2*N(m))),
-    col.names=c("EV.2N", "EV1.2N"), verbose=TRUE, replicates=replicates,
-    ...
-  )
-}
+## bootstrap.extrap <- function (model, replicates=100, ...) {
+##   lnre.bootstrap(
+##     model,
+##     function (spc, ...) lnre(model$type, spc, ...),
+##     function (m, ...) c(EV(m, 2*N(m)), EVm(m, 1, 2*N(m))),
+##     col.names=c("EV.2N", "EV1.2N"), verbose=TRUE, replicates=replicates,
+##     ...
+##   )
+## }

@@ -14,9 +14,9 @@
 
   lnre(type=c("zm", "fzm", "gigp"),
        spc=NULL, debug=FALSE,
-       cost=c("chisq", "linear", "smooth.linear", "mse", "exact"),
-       m.max=15,
-       method=c("Custom", "NLM", "Nelder-Mead", "SANN"),
+       cost=c("gof", "chisq", "linear", "smooth.linear", "mse", "exact"),
+       m.max=15, runs=5,
+       method=c("Nelder-Mead", "NLM", "BFGS", "SANN", "Custom"),
        exact=TRUE, sampling=c("Poisson", "multinomial"),
        bootstrap=0, verbose=TRUE,
        \dots)
@@ -39,8 +39,15 @@
     Functions" below for a listing of available cost functions).}
   
   \item{m.max}{number of spectrum elements considered by the cost
-    function (see "Cost Functions" below for more information)}
+    function (see "Cost Functions" below for more information). If
+    unspecified, the default is automatically adjusted to avoid small
+    spectrum elements that may be mathematically unreliable.}
 
+  \item{runs}{number of parameter optimization runs with random
+    initialization. Parameters from the run that achieves the smallest
+    value of the cost function will be selected. Currently not supported
+    for \code{method="Custom"}, please use \emph{runs=1} in this case.}
+  
   \item{method}{algorithm used for parameter estimation, by minimizing
     the value of the cost function (see "Parameter Estimation" below for
     details, and "Minimization Algorithms" for descriptions of the
@@ -66,8 +73,8 @@
   \item{bootstrap}{number of bootstrap samples used to estimate confidence
     intervals for estimated model parameters.  Recommended values are
     \code{bootstrap=100} or \code{bootstrap=200}.  Bootstrapping can be very
-    time-consuming and should only be used if the underlying sample size
-    isn't too large (roughly, up to 1 million tokens).  See
+    time-consuming and should not be used if the underlying sample size
+    is very large (roughly, more than 1 million tokens).  See
     \code{\link{lnre.bootstrap}} for further information and warnings.}
 
   \item{verbose}{if \code{TRUE}, a progress bar will be shown in the R console
@@ -131,6 +138,11 @@
   observed frequency spectrum, the automatic estimation procedure may
   result in a poor and counter-intuitive fit, or may fail altogether.
 
+  Usually, multiple runs of the minimization are performed with different
+  random start values. An error will only be reported if all the estimation
+  runs fail. Such multiple runs have not been implemented for the \code{Custom}
+  minimization method yet; please specify \code{runs=1} in this case.
+  
   Users can influence parameter estimation by choosing from a range of
   predefined cost functions and from several minimization algorithms, as
   described in the following sections.  Some experimentation with the
@@ -150,11 +162,16 @@
 
   \describe{
 
+    \item{\code{gof}:}{the multivariate chi-squared statistic used for
+      goodness-of-fit testing (\code{\link{lnre.goodness.of.fit}}).
+      This cost function corresponds (almost) to maximum-likelihood
+      parameter estimation and is used by default.}
+    
     \item{\code{chisq}:}{cost function based on a simplified version of
       the multivariate chi-squared test for goodness-of-fit (assuming
-      independence between the random variables \eqn{V_m}).  This cost
-      function usually achieves the best results in the goodness-of-fit
-      evaluation and is used by default.}
+      independence between the random variables \eqn{V_m}).
+      % This cost function usually achieves the best results in the goodness-of-fit evaluation and is used by default.
+    }
       
     \item{\code{linear}:}{linear cost function, which sums over the
       absolute differences between observed and expected values.  This
@@ -197,8 +214,35 @@
 
   \describe{
 
-    \item{\code{Custom}:}{by default, a custom estimation procedure is
-      used for each type of LNRE model, which may exploit special
+    \item{\code{Nelder-Mead}:}{the Nelder-Mead algorithm, implemented by
+      the \code{optim} function, performs minimization without using
+      derivatives.  Parameter estimation is therefore very robust, while
+      almost as fast and accurate as the \code{NLM} method. 
+      \code{Nelder-Mead} is the default algorithm and is also used
+      internally by most custom minimization procedures (see below).}
+
+    \item{\code{NLM}:}{a standard Newton-type algorithm for nonlinear
+      minimization, implemented by the \code{\link{nlm}} function, which
+      makes use of numerical derivatives of the cost function.
+      \code{NLM} minimization converges quickly and obtains very precise
+      parameter estimates (for a local minimum of the cost function),
+      but it is not very stable and may cause parameter estimation to
+      fail altogether.}
+
+    \item{\code{SANN}:}{minimization by simulated annealing, also provided by the
+      \code{optim} function.  Like \code{Nelder-Mead}, this algorithm is
+      very robust because it avoids numerical derivatives, but
+      convergence is extremely slow.  In some cases, \code{SANN} might
+      produce a better fit than \code{Nelder-Mead} (if the latter
+      converges to a suboptimal local minimum).}
+
+    \item{\code{BFGS}:}{a quasi-Newton method developed by Broyden, Fletcher,
+      Goldfarb and Shanno. This minimization algorithm is efficient, but
+      should be applied with care as it will often overshoot the valid range of
+      parameter values.}
+    
+    \item{\code{Custom}:}{a custom estimation procedure provided 
+      for certain types of LNRE model, which may exploit special
       mathematical properties of the model in order to calculate one or
       more of the parameter values directly.  For example, one parameter
       of the ZM and fZM models can easily be determined from the
@@ -211,28 +255,6 @@
       procedure has been implemented for the selected LNRE model,
       \code{lnre} falls back on the \code{Nelder-Mead} or \code{NLM}
       algorithm.}
-
-    \item{\code{NLM}:}{a standard Newton-type algorithm for nonlinear
-      minimization, implemented by the \code{\link{nlm}} function, which
-      makes use of numerical derivatives of the cost function.
-      \code{NLM} minimization converges quickly and obtains very precise
-      parameter estimates (for a local minimum of the cost function),
-      but it is not very stable and may cause parameter estimation to
-      fail altogether.}
-
-    \item{\code{Nelder-Mead}:}{the Nelder-Mead algorithm, implemented by
-      the \code{optim} function, performs minimization without using
-      derivatives.  Parameter estimation is therefore very robust, while
-      almost as fast and accurate as the \code{NLM} method.
-      \code{Nelder-Mead} is also used internally by most custom
-      minimization algorithms.}
-
-    \item{SANN}{minimization by simulated annealing, also provided by the
-      \code{optim} function.  Like \code{Nelder-Mead}, this algorithm is
-      very robust because it avoids numerical derivatives, but
-      convergence is extremely slow.  In some cases, \code{SANN} might
-      produce a better fit than \code{Nelder-Mead} (if the latter
-      converges to a suboptimal local minimum).}
 
   }
 

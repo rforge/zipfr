@@ -17,7 +17,7 @@
 
   estimate.model(model, spc, param.names,
                  method, cost.function, m.max=15,
-                 debug=FALSE, ...)
+                 runs=3, debug=FALSE, ...)
 
 }
 
@@ -46,6 +46,11 @@
   
   \item{m.max}{number of spectrum elements that will be used to compute
     the cost function (passed on to \code{cost.function})}
+
+  \item{runs}{number of parameter optimization runs with random
+    initialization. Parameters from the run that achieves the smallest
+    value of the cost function will be selected. Some method implementations
+    may not support multiple optimization runs.}
 
   \item{debug}{if \code{TRUE}, some debugging and progress information
     will be printed during the estimation procedure}

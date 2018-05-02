@@ -1,8 +1,7 @@
 lnre.goodness.of.fit <- function(model, spc, n.estimated=0, m.max=15)
 {
   if (! inherits(model, "lnre")) stop("first argument must belong to a subclass of 'lnre'")
-  if (model$multinomial)
-    warning("goodness-of-fit test for multinomial sampling not available yet, falling back to Poisson sampling")
+  if (model$multinomial) warning("goodness-of-fit test for multinomial sampling not available yet, falling back to Poisson sampling")
 
   ## automatically reduce number of spectrum elements if variances become too small
   V.Vm <- VVm(model, 1:m.max, N(spc))
@@ -28,7 +27,7 @@ lnre.goodness.of.fit <- function(model, spc, n.estimated=0, m.max=15)
 
   ## construct covariance matrix R
   err.vec <- c(V, Vm) - c(E.V, E.Vm)    # error vector (p. 119)
-  cov.Vm.Vk <- diag(E.Vm) -             # "inner part" of covariance matrix (p. 120, (3.61))
+  cov.Vm.Vk <- diag(E.Vm, nrow=m.max) - # "inner part" of covariance matrix (p. 120, (3.61))
     outer(1:m.max, 1:m.max, function (m,k) choose(m+k, m) * E.Vm.2N[m+k] / 2^(m+k))
   cov.Vm.V <- E.Vm.2N[1:m.max] / 2^(1:m.max) # (p. 121, (3.63))
   R <- rbind(c(VV(model, N), cov.Vm.V), # construct covariance matrix R (p. 119, (3.58))
