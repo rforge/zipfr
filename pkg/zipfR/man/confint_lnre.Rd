@@ -4,7 +4,7 @@
 
 \description{
 
-  Computed bootstrapped confidence intervals for LNRE model parameters.
+  Compute bootstrapped confidence intervals for LNRE model parameters.
   The supplied model must contain a sufficient number of bootstrapping replicates.
 
 }

@@ -11,10 +11,13 @@ Version 0.7:
   - lnre.bootstrap() performs parametric bootstrapping from an LNRE model
   - bootstrapped confidence intervals for model parameters can be obtained with
     confint() applied to an LNRE model object with bootstrap replicates
-  - posterior distribution for LNRE model as Bayesian prior, with density function
-    postdlnre(), including log-transformed version postldlnre(), as well as
-    cumulative probability postplnre() and quantiles postqlnre() where available
-  - Good-Turing estimates with gtlnre()
+  - posterior distribution functions using LNRE models as a Bayesian prior,
+    with type density postdlnre(), log-transformed density postldlnre(), as well as
+    cumulative probability postplnre() and quantiles postqlnre() for selected models
+  - compute various productivity measures from observed frequency spectrum, as well
+    as expectations and approximate confidence intervals from expected frequency spectrum
+  - merge() method for two or more type frequency lists
+  - new example data sets from Evert & Luedeling (2001) and Baayen (2001)
 
 Version 0.6-10
 

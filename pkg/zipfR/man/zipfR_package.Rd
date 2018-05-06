@@ -44,9 +44,9 @@ zipfR is released under the GNU General Public License
   Harald Baayen's LEXSTATS tools, which implement a wider range of LNRE models:
   \url{http://extras.springer.com/2001/978-0-7923-7017-8/lexstats-2.0}
 
-  Stefan Evert's UCS tools for collocation analysis, which include functions that have been integrated into 
-  \bold{zipfR}:
-  \url{http://collocations.de/software.html}
+  Stefan Evert's UCS tools for collocation analysis, which include
+  functions that have been integrated into \bold{zipfR}:
+  \url{http://www.collocations.de/software.html}
 
 }
 
@@ -63,18 +63,18 @@ Maintainer: Stefan Evert <\email{stefan.evert@fau.de}>
   Baayen, R. Harald (2001). \emph{Word Frequency Distributions.} Kluwer,
   Dordrecht.
 
-  Baroni, Marco (to appear). Distributions in text. To appear in: A.
-  Lüdeling and M. Kytö (eds.), \emph{Corpus Linguistics. An
-  International Handbook}, chapter 39. Mouton de Gruyter, Berlin.
+  Baroni, Marco (2008). Distributions in text. In: A. Lüdeling
+  and M. Kytö (eds.), \emph{Corpus Linguistics. An
+  International Handbook}, article 37. Mouton de Gruyter, Berlin.
 
-  Evert, Stefan (2004). \emph{The Statistics of Word Cooccurrences: Word
+  Evert, Stefan (2004). A simple LNRE model for random character
+  sequences. \emph{Proceedings of JADT 2004}, 411-422.
+
+  Evert, Stefan (2004b). \emph{The Statistics of Word Cooccurrences: Word
     Pairs and Collocations.} PhD Thesis, IMS, University of Stuttgart.
   URN urn:nbn:de:bsz:93-opus-23714
   \url{http://elib.uni-stuttgart.de/opus/volltexte/2005/2371/}
   
-  Evert, Stefan (2004). A simple LNRE model for random character
-  sequences. \emph{Proceedings of JADT 2004}, 411-422.
-
   Evert, Stefan and Baroni, Marco (2006). Testing the extrapolation
   quality of word frequency models. \emph{Proceedings of Corpus
   Linguistics 2005}.

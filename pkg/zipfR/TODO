@@ -1,6 +1,5 @@
-  - write/check documentation for bootstrapping and confidence intervals
-  - implement & document robust boostrapping confidence intervals (confint.lnre)
-  - write documentation for new posterior, Good-Turing, etc.
-  - complete implementation and documentation of posterior densities etc.
+  - implement "lexical constants" as productivity measures (lexconst.spc, lexconst.lnre?) with (approximate) confidence intervals for LNRE models
+  - complete implementation of posterior type distributions for ZM and fZM models (after writing down the mathematical equations precisely)
+  - custom code for posterior density, extended to m=0 for models with finite S
   - auto.gzfile() helper no longer needed -> remove
   - add encoding options to read.tfl
