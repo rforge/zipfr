@@ -58,7 +58,7 @@ productivity.measures(obj, measures, conf.level=.95, ...)
     \item{\code{H}:}{Honoré's (1979) \eqn{H = 100 \frac{ \log N }{ 1 - V_1 / V }}{H = 100 * log(N) / (1 - V1 / V)}, a transformation of the proportion of \emph{hapax legomena} adjusted for sample size}
     \item{\code{C}:}{Herdan's (1964) \eqn{C = \frac{ \log V }{ \log N }}{C = log(V) / log(N)} }
     \item{\code{P}:}{Baayen's (1991) productivity index \eqn{P = \frac{V_1}{N}}{P = V1 / N}, which corresponds to the slope of the vocabulary growth curve (under random sampling assumptions) }
-    \item{\code{TTR}:}{the type-token ratio \eqn{\text{TTR} = V / N}{TTR = V / N} }
+    \item{\code{TTR}:}{the type-token ratio TTR = \eqn{V / N} }
     \item{\code{Hapax}:}{the proportion of \emph{hapax legomena} \eqn{\frac{V_1}{V}}{V1 / V} }
     \item{\code{V}:}{the total number of types \eqn{V} }
 %%    \item{\code{}:}{}
