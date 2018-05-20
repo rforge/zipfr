@@ -1,0 +1,1607 @@
+%% \documentclass[handout,t]{beamer} % HANDOUT
+\documentclass[handout,notes=show,t]{beamer} % NOTES
+%% \documentclass[t]{beamer} % SLIDES
+
+\usetheme{ZipfR}
+\usepackage{beamer-tools}
+
+\input{lib/math}  % basic mathematical notation
+\input{lib/stat}  % notation for probability theory and statistics
+\input{lib/vector}% convenience macros for vectors and matrices
+
+\input{local/config} % local adjustments to configuration and macros
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Titlepage
+
+\title[T1: Zipf's Law]{What Every Computational Linguist
+  Should Know About Type-Token Distributions and Zipf's Law}
+\subtitle{\primary{Tutorial 1, 7 May 2018}}
+\author[Stefan Evert]{Stefan Evert\\ FAU Erlangen-Nürnberg}
+\date[7 May 2018 | CC-by-sa]{\href{http://zipfr.r-forge.r-project.org/lrec2018.html}{http://zipfr.r-forge.r-project.org/lrec2018.html}\\
+ \light{\small Licensed under CC-by-sa version 3.0}}
+
+\begin{document}
+
+\pgfdeclareimage[width=36mm]{lrec-logo}{img/logo_lrec2018}
+\pgfdeclareimage[width=30mm]{kallimachos-logo}{img/logo_kallimachos}
+\logo{\pgfuseimage{lrec-logo}\hspace{6cm}\pgfuseimage{kallimachos-logo}}
+
+\frame{\titlepage}
+\hideLogo{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Outline}
+\frame{ 
+  \frametitle{Outline}
+  \tableofcontents
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Part 1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Motivation}
+
+\begin{frame}
+  \frametitle{Type-token statistics}
+
+  \begin{itemize}
+  \item Type-token statistics different from most statistical inference
+    \begin{itemize}
+    \item not about probability of a specific event
+    \item but about diversity of events and their probability distribution
+    \end{itemize}
+  \item Relatively little work in statistical science
+  \item Nor a major research topic in computational linguistics
+    \begin{itemize}
+    \item very specialized, usually plays ancillary role in NLP
+    \end{itemize}
+  \item But type-token statistics appear in wide range of applications
+    \begin{itemize}
+    \item often crucial for sound analysis
+    \end{itemize}
+  \item[]
+  \item[\So] NLP community needs better awareness of statistical techniques,
+    their limitations, and available software 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some research questions}
+
+  \begin{itemize}
+  \item How many words did Shakespeare know?
+  \item What is the coverage of my treebank grammar on big data?
+  \item How many typos are there on the Internet?
+  \item Is \emph{-ness} more productive than \emph{-ity} in English?
+  \item Are there differences in the productivity of nominal compounds between academic writing and novels?
+  \item Does Dickens use a more complex vocabulary than Rowling?
+  \item Can a decline in lexical complexity predict Alzheimer's disease?
+  \item How frequent is a hapax legomenon from the Brown corpus?
+  \item What is appropriate smoothing for my n-gram model?
+  \item Who wrote the Bixby letter, Lincoln or Hay?
+  \item How many different species of \ldots\ are there? \citep{Brainerd:82}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some research questions}
+
+  \begin{itemize}
+  \item 
+  \item \counterpoint{coverage estimates}
+  \item
+  \item
+  \item \counterpoint{productivity}\\\rule{0mm}{1ex}
+  \item \counterpoint{lexical complexity \& stylometry}
+  \item 
+  \item \counterpoint{prior \& posterior distribution}
+  \item 
+  \item \counterpoint{unexpected applications}
+  \item 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Zipf's law \citep{Zipf:49}}
+
+  \begin{itemize}
+  \item[A)] Frequency distributions in natural language are highly skewed
+  \item[B)] Curious relationship between rank \& frequency
+    \begin{center}\footnotesize
+      \begin{tabular}[c]{lccc}
+        word & $r$ & $f$ & $r\cdot f$ \\
+        \midrule
+        \emph{the} & 1. & 142,776 & 142,776 \\
+        \emph{and} & 2. & 100,637 & 201,274 \\
+	\emph{be}  & 3. &  94,181 & 282,543 \\
+	\emph{of}  & 4. &  74,054 & 296,216
+      \end{tabular}
+      \counterpoint{(Dickens)}
+    \end{center}
+  \item[C)] Various explanations of Zipf's law
+    \begin{itemize}
+    \item principle of least effort \citep{Zipf:49}
+    \item optimal coding system, MDL \citep{Mandelbrot:53,Mandelbrot:62}
+    \item random sequences \citep{Miller:57,Li:92,Cao:etc:17}
+    \item Markov processes $\so$ n-gram models \citep{Rouault:78}
+    \end{itemize}
+  \item[D)] Language evolution: birth-death-process \citep{Simon:55}
+  \item[\hand] not the main topic today!
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Descriptive statistics \& notation}
+
+\newcommand{\TC}[1]{\counterpoint{\emph{#1}}}
+\newcommand{\TL}[1]{\light{\emph{#1}}}
+\newcommand<>{\TA}[1]{\light{\counterpoint#2{\emph{#1}}}}
+
+\begin{frame}
+  \frametitle{Tokens \& types}
+
+  our sample: \TC{recently}, \TC{very}, \TC{not}, \TC{otherwise}, \TC{much}, \TC{very},
+  \TC{very}, \TC{merely}, \TC{not}, \TC{now}, \TC{very}, \TC{much},
+  \TC{merely}, \TC{not}, \TC{very}
+
+  \begin{itemize}
+  \item $N = 15$: number of \hh{tokens} = sample size
+  \item $V = 7$: number of distinct \hh{types} = \h{vocabulary size}\\
+    (\TC{recently}, \TC{very}, \TC{not}, \TC{otherwise}, \TC{much}, \TC{merely}, \TC{now})
+  \end{itemize}
+
+  \onslide<2->
+  \begin{columns}[c]
+    \begin{column}{5cm}
+      \centering
+      \h{type-frequency list}
+
+      \begin{tabular}{l|c}
+        $w$ & $f_w$ \\
+        \hline
+        \TC{recently} & 1 \\ 
+        \TC{very}     & 5 \\
+        \TC{not}      & 3 \\ 
+        \TC{otherwise}& 1 \\ 
+        \TC{much}     & 2 \\ 
+        \TC{merely}   & 2 \\ 
+        \TC{now}      & 1 
+      \end{tabular}
+    \end{column}
+    \begin{column}{5cm}
+      
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Zipf ranking}
+
+  our sample: \TC{recently}, \TC{very}, \TC{not}, \TC{otherwise}, \TC{much}, \TC{very},
+  \TC{very}, \TC{merely}, \TC{not}, \TC{now}, \TC{very}, \TC{much},
+  \TC{merely}, \TC{not}, \TC{very}
+
+  \begin{itemize}
+  \item $N = 15$: number of \hh{tokens} = sample size
+  \item $V = 7$: number of distinct \hh{types} = \h{vocabulary size}\\
+    (\TC{recently}, \TC{very}, \TC{not}, \TC{otherwise}, \TC{much}, \TC{merely}, \TC{now})
+  \end{itemize}
+
+  \begin{columns}[c]
+    \begin{column}{5cm}
+      \centering
+      \h{Zipf ranking}
+
+      \begin{tabular}{l|c|c}
+        $w$ & $r$ & $f_r$ \\
+        \hline
+        \TL{very}     & 1 & 5 \\
+        \TL{not}      & 2 & 3 \\ 
+        \TL{merely}   & 3 & 2 \\ 
+        \TL{much}     & 4 & 2 \\ 
+        \TL{now}      & 5 & 1 \\
+        \TL{otherwise}& 6 & 1 \\ 
+        \TL{recently} & 7 & 1 
+      \end{tabular}
+    \end{column}
+    \begin{column}{5cm}
+      \visible<2->{\includegraphics[width=45mm]{../plots/tutorial_tfl}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{A realistic Zipf ranking: the Brown corpus}
+
+  \gap
+  \begin{scriptsize}
+    \begin{tabular}{|r|r|l||r|r|l|}
+      \hline
+      \multicolumn{3}{|c||}{\hh{top frequencies}} & \multicolumn{3}{c|}{\hh{bottom frequencies}}\\
+      \hline
+      \textbf{\textit{r}} & \multicolumn{1}{c|}{\textbf{\textit{f}}} & \textbf{word} & \textbf{rank range} & \multicolumn{1}{c|}{\textbf{\textit{f}}} & \textbf{randomly selected examples}\\
+      \hline
+       1 & 69836 & the   &   7731 -- \phantom{0}8271 & 10 &    schedules, polynomials, bleak \\ 
+       2 & 36365 & of    &   8272 -- \phantom{0}8922 &  9 &          tolerance, shaved, hymn \\ 
+       3 & 28826 & and   &   8923 -- \phantom{0}9703 &  8 & decreased, abolish, irresistible \\ 
+       4 & 26126 & to    &   9704 -- 10783 &  7 &        immunity, cruising, titan \\ 
+       5 & 23157 & a     &  10784 -- 11985 &  6 &     geographic, lauro, portrayed \\ 
+       6 & 21314 & in    &  11986 -- 13690 &  5 &     grigori, slashing, developer \\ 
+       7 & 10777 & that  &  13691 -- 15991 &  4 &       sheath, gaulle, ellipsoids \\ 
+       8 & 10182 & is    &  15992 -- 19627 &  3 &         mc, initials, abstracted \\ 
+       9 &  9968 & was   &  19628 -- 26085 &  2 &         thar, slackening, deluxe \\ 
+      10 &  9801 & he    &  26086 -- 45215 &  1 &  beck, encompasses, second-place \\ 
+      \hline
+    \end{tabular}
+  \end{scriptsize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{A realistic Zipf ranking: the Brown corpus}
+
+  \ungap[1]
+  \begin{center}
+    \only<beamer:1| handout:0>{\includegraphics[height=7.5cm]{../plots/tutorial_brown_tfl}}%
+    \only<beamer:2| handout:1>{\includegraphics[height=7.5cm]{../plots/tutorial_brown_tfl_log}}%
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Frequency spectrum}
+
+  \ungap[1.5]
+  \begin{itemize}
+  \item pool types with $f = 1$ (\primary{hapax legomena}), types with $f = 2$ (\primary{dis legomena}), \ldots, $f = m$, \ldots
+  \item $V_1 = 3$: number of hapax legomena (\emph{now, otherwise, recently})
+  \item $V_2 = 2$: number of dis legomena (\emph{merely, much})
+  \item general definition: $V_m = \abs{\setdef{w}{f_w = m}}$
+  \end{itemize}
+  
+  \begin{columns}[c]
+    \begin{column}{35mm}
+      \centering
+      \textbf{Zipf ranking}
+
+      \begin{tabular}{l|c|c}
+        $w$ & $r$ & $f_r$ \\
+        \hline
+        \TL{very}     & 1 & 5 \\
+        \TL{not}      & 2 & 3 \\ 
+        \TL{merely}   & 3 & 2 \\ 
+        \TL{much}     & 4 & 2 \\ 
+        \TL{now}      & 5 & 1 \\
+        \TL{otherwise}& 6 & 1 \\ 
+        \TL{recently} & 7 & 1 
+      \end{tabular}
+    \end{column}
+    \begin{column}{25mm}
+      \centering
+      \h{frequency\\ spectrum}
+
+      \begin{tabular}{c|c}
+        $m$ & $V_m$ \\
+        \hline
+        1 & 3 \\
+        2 & 2 \\
+        3 & 1 \\
+        5 & 1
+      \end{tabular}
+    \end{column}
+    \begin{column}{5cm}
+      \visible<2->{\includegraphics[width=45mm]{../plots/tutorial_spc}}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{A realistic frequency spectrum: the Brown corpus}
+
+  \ungap[1]
+  \begin{center}
+    \includegraphics[height=7.5cm]{../plots/tutorial_brown_spc}%
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Vocabulary growth curve}
+  
+    our sample: \TA<1->{recently}, \TA<2->{very}, \TA<2->{not}, \TA<3->{otherwise}, \TA<3->{much}, \TA<3->{very},
+  \TA<3->{very}, \TA<4->{merely}, \TA<4->{not}, \TA<4->{now}, \TA<4->{very}, \TA<4->{much},
+  \TA<5->{merely}, \TA<5->{not}, \TA<5->{very}
+
+  \begin{columns}[c]
+    \begin{column}{6cm}
+      \begin{itemize}
+      \item<1-> $N = 1$, $V(N) = 1$, $V_1(N) = 1$
+      \item<2-> $N = 3$, $V(N) = 3$, $V_1(N) = 3$
+      \item<3-> $N = 7$, $V(N) = 5$, $V_1(N) = 4$
+      \item<4-> $N = 12$, $V(N) = 7$, $V_1(N) = 4$
+      \item<5-> $N = 15$, $V(N) = 7$, $V_1(N) = 3$
+      \end{itemize}
+    \end{column}
+    \begin{column}{5cm}
+      \visible<6->{\includegraphics[width=5cm]{../plots/tutorial_vgc}}%
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{A realistic vocabulary growth curve: the Brown corpus}
+
+  \ungap[1]
+  \begin{center}
+    \includegraphics[height=6.5cm]{../plots/tutorial_brown_vgc}%
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Vocabulary growth in authorship attribution}
+
+  \begin{itemize}
+  \item Authorship attribution by n-gram tracing applied to the case of the Bixby letter \citep{Grieve:etc:18}
+  \item Word or character n-grams in disputed text are compared against large ``training'' corpora from candidate authors
+  \end{itemize}
+
+  \begin{center}
+    \includegraphics[width=7cm]{img/GrieveEtc2018_fig1}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Observing Zipf's law}
+  \framesubtitle{across languages and different linguistic units}
+
+  \ungap[1.5]
+  \begin{center}
+    \includegraphics[height=7.5cm]{img/othercorporarf}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Observing Zipf's law}
+  \framesubtitle{The Italian prefix \TC{ri-} in the \emph{la Repubblica} corpus}
+
+  \begin{center}
+    \includegraphics[height=6.5cm]{img/ita-ri-rf}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Observing Zipf's law}
+
+  \ungap[1.5]
+  \begin{center}
+    \only<beamer:1| handout:0>{\includegraphics[height=7.5cm]{../plots/tutorial_brown_tfl_log}}%
+    \only<beamer:2| handout:1>{\includegraphics[height=7.5cm]{../plots/tutorial_brown_tfl_loglog}}%
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Observing Zipf's law}
+
+  \begin{itemize}
+  \item Straight line in double-logarithmic space corresponds\\
+    to \h{power law} for original variables
+  \item This leads to Zipf's (\citeyear{Zipf:49,Zipf:65}) famous law:
+    \[
+      f_r = \frac{C}{r^a}
+    \]
+  \item<2-> If we take logarithm on both sides, we obtain:
+    \[
+    \only<beamer:2| handout:0>{%
+      \log f_r = \log C - a \cdot \log r}%
+    \only<beamer:3-| handout:1>{%
+      \secondary{\underbrace{\log f_r}_y}
+      = \log C - a \cdot \secondary{\underbrace{\log r}_x}}%
+    \]
+  \item<4-> Intuitive interpretation of $a$ and $C$:
+    \begin{itemize}
+    \item $a$ is \h{slope} determining how fast log frequency decreases
+    \item $\log C$ is \h{intercept}, i.e.\ log frequency of most frequent word
+      ($r = 1$ \so $\log r = 0$) 
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Observing Zipf's law}
+  \framesubtitle{Least-squares fit = linear regression in log-space (Brown corpus)}
+
+  \ungap[1.5]
+  \begin{center}
+    \includegraphics[height=7.5cm]{img/brown-zipf-rf}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Zipf-Mandelbrot law}
+  \framesubtitle{\citet{Mandelbrot:53,Mandelbrot:62}}
+
+  \begin{itemize}
+    \item Mandelbrot's extra parameter:
+    \[
+    f_r = \frac{C}{(r + b)^a}
+    \]
+  \item Zipf's law is special case with $b=0$
+  \item<2-> Assuming $a=1$, $C=$ 60,000, $b=1$:
+    \begin{itemize}
+    \item For word with rank 1, Zipf's law predicts frequency of
+      60,000; Mandelbrot's variation predicts frequency of 30,000
+    \item For word with rank 1,000,  Zipf's law predicts frequency of
+      60; Mandelbrot's variation predicts frequency of 59.94
+    \item[]
+    \end{itemize}
+  \item<3-> Zipf-Mandelbrot law forms basis of statistical LNRE models% 
+    \begin{itemize}
+    \item ZM law derived mathematically as limiting distribution of
+      vocabulary generated by a character-level Markov process
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Zipf-Mandelbrot law} 
+  \framesubtitle{Non-linear least-squares fit (Brown corpus)}
+
+  \ungap[1.5]
+  \begin{center}
+    \includegraphics[height=7.5cm]{img/brown-zipf-man-rf}
+  \end{center}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Some examples (zipfR)}
+
+\begin{frame}
+  \frametitle{zipfR}
+  \framesubtitle{\citet{Evert:Baroni:07}}
+
+  \begin{itemize}
+  \item \url{http://zipfR.R-Forge.R-Project.org/}
+  \item Conveniently available from CRAN repository
+  \item Package vignette = gentle tutorial introduction
+  \end{itemize}
+
+  \begin{flushright}
+    \includegraphics[width=6cm]{img/zipfR_logo}
+    \rule{1cm}{0mm}
+  \end{flushright}
+
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    \secondary{\huge interactive demo}
+  \end{center}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{LNRE models: intuition}
+
+\begin{frame}
+  \frametitle{Motivation}
+
+  \begin{itemize}
+  \item Interested in productivity of affix, vocabulary of author, \ldots; not in a particular text or sample\\
+    \begin{itemize}
+    \item[\hand] statistical inference from sample to population
+    \item[]
+    \end{itemize}
+  \item Discrete frequency counts are difficult to capture with generalizations such as Zipf's law
+    \begin{itemize}
+    \item Zipf's law predicts many impossible types with $1 < f_r < 2$
+    \item[\hand] population does not suffer from such quantization effects
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LNRE models}
+
+  \begin{itemize}
+  \item This tutorial introduces the state-of-the-art LNRE approach proposed by \citet{Baayen:01}
+    \begin{itemize}
+    \item LNRE = Large Number of Rare Events
+    \item[]
+    \end{itemize}
+  \item LNRE uses various approximations and simplifications to obtain a tractable and elegant model
+    \begin{itemize}
+    \item[]
+    \end{itemize}
+  \item Of course, we could also estimate the precise discrete distributions using MCMC simulations, but \ldots
+    \begin{enumerate}
+    \item LNRE model usually minor component of complex procedure
+    \item often applied to very large samples ($N > 1$ M tokens)
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The LNRE population}
+
+  \begin{itemize}
+  \item Population: set of $S$ types $w_i$ with occurrence \h{probabilities} $\pi_i$
+  \item $S$ = \h{population diversity} can be finite or infinite ($S = \infty$)
+  \item Not interested in specific types \so  arrange by decreasing
+    probability: $\pi_1\geq \pi_2\geq \pi_3 \geq \cdots$
+    \begin{itemize}
+    \item[\hand] impossible to determine probabilities of all individual types
+    \end{itemize}
+  \item Normalization: $\pi_1 + \pi_2 + \ldots + \pi_S = 1$
+    \begin{itemize}
+    \item[]
+    \end{itemize}
+  \item Need \hh{parametric} statistical \hh{model} to describe full population (esp.\ for $S = \infty$),
+    i.e.\ a function $i \mapsto \pi_i$
+    \begin{itemize}
+    \item type probabilities $\pi_i$ cannot be estimated reliably from a sample, but parameters of this function can
+    \item NB: population index $i$ $\neq$ Zipf rank $r$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples of population models}
+  
+  \ungap[1.5]
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=40mm]{img/05-models-normal} &
+      \includegraphics[width=40mm]{img/05-models-zm-1} \\
+      \includegraphics[width=40mm]{img/05-models-zm-3} &
+      \includegraphics[width=40mm]{img/05-models-zm-2}
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Zipf-Mandelbrot law as a population model}
+
+  What is the right family of models for lexical frequency distributions?
+  \begin{itemize}
+  \item We have already seen that the Zipf-Mandelbrot law captures the
+    distribution of observed frequencies very well%
+    \pause
+  \item Re-phrase the law for type probabilities:
+    \[ \pi_i := \frac{C}{(i + b) ^ a} \]
+  \item Two free parameters: $a > 1$ and $b \geq 0$
+  \item $C$ is not a parameter but a normalization constant,\\
+    needed to ensure that $\sum_i \pi_i = 1$
+  \item This is the \h{Zipf-Mandelbrot} population model
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The parameters of the Zipf-Mandelbrot model}
+
+  \ungap[1.5]
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=40mm]{img/05-models-zm-param-4} &
+      \includegraphics[width=40mm]{img/05-models-zm-param-1} \\
+      \includegraphics[width=40mm]{img/05-models-zm-param-3} &
+      \includegraphics[width=40mm]{img/05-models-zm-param-2}
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The parameters of the Zipf-Mandelbrot model}
+
+  \ungap[1.5]
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=40mm]{img/05-models-zm-log-4} &
+      \includegraphics[width=40mm]{img/05-models-zm-log-1} \\
+      \includegraphics[width=40mm]{img/05-models-zm-log-3} &
+      \includegraphics[width=40mm]{img/05-models-zm-log-2}
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The finite Zipf-Mandelbrot model}
+  \framesubtitle{\citet{Evert:04}}
+
+  \begin{itemize}
+  \item Zipf-Mandelbrot population model characterizes an \emph{infinite} type
+    population: there is no upper bound on $i$, and the type probabilities
+    $\pi_i$ can become arbitrarily small
+  \item $\pi = 10^{-6}$ (once every million words), $\pi = 10^{-9}$ (once
+    every billion words), $\pi = 10^{-15}$ (once on the entire Internet), $\pi
+    = 10^{-100}$ (once in the universe?)
+  \item<2-> The \h{finite Zipf-Mandelbrot} model stops after first $S$
+    types
+  \item<2-> Population diversity $S$ becomes a parameter of the model\\
+    $\to$ the finite Zipf-Mandelbrot model has 3 parameters
+  \end{itemize}
+
+  \onslide<3->
+  Abbreviations: 
+  \begin{itemize}
+  \item \h{ZM} for Zipf-Mandelbrot model
+  \item \h{fZM} for finite Zipf-Mandelbrot model
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sampling from a population model}
+
+  Assume we believe that the population we are interested in can be described
+  by a Zipf-Mandelbrot model: 
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=30mm]{img/05-samples-zm-model} &
+      \includegraphics[width=30mm]{img/05-samples-zm-model-log} 
+    \end{tabular}
+  \end{center}
+  
+  Use computer simulation to generate random samples:
+  \begin{itemize}
+  \item Draw $N$ tokens from the population such that in\\
+    each step, type $w_i$ has probability $\pi_i$ to be picked
+  \item This allows us to make predictions for samples (= corpora)\\
+    of arbitrary size $N$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Sampling from a population model}
+
+  \begin{center}
+    \footnotesize
+    \begin{tabular}{r *{9}{ @{\hspace{1mm}}r } r}
+      \hh{\#1:} &   1 &  42 &  34 &  23 & 108 &  18 &  48 &  18 &   1 & \ldots \\ 
+       \pause
+      & time & order & room & school & town & course & area & course & time & \ldots \\
+       \pause\\
+      \hh{\#2:} & 286 &  28 &  23 &  36 &   3 &   4 &   7 &   4 &   8 & \ldots \\ 
+       \pause\\
+      \hh{\#3:} &   2 &  11 & 105 &  21 &  11 &  17 &  17 &   1 &  16 & \ldots \\ 
+       \pause\\
+      \hh{\#4:} &  44 &   3 & 110 &  34 & 223 &   2 &  25 &  20 &  28 & \ldots \\ 
+       \\
+      \hh{\#5:} &  24 &  81 &  54 &  11 &   8 &  61 &   1 &  31 &  35 & \ldots \\ 
+      \\
+      \hh{\#6:} &   3 &  65 &   9 & 165 &   5 &  42 &  16 &  20 &   7 & \ldots \\ 
+      \\
+      \hh{\#7:} &  10 &  21 &  11 &  60 & 164 &  54 &  18 &  16 & 203 & \ldots \\ 
+      \\
+      \hh{\#8:} &  11 &   7 & 147 &   5 &  24 &  19 &  15 &  85 &  37 & \ldots \\
+      \\
+      \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Samples: type frequency list \& spectrum}
+
+  \ungap[1]
+  \begin{center}
+    \begin{tabular}[t]{r | rr}
+      rank $r$ & $f_r$ & type $i$ \\
+      \hline
+       1 & 37 &  6 \\
+       2 & 36 &  1 \\
+       3 & 33 &  3 \\
+       4 & 31 &  7 \\
+       5 & 31 & 10 \\
+       6 & 30 &  5 \\
+       7 & 28 & 12 \\
+       8 & 27 &  2 \\
+       9 & 24 &  4 \\
+      10 & 24 & 16 \\
+      11 & 23 &  8 \\
+      12 & 22 & 14 \\
+      \vdots & \vdots & \vdots
+    \end{tabular}
+    \hspace{2cm}
+    \begin{tabular}[t]{r | r}
+      $m$ & $V_m$ \\
+      \hline
+       1 & 83 \\
+       2 & 22 \\
+       3 & 20 \\
+       4 & 12 \\
+       5 & 10 \\
+       6 &  5 \\
+       7 &  5 \\
+       8 &  3 \\
+       9 &  3 \\
+      10 &  3 \\
+      \vdots & \vdots \\
+      \multicolumn{2}{c}{} \\
+      \multicolumn{2}{c}{\hh{sample \#1}}
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Samples: type frequency list \& spectrum}
+
+  \ungap[1]
+  \begin{center}
+    \begin{tabular}[t]{r | rr}
+      rank $r$ & $f_r$ & type $i$ \\
+      \hline
+       1 & 39 &  2 \\
+       2 & 34 &  3 \\
+       3 & 30 &  5 \\
+       4 & 29 & 10 \\
+       5 & 28 &  8 \\
+       6 & 26 &  1 \\
+       7 & 25 & 13 \\
+       8 & 24 &  7 \\
+       9 & 23 &  6 \\
+      10 & 23 & 11 \\
+      11 & 20 &  4 \\
+      12 & 19 & 17 \\
+      \vdots & \vdots & \vdots
+    \end{tabular}
+    \hspace{2cm}
+    \begin{tabular}[t]{r | r}
+      $m$ & $V_m$ \\
+      \hline
+       1 & 76 \\
+       2 & 27 \\
+       3 & 17 \\
+       4 & 10 \\
+       5 &  6 \\
+       6 &  5 \\
+       7 &  7 \\
+       8 &  3 \\
+      10 &  4 \\
+      11 &  2 \\
+      \vdots & \vdots \\
+      \multicolumn{2}{c}{} \\
+      \multicolumn{2}{c}{\hh{sample \#2}}
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Random variation in type-frequency lists}
+
+  \ungap[1]
+  \begin{tabular}{ccc}
+    \includegraphics[width=40mm]{img/05-samples-tfl-r-1} &
+    \includegraphics[width=40mm]{img/05-samples-tfl-r-2} &
+    \raisebox{2cm}{$r\leftrightarrow f_r$} \\
+    
+    \includegraphics[width=40mm]{img/05-samples-tfl-k-1} &
+    \includegraphics[width=40mm]{img/05-samples-tfl-k-2} &
+    \raisebox{2cm}{$i\leftrightarrow f_i$} 
+  \end{tabular}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Random variation: frequency spectrum}
+
+  \ungap[1]
+  \begin{center}
+    \only<beamer:0| handout:1>{%
+      \begin{tabular}{cc}
+        \includegraphics[width=40mm]{img/05-samples-spc-1} &
+        \includegraphics[width=40mm]{img/05-samples-spc-2} \\
+        \includegraphics[width=40mm]{img/05-samples-spc-3} &
+        \includegraphics[width=40mm]{img/05-samples-spc-4} 
+      \end{tabular}%
+    }%
+    \only<beamer:1| handout:0>{\includegraphics[width=70mm]{img/05-samples-spc-1}}%
+    \only<beamer:2| handout:0>{\includegraphics[width=70mm]{img/05-samples-spc-2}}%
+    \only<beamer:3| handout:0>{\includegraphics[width=70mm]{img/05-samples-spc-3}}%
+    \only<beamer:4| handout:0>{\includegraphics[width=70mm]{img/05-samples-spc-4}}%
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Random variation: vocabulary growth curve}
+
+  \ungap[1]
+  \begin{center}
+    \only<beamer:0| handout:1>{%
+      \begin{tabular}{cc}
+        \includegraphics[width=40mm]{img/05-samples-vgc-1} &
+        \includegraphics[width=40mm]{img/05-samples-vgc-2} \\
+        \includegraphics[width=40mm]{img/05-samples-vgc-3} &
+        \includegraphics[width=40mm]{img/05-samples-vgc-4} 
+      \end{tabular}%
+    }%
+    \only<beamer:1| handout:0>{\includegraphics[width=70mm]{img/05-samples-vgc-1}}%
+    \only<beamer:2| handout:0>{\includegraphics[width=70mm]{img/05-samples-vgc-2}}%
+    \only<beamer:3| handout:0>{\includegraphics[width=70mm]{img/05-samples-vgc-3}}%
+    \only<beamer:4| handout:0>{\includegraphics[width=70mm]{img/05-samples-vgc-4}}%
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Expected values}
+
+  \begin{itemize}
+  \item There is no reason why we should choose a particular sample to compare
+    to the real data or make a prediction -- each one is equally likely or
+    unlikely
+  \item Take the average over a large number of samples, called \h{expected
+      value} or \h{expectation} in statistics
+  \item[]
+  \item Notation: $\text{E}\bigl[V(N)\bigr]$ and $\text{E}\bigl[V_m(N)\bigr]$
+    \begin{itemize}
+    \item indicates that we are referring to expected values for a sample of
+      size $N$
+    \item rather than to the specific values $V$ and $V_m$\\
+      observed in a particular sample or a real-world data set
+    \item[]
+    \end{itemize}
+  \item Expected values can be calculated efficiently \emph{without}
+    generating thousands of random samples
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The expected frequency spectrum}
+
+  \ungap[1]
+  \begin{center}
+    \only<beamer:0| handout:1>{%
+      \begin{tabular}{cc}
+        \includegraphics[width=40mm]{img/05-samples-spc-exp-vs-sample-1} &
+        \includegraphics[width=40mm]{img/05-samples-spc-exp-vs-sample-2} \\
+        \includegraphics[width=40mm]{img/05-samples-spc-exp-vs-sample-3} &
+        \includegraphics[width=40mm]{img/05-samples-spc-exp-vs-sample-4} 
+      \end{tabular}%
+    }%
+    \only<beamer:1| handout:0>{\includegraphics[width=70mm]{img/05-samples-spc-exp-vs-sample-1}}%
+    \only<beamer:2| handout:0>{\includegraphics[width=70mm]{img/05-samples-spc-exp-vs-sample-2}}%
+    \only<beamer:3| handout:0>{\includegraphics[width=70mm]{img/05-samples-spc-exp-vs-sample-3}}%
+    \only<beamer:4| handout:0>{\includegraphics[width=70mm]{img/05-samples-spc-exp-vs-sample-4}}%
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The expected vocabulary growth curve}
+
+  \ungap[1]
+  \begin{center}
+    \begin{tabular}{c @{} c}
+      \includegraphics[width=50mm]{img/05-samples-vgc-exp-vs-samples} &
+      \includegraphics[width=50mm]{img/05-samples-vgc-V1-exp-vs-samples}
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Prediction intervals for the expected VGC}
+
+  \ungap[1]
+  \begin{center}
+    \begin{tabular}{c @{} c}
+      \includegraphics[width=50mm]{img/05-samples-vgc-exp-vs-samples-conf} &
+      \includegraphics[width=50mm]{img/05-samples-vgc-V1-exp-vs-samples-conf}
+    \end{tabular}
+  \end{center}
+
+  ``Confidence intervals'' indicate predicted sampling distribution:%
+  \begin{itemize}
+  \item[\hand] for 95\% of samples generated by the LNRE model, VGC will fall within the range delimited by the thin red lines
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}<beamer:1-7| handout:1-3,7>
+  \frametitle{Parameter estimation by trial \& error}
+
+  \begin{center}
+    \begin{tabular}{c @{} c}
+      \only<beamer:1| handout:1>{\includegraphics[width=50mm]{img/05-estimation-spc-1}}%
+      \only<beamer:2| handout:2>{\includegraphics[width=50mm]{img/05-estimation-spc-2}}%
+      \only<beamer:3| handout:3>{\includegraphics[width=50mm]{img/05-estimation-spc-3}}%
+      \only<beamer:4| handout:0>{\includegraphics[width=50mm]{img/05-estimation-spc-1}}%
+      \only<beamer:5| handout:0>{\includegraphics[width=50mm]{img/05-estimation-spc-4}}%
+      \only<beamer:6| handout:0>{\includegraphics[width=50mm]{img/05-estimation-spc-5}}%
+      \only<beamer:7| handout:7>{\includegraphics[width=50mm]{img/05-estimation-spc-6}}%
+      &
+      \only<beamer:1| handout:1>{\includegraphics[width=50mm]{img/05-estimation-vgc-1}}%
+      \only<beamer:2| handout:2>{\includegraphics[width=50mm]{img/05-estimation-vgc-2}}%
+      \only<beamer:3| handout:3>{\includegraphics[width=50mm]{img/05-estimation-vgc-3}}%
+      \only<beamer:4| handout:0>{\includegraphics[width=50mm]{img/05-estimation-vgc-1}}%
+      \only<beamer:5| handout:0>{\includegraphics[width=50mm]{img/05-estimation-vgc-4}}%
+      \only<beamer:6| handout:0>{\includegraphics[width=50mm]{img/05-estimation-vgc-5}}%
+      \only<beamer:7| handout:7>{\includegraphics[width=50mm]{img/05-estimation-vgc-6}}%
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Automatic parameter estimation}
+  % \framesubtitle{Minimisation of suitable cost function for frequency spectrum}
+
+  \begin{center}
+    \begin{tabular}{c @{} c}
+      \includegraphics[width=50mm]{img/05-estimation-spc-estimated} &
+      \includegraphics[width=50mm]{img/05-estimation-vgc-estimated} 
+    \end{tabular}
+  \end{center}
+
+  \ungap[1]
+  \begin{itemize}
+    \item By trial \& error we found $a=2.0$ and $b=550$
+    \item Automatic estimation procedure: $a=2.39$ and $b=1968$
+  \end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{LNRE models: mathematics}
+
+\begin{frame}
+  \frametitle{The sampling model}
+
+  \begin{itemize}
+  \item Draw random sample of $N$ tokens from LNRE population
+  \item Sufficient statistic: set of type frequencies $\set{f_i}$
+    \begin{itemize}
+    \item because tokens of random sample have no ordering
+    \end{itemize}
+  \item Joint \hh{multinomial} distribution of $\set{f_i}$:
+    \[
+      \pC{\set{f_i = k_i}}{N} =
+      \frac{N!}{k_1! \cdots k_S!} \pi_1^{k_1} \cdots \pi_S^{k_S}
+    \]
+  \item<2-> \h{Approximation:} do not condition on fixed sample size $N$
+    \begin{itemize}
+    \item $N$ is now the average (expected) sample size
+    \end{itemize}
+  \item<2-> Random variables $f_i$ have \hh{independent Poisson} distributions:
+    \[
+      \p{f_i = k_i} = e^{-N\pi_i} \frac{(N\pi_i)^{k_i}}{k_i!}
+    \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Frequency spectrum}
+
+  \begin{itemize}
+  \item Key problem: we cannot determine $f_i$ in observed sample
+    \begin{itemize}
+    \item becasue we don't know which type $w_i$ is
+    \item recall that population ranking $f_i$ $\neq$ Zipf ranking $f_r$
+    \end{itemize}
+  \item Use spectrum $\set{V_m}$ and sample size $V$ as statistics
+    \begin{itemize}
+    \item contains all information we have about observed sample
+    \end{itemize}
+  \item<2-> Can be expressed in terms of indicator variables
+    \begin{align*}
+      \IV{f_i = m} &=
+      \begin{cases}
+        1 & f_i = m\\
+        0 & \text{otherwise}
+      \end{cases}\\
+      \visible<3->{V_m &= \sum_{i=1}^S \IV{f_i = m}} \\
+      \visible<4->{V &= \sum_{i=1}^S \IV{f_i > 0} = \sum_{i=1}^S \bigl( 1 - \IV{f_i = 0} \bigr)}
+    \end{align*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The expected spectrum}
+
+  \begin{itemize}
+  \item It is easy to compute expected values for the frequency spectrum (and
+    variances because the $f_i$ are independent)
+    \begin{align*}
+      \Exp{\IV{f_i = m}} &= \p{f_i = m} = e^{-N\pi_i} \frac{(N\pi_i)^m}{m!}\\
+      \visible<2->{\Exp{V_m} &= \sum_{i=1}^S \Exp{\IV{f_i = m}} = \sum_{i=1}^S e^{-N\pi_i} \frac{(N\pi_i)^m}{m!}}\\
+      \visible<3->{\Exp{V} &= \sum_{i=1}^S \bigExp{1 - \IV{f_i = 0}} = \sum_{i=1}^S \bigl( 1 - e^{-N\pi_i} \bigr)}
+    \end{align*}
+  \item<4-> NB: $V_m$ and $V$ are \primary{not independent} because they are
+    derived from the same random variables $f_i$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sampling distribution of $V_m$ and $V$}
+
+  \begin{itemize}
+  \item Joint sampling distribution of $\set{V_m}$ and $V$ is complicated
+  \item \h{Approximation:} $V$ and $\set{V_m}$ asymptotically follow a \hh{multivariate normal} distribution
+    \begin{itemize}
+    \item motivated by the multivariate central limit theorem:\\ sum of many independent variables $\IV{f_i = m}$
+    \end{itemize}
+  \item Usually limited to first spectrum elements, e.g.\ $V_1, \ldots, V_{15}$
+    \begin{itemize}
+    \item approximation of discrete $V_m$ by continuous distribution
+      suitable only if $\Exp{V_m}$ is sufficiently large
+    \end{itemize}
+  \item<2-> Parameters of multivariate normal:
+    $\pmb{\mu} = (\Exp{V}, \Exp{V_1}, \Exp{V_2}, \ldots)$ and $\pmb{\Sigma}$ = covariance matrix
+    \[
+      \bigp{(V, V_1, \ldots, V_k) = \mathbf{v}} \sim
+      \frac{
+        e^{-\frac12 (\mathbf{v} - \pmb{\mu})^T \pmb{\Sigma}^{-1} (\mathbf{v} - \pmb{\mu})}
+      }{\small
+        \sqrt{(2\pi)^{k+1} \det \pmb{\Sigma}}
+      }
+    \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Type density function}
+
+  \begin{itemize}
+  \item Discrete sums of probabilities in $\Exp{V}$, $\Exp{V_m}$, ldots\ are inconvenient and computationally expensive
+  \item \h{Approximation:} continuous \h{type density function} $g(\pi)$
+    \begin{align*}
+      \abs{\setdef{w_i}{a \leq \pi_i \leq b}}
+      &= \int_a^b g(\pi) \dpi\\
+      \sum \setdef{\pi_i}{a \leq \pi_i \leq b}
+      &= \int_a^b \pi g(\pi) \dpi
+    \end{align*}
+  \item<2-> Normalization constraint:
+    \[
+      \int_0^{\infty} \pi g(\pi) \dpi = 1
+    \]
+  \item<2-> Good approximation for low-probability types, but probability mass of $w_1, w_2, \ldots$ ``smeared out'' over range
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Type density function}
+
+  \centering
+  \begin{tikzpicture}
+    \useasboundingbox (0, 0) rectangle (11, 7) ;
+    \node[anchor=south west] at (0, 0) {\includegraphics[width=11cm]{../plots/lnre_tdf_vs_prob}} ;
+    \visible<2->{
+      \node[anchor=south west] at (4.5, 3) {\includegraphics[width=7cm]{../plots/lnre_pdf_vs_prob}} ;
+    }
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+  \frametitle{ZM and fZM as LNRE models}
+
+  \begin{itemize}
+  \item Discrete Zipf-Mandelbrot population
+    \[
+      \pi_i := \frac{C}{(i + b) ^ a} \quad \text{for } i = 1, \ldots, S
+    \]
+  \item<2-> Corresponding type density function \citep{Evert:04}
+    \[
+      g(\pi) =
+      \begin{cases}
+        C\cdot \pi^{-\alpha-1} & A \leq \pi \leq B\\
+        0 & \text{otherwise}
+      \end{cases}
+    \]
+    \onslide<3->
+    with parameters
+    \begin{itemize}
+    \item $\primary{\alpha} = 1 / a$ ($0 < \alpha < 1$)
+    \item $\primary{B} = b \cdot \alpha / (1 - \alpha)$
+    \item $0 \leq \primary{A} < B$ determines $S$ (ZM with $S = \infty$ for $A = 0$)
+    \item[\hand] $C$ is a normalization factor, not a parameter
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{ZM and fZM as LNRE models}
+
+  \centering
+  \only<beamer:1| handout:0>{\includegraphics[width=11cm]{../plots/lnre_tdf_zm}}%
+  \only<beamer:2| handout:1>{\includegraphics[width=11cm]{../plots/lnre_tdf_fzm}}%
+\end{frame}
+
+\begin{frame}
+  \frametitle{Expectations as integrals}
+
+  \begin{itemize}
+  \item Expected values can now be expressed as integrals over $g(\pi)$
+    \begin{align*}
+      \Exp{V_m} &= \int_0^{\infty} \frac{(N\pi)^m}{m!} e^{-N\pi} g(\pi) \dpi\\
+      \Exp{V} &= \int_0^{\infty} \bigl( 1 - e^{-N\pi} \bigr) g(\pi) \dpi
+    \end{align*}
+  \item<2-> Reduce to simple closed form for ZM (approximation)
+    \begin{align*}
+      \Exp{V_m} &= \frac{C}{m!} \cdot N^{\alpha} \cdot \Gamma (m - \alpha) \\
+      \Exp{V} &= C \cdot N^{\alpha} \cdot \frac{\Gamma(1 - \alpha)}{\alpha}
+    \end{align*}
+  \item<2-> fZM and exact solution for ZM with incompl.\ Gamma function
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Parameter estimation from training corpus}
+
+  \begin{itemize}
+  \item For ZM, $\alpha = \frac{\Exp{V_1}}{\Exp{V}} \approx \frac{V_1}{V}$ can be estimated directly,\\
+    but prone to overfitting
+  \item General parameter fitting by \hh{MLE}:\\
+    maximize likelihood of observed spectrum $\mathbf{v}$
+    \[
+      \max_{\alpha, A, B}\; \bigpC{(V, V1, \ldots, V_k) = \mathbf{v}}{\alpha, A, B}
+    \]
+  \item<2-> Multivariate normal approximation:\\
+    \[
+      \min_{\alpha, A, B}\; (\mathbf{v} - \pmb{\mu})^T \pmb{\Sigma}^{-1} (\mathbf{v} - \pmb{\mu})
+    \]
+  \item<2-> Minimization by gradient descent (BFGS, CG) or simplex search (Nelder-Mead)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Parameter estimation from training corpus}
+
+  \centering
+  \only<beamer:1| handout:1>{\includegraphics[width=11cm]{img/cost_bncBare_chisq_10}}%
+  \only<beamer:2| handout:0>{\includegraphics[width=11cm]{img/cost_brownWords_chisq_5}}%
+\end{frame}
+
+\begin{frame}
+  \frametitle{Goodness-of-fit}
+  \framesubtitle{\citep[Sec.~3.3]{Baayen:01}}
+
+  \begin{itemize}
+  \item How well does the fitted model explain the observed data?
+  \item For multivariate normal distribution:
+    \[
+      X^2 = (\mathbf{V} - \pmb{\mu})^T \pmb{\Sigma}^{-1} (\mathbf{V} - \pmb{\mu}) \sim \chi^2_{k + 1}
+    \]
+    where $\mathbf{V} = (V, V_1, \ldots, V_k)$
+  \item<2->[\So] Multivariate chi-squared test of \h{goodness-of-fit}
+    \begin{itemize}
+    \item replace $\mathbf{V}$ by observed $\mathbf{v}$ \so test statistic $x^2$
+    \item must reduce $\text{df} = k + 1$ by number of estimated parameters
+    \end{itemize}
+  \item<2->[]
+  \item<2-> NB: significant rejection of the LNRE model for $p < .05$
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\logo{\includegraphics[width=4cm]{img/Macchiato}}
+\begin{frame}[c]
+  \begin{center}
+    \counterpoint{\huge Coffee break!}
+  \end{center}
+\end{frame}
+\hideLogo{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Part 2}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Applications \& examples (zipfR)}
+
+\begin{frame}
+  \frametitle{Measuring morphological productivity}
+  \framesubtitle{example from \citet{Evert:Luedeling:01}}
+  
+  \centering
+  \only<beamer:1| handout:1>{\includegraphics[width=11cm]{../plots/EL2001_vgc_bar_sam_oes}}%
+  \only<beamer:2| handout:2>{\includegraphics[width=7cm]{img/02-samples-ot-vgc-extrapolated}}%
+  \only<beamer:3| handout:3>{\includegraphics[width=11cm]{../plots/EL2001_vgc_bar_sam_oes_extrap}}%
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Quantitative measures of productivity}
+  \framesubtitle{\citep{Tweedie:Baayen:98,Baayen:01}}
+
+  %% TODO: COMPLETE REFERENCES
+  \footnotesize
+  \begin{columns}[c]
+        \begin{column}{6cm}
+      \ungap[1.2]
+      \begin{itemize}
+      \item Baayen's (\citeyear{Baayen:91}) productivity index $\mathcal{P}$\\
+        (slope of vocabulary growth curve)
+        \[
+        \mathcal{P} = \frac{V_1}{N}
+        \]
+      \item TTR = type-token ratio
+        \[
+        \text{TTR} = \frac{V}{N}
+        \]
+      \item Zipf-Mandelbrot slope
+        \[
+        a
+        \]
+      \item Herdan's law (\citeyear{Herdan:64})
+        \[
+        C = \frac{\log V}{\log N}
+        \]
+      \end{itemize}
+    \end{column}
+    \begin{column}{6cm}
+      \begin{itemize}
+      \item<2-> \citet{Yule:44} /  Simpson (1949) 
+        \[
+          K = 10\,000\cdot \frac{\sum_m m^2 V_m - N}{N^2}
+        \]
+      \item<2-> Guiraud (1954)
+        \[
+          R = \frac{V}{\sqrt{N}}
+        \]
+      \item<2-> \citet{Sichel:75}
+        \[
+          S = \frac{V_2}{V}
+        \]
+      \item<2-> Honoré (1979)
+        \[
+          H = \frac{\log N}{1 - \frac{V_1}{V}}
+        \]
+      \end{itemize}
+    \end{column}
+  \end{columns}  
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Productivity measures for bare singulars in the BNC}
+  %% \framesubtitle{}
+
+  \begin{columns}[c]
+    \begin{column}{6cm}
+      \centering
+      \begin{tabular}{c@{$\qquad$}r@{$\qquad$}r}
+        \toprule
+        &    spoken &   written \\
+        \midrule
+        $V$     &  2,039 & 12,876 \\
+        $N$     &  6,766 & 85,750 \\
+        \midrule
+        $K$     &    86.84 &    28.57 \\
+        $R$     &    24.79 &    43.97 \\
+        $S$     &     0.13 &     0.15 \\
+        $C$     &     0.86 &     0.83 \\
+        $\mathcal{P}$     &     0.21 &     0.08 \\
+        TTR   &     0.301 &     0.150 \\
+        $a$     &     1.18 &     1.27 \\
+        pop.\ $S$ & 15,958 & 36,874 \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+    \begin{column}{6cm}
+      \visible<2->{\includegraphics[width=6cm]{img/bare_bncWS_vgc}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Are these ``lexical constants'' really constant?}
+  %% \framesubtitle{}
+
+  \centering
+  \includegraphics[width=11cm]{img/bare_bncS_obs_lexical_constants}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation experiments based on LNRE models}
+
+  \begin{itemize}
+  \item Systematic study of size dependence and other aspects of productivity
+    measures based on samples from LNRE model
+  \item LNRE model \so well-defined population
+  \item Random sampling helps to assess variability of measures
+  \item Expected values $\Exp{\mathcal{P}}$ etc.\ can often be computed directly\\ (or approximated) \so computationally efficient
+  \item[\So] LNRE models as tools for understanding productivity measures
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Simulation: sample size}
+
+  \centering
+  \includegraphics[width=11cm]{img/lexconst_sample_size}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Simulation: frequent lexicalized types}
+
+  \centering
+  \includegraphics[width=11cm]{img/lexconst_echo_type}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    \secondary{\huge interactive demo}
+  \end{center}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Posterior distribution}
+
+  \centering
+  \only<beamer:1| handout:1>{\includegraphics[width=11cm]{img/posterior_zm_4_1}}%
+  \only<beamer:2| handout:2>{\includegraphics[width=11cm]{img/posterior_zm_9_1}}%
+  \only<beamer:3| handout:0>{\includegraphics[width=11cm]{img/posterior_zm_9_2}}%
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Limitations}
+
+\begin{frame}
+  \frametitle{How reliable are the fitted models?}
+  
+  Three potential issues:
+  \begin{enumerate}
+  \item<2-> Model assumptions $\neq$ population\\
+    (e.g.\ distribution does not follow a Zipf-Mandelbrot law)
+    \begin{itemize}
+    \item[\hand] model cannot be adequate, regardless of parameter settings
+    \item[]
+    \end{itemize}
+  \item<3-> Parameter estimation unsuccessful\\
+    (i.e.\ suboptimal goodness-of-fit to training data)
+    \begin{itemize}
+    \item[\hand] optimization algorithm trapped in local minimum
+    \item[\hand] can result in highly inaccurate model
+    \item[]
+    \end{itemize}
+  \item<4-> \primary<5->{Uncertainty due to sampling variation}\\
+    (i.e.\ training data differ from population distribution)
+    \begin{itemize}
+    \item[\hand] model fitted to training data, may not reflect true population
+    \item[\hand] another training sample would have led to different parameters
+    \item[\hand] especially critical for small samples ($N < $ 10,000)
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Bootstrapping}
+
+  \begin{itemize}
+  \item<1-> An empirical approach to sampling variation:
+    \begin{itemize}
+    \item take many random samples from the same population
+    \item estimate LNRE model from each sample
+    \item analyse distribution of model parameters, goodness-of-fit, etc.
+      (mean, median, s.d., boxplot, histogram, \ldots)
+    \item problem: how to obtain the additional samples?
+    \end{itemize}
+  \item<2-> Bootstrapping \citep{Efron:79}
+    \begin{itemize}
+    \item resample from observed data \emph{with replacement}
+    \item this approach is not suitable for type-token distributions
+      (resamples underestimate vocabulary size $V$!)
+    \end{itemize}
+  \item<3-> Parametric bootstrapping
+    \begin{itemize}
+    \item use fitted model to generate samples, i.e.\ sample from the population described by the model
+    \item advantage: ``correct'' parameter values are known
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Bootstrapping}
+  \framesubtitle{parametric bootstrapping with 100 replicates}
+
+  \ungap[.5]
+  \only<beamer:1| handout:1>{\h{Zipfian slope $a = 1 / \alpha$}}%
+  \only<beamer:2| handout:0>{\h{Offset $b = (1 - \alpha) / (B\cdot \alpha)$}}%
+  \only<beamer:3| handout:0>{\h{fZM probability cutoff $A = \pi_S$}}%
+  \only<beamer:4| handout:2>{\h{Goodness-of-fit statistic $X^2$} \secondary{(model not plausible for $X^2 > 11$)}}%
+  \only<beamer:5-6| handout:3>{\h{Population diversity $S$}}%
+  \ungap[.5]
+  \begin{center}
+    \only<beamer:1| handout:1>{\includegraphics[width=10cm]{img/05-bootstrap-ultra-alpha}}%
+    \only<beamer:2| handout:0>{\includegraphics[width=10cm]{img/05-bootstrap-ultra-B}}%
+    \only<beamer:3| handout:0>{\includegraphics[width=10cm]{img/05-bootstrap-ultra-A}}%
+    \only<beamer:4| handout:2>{\includegraphics[width=10cm]{img/05-bootstrap-ultra-X2}}%
+    \only<beamer:5| handout:0>{\includegraphics[width=10cm]{img/05-bootstrap-ultra-S}}%
+    \only<beamer:6| handout:3>{\includegraphics[width=10cm]{img/05-bootstrap-ultra-S-zoomed}}%
+  \end{center}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Sample size matters!}
+  \framesubtitle{Brown corpus is too small for reliable LNRE parameter estimation (bare singulars)}
+
+  \centering
+  \includegraphics[width=11cm]{img/bare_brown_boot_fzm_a_S}
+\end{frame}
+
+\begin{frame}
+  \frametitle{How reliable are the fitted models?}
+  
+  Three potential issues:
+  \begin{enumerate}
+  \item \primary{Model assumptions $\neq$ population}\\
+    (e.g.\ distribution does not follow a Zipf-Mandelbrot law)
+    \begin{itemize}
+    \item[\hand] model cannot be adequate, regardless of parameter settings
+    \item[]
+    \end{itemize}
+  \item Parameter estimation unsuccessful\\
+    (i.e.\ suboptimal goodness-of-fit to training data)
+    \begin{itemize}
+    \item[\hand] optimization algorithm trapped in local minimum
+    \item[\hand] can result in highly inaccurate model
+    \item[]
+    \end{itemize}
+  \item Uncertainty due to sampling variation\\
+    (i.e.\ training data differ from population distribution)
+    \begin{itemize}
+    \item[\hand] model fitted to training data, may not reflect true population
+    \item[\hand] another training sample would have led to different parameters
+    \item[\hand] especially critical for small samples ($N < $ 10,000)
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{How well does Zipf's law hold?} 
+
+  \centering
+  \begin{tikzpicture}
+    \useasboundingbox (0, 0) rectangle (7.5, 7.5) ;
+    \node[anchor=south west] at (0, 0) {\includegraphics[height=7.5cm]{img/brown-zipf-man-rf}} ;
+    \draw[draw=primary, ultra thick] (6.4, 1.8) circle [radius=1] ;
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+  \frametitle{How well does Zipf's law hold?}
+
+  \begin{itemize}
+  \item Z-M law seems to fit the first few thousand ranks very well, but then slope of empirical ranking becomes much steeper
+    \begin{itemize}
+    \item similar patterns have been found in many different data sets
+    \item[]
+    \end{itemize}
+  \item<2-> Various modifications and extensions have been suggested \citep{Sichel:71,Kornai:99,Montemurro:01}
+    \begin{itemize}
+    \item mathematics of corresponding LNRE models are often much more complex and numerically challenging
+    \item may not have closed form for $\Exp{V}$, $\Exp{V_m}$, or for the cumulative type distribution $G(\rho) = \int_{\rho}^{\infty} g(\pi) \dpi$
+    \item[]
+    \end{itemize}
+  \item<3-> E.g.\ Generalized Inverse Gauss-Poisson \citep[GIGP;][]{Sichel:71}
+    \[
+      g(\pi) =
+      \frac{(2 / bc)^{\gamma + 1}}{K_{\gamma+1}(b)} \cdot
+      \primary{\pi}^{\gamma-1} \cdot
+      e^{-\frac{\primary{\pi}}{c} - \frac{b^2 c}{4 \primary{\pi}}}
+    \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{The GIGP model \citep{Sichel:71}}
+
+  \centering
+  \only<beamer:1| handout:0>{\includegraphics[width=11cm]{../plots/lnre_tdf_fzm}}%
+  \only<beamer:2| handout:1>{\includegraphics[width=11cm]{../plots/lnre_tdf_fzm_gigp}}%
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Non-randomness}
+
+\begin{frame}[c]
+  \frametitle{How accurate is LNRE-based extrapolation?}
+  \framesubtitle{\citep{Baroni:Evert:05}}
+
+  \hspace*{-10mm}%
+  \only<beamer:1| handout:1>{\includegraphics[width=12.5cm]{img/BE2005_bar-4-2}}%
+  \only<beamer:2| handout:0>{\includegraphics[width=12.5cm]{img/BE2005_lich-4-2}}%
+  \only<beamer:3| handout:2>{\includegraphics[width=12.5cm]{img/BE2005_lob-4-2}}%
+  \only<beamer:4| handout:3>{\includegraphics[width=12.5cm]{img/BE2005_bnc-100-10}}%
+\end{frame}
+
+\begin{frame}
+  \frametitle{Reasons for poor extrapolation quality}
+
+  \begin{itemize}
+  \item Major problem: \h{non-randomness} of corpus data
+    \begin{itemize}
+    \item LNRE modelling assumes that corpus is random sample
+    \item[]
+    \end{itemize}
+  \item<2-> Cause 1: \hh{repetition} within texts
+    \begin{itemize}
+    \item most corpora use entire text as unit of sampling
+    \item also referred to as ``term clustering'' or ``burstiness''
+    \item well-known in computational linguistics \citep{Church:00}
+    \item[]
+    \end{itemize}
+  \item<3-> Cause 2: \hh{non-homogeneous} corpus
+    \begin{itemize}
+    \item cannot extrapolate from spoken BNC to written BNC 
+    \item similar for different genres and domains
+    \item also within single text, e.g.\ beginning/end of novel
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The ECHO correction}
+  \framesubtitle{\citep{Baroni:Evert:07a}}
+
+  \begin{itemize}
+  \item Empirical study: quality of extrapolation $N_0 \to 4 N_0$ starting from random samples of corpus texts
+  \end{itemize}
+
+  \begin{center}
+    \begin{tabular}{cc}
+      \only<beamer:1| handout:1>{\includegraphics[height=4.5cm]{img/BE2007_plain_ranges_V_dewac}}%
+      \only<beamer:2| handout:0>{\includegraphics[height=4.5cm]{img/BE2007_plain_ranges_V_bnc}}%
+      & \includegraphics[width=5cm]{img/BE2007_plain_corr_V_3N}
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The ECHO correction}
+  \framesubtitle{\citep{Baroni:Evert:07a}}
+
+  \begin{itemize}
+  \item ECHO correction: replace every repetition within same text by special type \textsc{echo} (= document frequencies)
+  \end{itemize}
+
+  \ungap[1]
+  \begin{center}
+    \begin{tabular}{cc}
+      \only<beamer:1| handout:1>{\includegraphics[height=4.5cm]{img/BE2007_ranges_V_dewac}}%
+      \only<beamer:2| handout:0>{\includegraphics[height=4.5cm]{img/BE2007_ranges_V_bnc}}%
+      & \includegraphics[width=5cm]{img/BE2007_corr_V_3N}
+    \end{tabular}
+  \end{center}  
+\end{frame}
+
+%% TODO: MURDOCH
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Conclusion \& outlook}
+
+\begin{frame}
+  \frametitle{Future plans for zipfR}
+
+  \begin{itemize}
+  \item More efficient LNRE sampling \& parametric bootstrapping
+  \item Improve parameter estimation (minimization algorithm)
+  \item Better computation accuracy by numerical integration
+  \item Extended Zipf-Mandelbrot LNRE model: piecewise power law
+  \item Development of robust and interpretable productivity measures, using LNRE simulations
+  \item Computationally expensive modelling (MCMC) for accurate inference from small samples
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    \counterpoint{\huge Thank you!}
+  \end{center}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% References (if any)
+
+\frame[allowframebreaks]{
+  \frametitle{References}
+  \bibliographystyle{natbib-stefan}
+  \begin{scriptsize}
+    \bibliography{stefan-publications,stefan-literature}
+  \end{scriptsize}
+}
+
+\end{document}

@@ -1,0 +1,329 @@
+%% \documentclass[handout,t]{beamer} % HANDOUT
+%% \documentclass[handout,notes=show,t]{beamer} % NOTES
+\documentclass[t]{beamer} % SLIDES
+
+\usetheme{ZipfR}
+\usepackage{beamer-tools}
+
+\input{lib/math}  % basic mathematical notation
+\input{lib/stat}  % notation for probability theory and statistics
+\input{lib/vector}% convenience macros for vectors and matrices
+
+\input{local/config} % local adjustments to configuration and macros
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Titlepage
+
+\title[T1: Zipf's Law]{What Every Computational Linguist
+  Should Know About Type-Token Distributions and Zipf's Law}
+\subtitle{\primary{Tutorial 1, 7 May 2018}}
+\author[Stefan Evert]{Stefan Evert\\ FAU Erlangen-Nürnberg}
+\date[7 May 2018 | CC-by-sa]{\href{http://zipfr.r-forge.r-project.org/lrec2018.html}{http://zipfr.r-forge.r-project.org/lrec2018.html}\\
+ \light{\small Licensed under CC-by-sa version 3.0}}
+
+\begin{document}
+
+\pgfdeclareimage[width=36mm]{lrec-logo}{img/logo_lrec2018}
+\pgfdeclareimage[width=30mm]{kallimachos-logo}{img/logo_kallimachos}
+\logo{\pgfuseimage{lrec-logo}\hspace{6cm}\pgfuseimage{kallimachos-logo}}
+
+\frame{\titlepage}
+\hideLogo{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{zipfR}
+
+\begin{frame}
+  \frametitle{zipfR}
+  \framesubtitle{\citet{Evert:Baroni:07}}
+
+  \begin{itemize}
+  \item \url{http://zipfR.R-Forge.R-Project.org/}
+  \item Conveniently available from CRAN repository
+    \begin{itemize}
+    \item see Unit 1 for general package installation guides
+    \end{itemize}
+  \end{itemize}
+
+  \begin{flushright}
+    \includegraphics[width=6cm]{img/zipfR_logo}
+    \rule{1cm}{0mm}
+  \end{flushright}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Loading}
+
+\begin{alltt}
+> library(zipfR)
+
+> ?zipfR
+
+> data(package="zipfR")
+
+\REM{package overview in HTML help leads to zipfR tutorial}
+> help.start() 
+\end{alltt}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Importing data}
+
+\begin{alltt}
+> data(ItaRi.spc)     \REM{not necessary in recent package versions}
+> data(ItaRi.emp.vgc)
+
+\REM{load your own data sets (see \texttt{?read.spc} etc.\ for file format)}
+> my.spc <- read.spc("my.spc.txt")
+> my.vgc <- read.vgc("my.vgc.txt")
+
+> my.tfl <- read.tfl("my.tfl.txt")
+> my.spc <- tfl2spc(my.tfl) \REM{compute spectrum from frequency list}
+\end{alltt}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Looking at spectra}
+
+\begin{alltt}
+> summary(ItaRi.spc)
+> ItaRi.spc
+
+> N(ItaRi.spc)
+> V(ItaRi.spc)
+> Vm(ItaRi.spc, 1)
+> Vm(ItaRi.spc, 1:5)
+
+\REM{Baayen's P = estimate for slope of VGC}
+> Vm(ItaRi.spc, 1) / N(ItaRi.spc)
+
+> plot(ItaRi.spc)
+> plot(ItaRi.spc, log="x")
+\end{alltt}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Looking at VGCs}
+
+\begin{verbatim}
+> summary(ItaRi.emp.vgc)
+> ItaRi.emp.vgc
+
+> N(ItaRi.emp.vgc)
+
+> plot(ItaRi.emp.vgc, add.m=1)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Smoothing VGCs with binomial interpolation}
+  \framesubtitle{\citep[for details, see][Sec. 2.6.1]{Baayen:01}}
+
+\begin{alltt}
+\REM{interpolated VGC}
+> ItaRi.bin.vgc <- 
+  vgc.interp(ItaRi.spc, N(ItaRi.emp.vgc), m.max=1)
+
+> summary(ItaRi.bin.vgc)
+
+\REM{comparison}
+> plot(ItaRi.emp.vgc, ItaRi.bin.vgc,
+       legend=c("observed", "interpolated"))
+\end{alltt}
+
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{\emph{ultra-}}
+
+  \begin{itemize}
+  \item Load the spectrum and empirical VGC of the less common prefix \emph{ultra-}
+  \item Compute binomially interpolated VGC for \emph{ultra-}
+  \item Plot the binomially interpolated \emph{ri-} and \emph{ultra-}
+    VGCs together
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Estimating LNRE models}
+
+\begin{alltt}
+\REM{fit a fZM model}
+\REM{(you can also try ZM and GIGP, and compare them with fZM)}
+
+> ItaUltra.fzm <- lnre("fzm", ItaUltra.spc)
+
+> summary(ItaUltra.fzm)
+\end{alltt}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Observed/expected spectra at estimation size}
+\begin{alltt}
+\REM{expected spectrum}
+> ItaUltra.fzm.spc <- 
+  lnre.spc(ItaUltra.fzm, N(ItaUltra.fzm))
+
+\REM{compare}
+> plot(ItaUltra.spc, ItaUltra.fzm.spc,
+       legend=c("observed", "fzm"))
+
+\REM{plot first 10 elements only}
+> plot(ItaUltra.spc, ItaUltra.fzm.spc, 
+       legend=c("observed", "fzm"), m.max=10)
+\end{alltt}
+\end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Expected spectra at 10 times the estimation size}
+% \begin{alltt}
+% \REM{extrapolated spectra}
+
+% ItaRi.zm.spc <- lnre.spc(ItaRi.zm, 10*N(ItaRi.zm))
+
+% ItaRi.fzm.spc <- lnre.spc(ItaRi.fzm, 
+% 10*N(ItaRi.fzm))
+
+% \REM{compare}
+
+% plot(ItaRi.zm.spc, ItaRi.fzm.spc,
+% legend=c("zm","fzm"))
+% \end{alltt}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Evaluating extrapolation quality 1}
+
+% \begin{alltt}
+% \REM{taking a subsample and estimating a model (if you
+% # repat you'll get different sample and different 
+% # model!)}
+
+% ItaRi.sub.spc <- sample.spc(ItaRi.spc, N=700000)
+
+% ItaRi.sub.fzm <- lnre("fzm", ItaRi.sub.spc)
+
+% ItaRi.sub.fzm
+% \end{alltt}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Evaluating extrapolation quality 2}
+
+% \begin{alltt}
+% \REM{extrapolate vgc up to original sample size}
+
+% ItaRi.sub.fzm.vgc <- lnre.vgc(ItaRi.sub.fzm, 
+% N(ItaRi.emp.vgc))
+
+% \REM{compare}
+
+% plot(ItaRi.bin.vgc, ItaRi.sub.fzm.vgc,
+% N0=N(ItaRi.sub.fzm), legend=c("interpolated","fZM"))
+% \end{alltt}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Compare growth of two categories 1}
+% \begin{alltt}
+% \REM{the ultra- prefix}
+
+% data(ItaUltra.spc)
+
+% summary(ItaUltra.spc)
+
+% \REM{cf.}
+
+% summary(ItaRi.spc)
+
+% \REM{estimating model}
+
+% ItaUltra.fzm <- lnre("fzm",ItaUltra.spc,exact=F)
+
+% ItaUltra.fzm
+
+% \end{alltt}
+% \end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Compare growth of two categories}
+\begin{alltt}
+\REM{extrapolation of \emph{ultra-} VGC to sample size of \emph{ri-} data}
+> ItaUltra.ext.vgc <- 
+  lnre.vgc(ItaUltra.fzm, N(ItaRi.emp.vgc))
+
+\REM{compare}
+> plot(ItaUltra.ext.vgc, ItaRi.bin.vgc,
+       N0=N(ItaUltra.fzm), legend=c("ultra-", "ri-"))
+
+\REM{zooming in}
+> plot(ItaUltra.ext.vgc, ItaRi.bin.vgc,
+       N0=N(ItaUltra.fzm), legend=c("ultra-", "ri-"),
+       xlim=c(0, 100e3))
+\end{alltt}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Model validation by parametric bootstrapping}
+\begin{alltt}
+\REM{define function to extract relevant information from fitted model}
+> extract.stats <- function (m)
+    data.frame(alpha=m$param$alpha, A=m$param$A, 
+               B=m$param$B, S=m$S, X2=m$gof$X2)
+
+\REM{run bootstrapping procedure (default = 100 replicates)}
+> runs <- lnre.bootstrap(ItaUltra.fzm, N(ItaUltra.fzm), 
+                         lnre, extract.stats, type="fzm")
+
+> head(runs)
+
+\REM{NB: don't try this with large samples (N \(>\) 1M tokens)}
+\end{alltt} %$
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model validation by parametric bootstrapping}
+\begin{alltt}
+\REM{distribution of estimated model parameters}
+> hist(runs$alpha, freq=FALSE, xlim=c(0, 1))
+> lines(density(runs$alpha), lwd=2, col="red")
+> abline(v=ItaUltra.fzm$param$alpha, lwd=2, col="blue")
+
+\REM{try the other parameters for yourself!}
+
+\REM{distribution of goodness-of-fit values}
+> hist(runs$X2, freq=FALSE)
+> lines(density(runs$X2), lwd=2, col="red")
+
+\REM{estimated population vocabulary size}
+> hist(runs$S) \REM{what is wrong here?}
+\end{alltt} %$
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% References (if any)
+
+\frame[allowframebreaks]{
+  \frametitle{References}
+  \bibliographystyle{natbib-stefan}
+  \begin{scriptsize}
+    \bibliography{stefan-publications,stefan-literature}
+  \end{scriptsize}
+}
+
+\end{document}
