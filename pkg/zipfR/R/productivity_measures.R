@@ -1,1 +1,1 @@
-productivity.measures <- function (obj, measures, conf.level=.95, ...) UseMethod("productivity.measures")
+productivity.measures <- function (obj, measures, ...) UseMethod("productivity.measures")

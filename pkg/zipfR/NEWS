@@ -14,8 +14,8 @@ Version 0.7:
   - posterior distribution functions using LNRE models as a Bayesian prior,
     with type density postdlnre(), log-transformed density postldlnre(), as well as
     cumulative probability postplnre() and quantiles postqlnre() for selected models
-  - compute various productivity measures from observed frequency spectrum, as well
-    as expectations and approximate confidence intervals from expected frequency spectrum
+  - compute various productivity measures from frequency spectrum or vocabulary
+    growth curve (either observed values or approximate expectations)
   - merge() method for two or more type frequency lists
   - new example data sets from Evert & Luedeling (2001) and Baayen (2001)
 

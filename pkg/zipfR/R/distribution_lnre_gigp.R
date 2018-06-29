@@ -6,7 +6,7 @@ tdlnre.lnre.gigp <- function (model, x, ...)
   b <- model$param$B                    # original notation from Baayen (2001)
   c <- model$param$C
 
-  C <- (2 / (b*c))^(gamma+1) / besselK(b, gamma+1)
+  C <- (2 / (b*c))^(gamma+1) / (2 * besselK(b, gamma+1))
   d <- C * x^(gamma-1) * exp(- x/c - (b*b*c)/(4*x))
   
   d
@@ -21,7 +21,7 @@ dlnre.lnre.gigp <- function (model, x, ...)
   b <- model$param$B                    # original notation from Baayen (2001)
   c <- model$param$C
 
-  C <- (2 / (b*c))^(gamma+1) / besselK(b, gamma+1)
+  C <- (2 / (b*c))^(gamma+1) / (2 * besselK(b, gamma+1))
   d <- C * x^gamma * exp(- x/c - (b*b*c)/(4*x))
   
   d

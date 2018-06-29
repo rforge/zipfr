@@ -5,32 +5,27 @@
 
 \description{
 
-  Compute various measures of productivity and lexical richness
-  from an observed or expected frequency spectrum (or an LNRE model).
+  Compute various measures of productivity and lexical richness from
+  an observed or expected frequency spectrum or vocabulary growth curve.
 
-  If possible, approximate confidence intervals are determined for
-  the selected measures.
-  
 }
 
 \usage{
 
-productivity.measures(obj, measures, conf.level=.95, ...)
+productivity.measures(obj, measures, ...)
 
 }
 
 \arguments{
 
   \item{obj}{a suitable data object from which productivity measures
-    can be computed. Currently either an observed or expected frequency
-    spectrum (of class \code{spc}) or an LNRE model (a subclass of \code{lnre}).}
+    can be computed. Currently either a frequency spectrum
+    (of class \code{spc}) or a vocabulary growth curve (of class \code{vgc}).}
 
   \item{measures}{character vector naming the productivity measures to
     be computed (see "Productivity Measures" below).
     Names may be abbreviated as long as they remain unique.}
 
-  \item{conf.level}{confidence level for the optional confidence intervals}
-  
   \item{...}{additional arguments passed on to the method implementation
     (see respective manpages for details)}
   
@@ -38,12 +33,25 @@ productivity.measures(obj, measures, conf.level=.95, ...)
 
 \value{
 
-  A data frame with one or three columns, and rows  labelled with the full names of the productivity measures:
+  If \code{obj} is a frequency spectrum: A numeric vector of the same length as \code{measures} with the
+  corresponding observed or expected values of the productivity measures.
 
-  \item{estimate}{the observed or expected value of the productivity measure}
-  \item{lower}{lower bound of the confidence interval (if available)}
-  \item{upper}{upper bound of the confidence interval (if available)}
-    
+  If \code{obj} is a vocabulary growth curves: A numeric matrix with columns corresponding to the selected
+  productivity measures and rows corresponding to the sample sizes of the vocabulary growth curve.
+  
+}
+
+\details{
+
+  For an observed frequency spectrum or vocabulary growth curve, sample estimates of the productivity measures are computed.
+  In the case of vocabulary growth curves, computation is only possible if a sufficient number of spectrum elements (usually
+  \eqn{V_1} and \eqn{V_2}) are available. \eqn{L} and \eqn{D} are not supported for vocabulary growth curves. Any unavailable
+  measures appear as missing value (\code{NA}) in the result vector.
+
+  For an expected frequency spectrum or vocabulary growth curve, the expectations of the productivity measures are computed.
+  They are exact for \eqn{K}, \eqn{D}, \eqn{R}, \eqn{C}, \eqn{P}, TTR and \eqn{V}, but only approximations for \eqn{S}, \eqn{H} and Hapax.
+  A suitable number of expected spectrum elements are required for \eqn{K} and \eqn{D}, which are not available for vocbulary growth curves.
+  
 }
 
 \section{Productivity Measures}{
@@ -69,7 +77,7 @@ productivity.measures(obj, measures, conf.level=.95, ...)
 \seealso{
 
   Methods \code{\link{productivity.measures.spc}} (for observed and expected frequency spectra)
-  and \code{\link{productivity.measures.lnre}} (for LNRE models).
+  and \code{\link{productivity.measures.vgc}} (for observed and expected vocabulary growth curves).
   
 }
 
