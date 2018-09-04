@@ -14,10 +14,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Titlepage
 
-\title[Productivity in small samples]{The impossibility of measuring productivity\\ in small samples}
+\title[LNRE models]{LNRE models of type-token distributions}
 \subtitle{}
 \author[Stefan Evert]{Stefan Evert\\ FAU Erlangen-Nürnberg}
-\date[MISC | 18 May 2018]{\small MISC Workshop @ HU Berlin\\18 May 2018}
+\date[Würzburg | 3 Sep 2018]{\small Kallimachos II\\Würzburg, 3 Sep 2018}
 
 \begin{document}
 
@@ -26,11 +26,60 @@
 
 \frame{\titlepage}
 \hideLogo{}
-\AtBeginSubsection[]{}
+%% \AtBeginSubsection[]{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Notation}
-\subsection{and basic concepts}
+
+\section*{Outline}
+\frame{ 
+  \frametitle{Outline}
+  \tableofcontents
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Applications}
+
+\begin{frame}
+  \frametitle{Applications of type-token statistics}
+
+  \begin{itemize}
+  \item How many words did Shakespeare know?
+  \item What is the coverage of my treebank grammar on big data?
+  \item How many typos are there on the Internet?
+  \item Is \emph{-ness} more productive than \emph{-ity} in English?
+  \item Are there differences in the productivity of nominal compounds between academic writing and novels?
+  \item Does Dickens use a more complex vocabulary than Rowling?
+  \item Can a decline in lexical complexity predict Alzheimer's disease?
+  \item How frequent is a hapax legomenon from the Brown corpus?
+  \item What is appropriate smoothing for my n-gram model?
+  \item Who wrote the Bixby letter, Lincoln or Hay?
+  \item How many different species of \ldots\ are there? \citep{Brainerd:82}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Applications of type-token statistics}
+
+  \begin{itemize}
+  \item 
+  \item \counterpoint{coverage estimates}
+  \item
+  \item
+  \item \counterpoint{productivity}\\\rule{0mm}{1ex}
+  \item \counterpoint{lexical complexity \& stylometry}
+  \item 
+  \item \counterpoint{prior \& posterior distribution}
+  \item 
+  \item \counterpoint{unexpected applications}
+  \item 
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Notation \& basic concepts}
 
 \newcommand{\TC}[1]{\counterpoint{\emph{#1}}}
 \newcommand{\TL}[1]{\light{\emph{#1}}}
@@ -235,11 +284,21 @@
   \end{center}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Measuring productivity}
+\begin{frame}
+  \frametitle{Vocabulary growth in authorship attribution}
+
+  \begin{itemize}
+  \item Authorship attribution by n-gram tracing applied to the case of the Bixby letter \citep{Grieve:etc:18}
+  \item Word or character n-grams in disputed text are compared against large ``training'' corpora from candidate authors
+  \end{itemize}
+
+  \begin{center}
+    \includegraphics[width=7cm]{img/GrieveEtc2018_fig1}
+  \end{center}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{VCG \& quantitative measures}
+\subsection{Productivity \& lexical diversity}
 
 \begin{frame}
   \frametitle{Measuring morphological productivity}
@@ -339,22 +398,9 @@
   \includegraphics[width=11cm]{img/bare_bncS_obs_lexical_constants}
 \end{frame}
 
-\begin{frame}[c]
-  \frametitle{Simulation: sample size}
-
-  \centering
-  \includegraphics[width=11cm]{img/lexconst_sample_size}
-\end{frame}
-
-\begin{frame}[c]
-  \frametitle{Simulation: frequent lexicalized types}
-
-  \centering
-  \includegraphics[width=11cm]{img/lexconst_echo_type}
-\end{frame}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{LNRE models}
+\section{LNRE models}
+\subsection{Population \& samples}
 
 \begin{frame}
   \frametitle{LNRE models}
@@ -552,6 +598,30 @@
   \includegraphics[width=7.5cm]{img/02-samples-ot-vgc-extrapolated}
 \end{frame}
 
+\begin{frame}<beamer:1-7| handout:0>
+  \frametitle{Parameter estimation by trial \& error}
+
+  \begin{center}
+    \begin{tabular}{c @{} c}
+      \only<beamer:1| handout:1>{\includegraphics[width=50mm]{img/05-estimation-spc-1}}%
+      \only<beamer:2| handout:2>{\includegraphics[width=50mm]{img/05-estimation-spc-2}}%
+      \only<beamer:3| handout:3>{\includegraphics[width=50mm]{img/05-estimation-spc-3}}%
+      \only<beamer:4| handout:0>{\includegraphics[width=50mm]{img/05-estimation-spc-1}}%
+      \only<beamer:5| handout:0>{\includegraphics[width=50mm]{img/05-estimation-spc-4}}%
+      \only<beamer:6| handout:0>{\includegraphics[width=50mm]{img/05-estimation-spc-5}}%
+      \only<beamer:7| handout:7>{\includegraphics[width=50mm]{img/05-estimation-spc-6}}%
+      &
+      \only<beamer:1| handout:1>{\includegraphics[width=50mm]{img/05-estimation-vgc-1}}%
+      \only<beamer:2| handout:2>{\includegraphics[width=50mm]{img/05-estimation-vgc-2}}%
+      \only<beamer:3| handout:3>{\includegraphics[width=50mm]{img/05-estimation-vgc-3}}%
+      \only<beamer:4| handout:0>{\includegraphics[width=50mm]{img/05-estimation-vgc-1}}%
+      \only<beamer:5| handout:0>{\includegraphics[width=50mm]{img/05-estimation-vgc-4}}%
+      \only<beamer:6| handout:0>{\includegraphics[width=50mm]{img/05-estimation-vgc-5}}%
+      \only<beamer:7| handout:7>{\includegraphics[width=50mm]{img/05-estimation-vgc-6}}%
+    \end{tabular}
+  \end{center}
+\end{frame}
+
 \begin{frame}[c]
   \frametitle{Parameter estimation}
   % \framesubtitle{Minimisation of suitable cost function for frequency spectrum}
@@ -570,18 +640,298 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[c]
-  \frametitle{Parameter estimation}
-  \framesubtitle{ZM model with free parameters $0 < \alpha < 1$ and $B > 0$}
-  
-  \centering\hspace*{-5mm}%
-  \only<beamer:1| handout:1>{\includegraphics[width=12cm]{img/cost_bncBare_chisq_10}}%
-  \only<beamer:0| handout:0>{\includegraphics[width=12cm]{img/cost_brownWords_chisq_5}}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{The mathematics of LNRE}
+
+\begin{frame}
+  \frametitle{The sampling model}
+
+  \begin{itemize}
+  \item Draw random sample of $N$ tokens from LNRE population
+  \item Sufficient statistic: set of type frequencies $\set{f_i}$
+    \begin{itemize}
+    \item because tokens of random sample have no ordering
+    \end{itemize}
+  \item Joint \hh{multinomial} distribution of $\set{f_i}$:
+    \[
+      \pC{\set{f_i = k_i}}{N} =
+      \frac{N!}{k_1! \cdots k_S!} \pi_1^{k_1} \cdots \pi_S^{k_S}
+    \]
+  \item<2-> \h{Approximation:} do not condition on fixed sample size $N$
+    \begin{itemize}
+    \item $N$ is now the average (expected) sample size
+    \end{itemize}
+  \item<2-> Random variables $f_i$ have \hh{independent Poisson} distributions:
+    \[
+      \p{f_i = k_i} = e^{-N\pi_i} \frac{(N\pi_i)^{k_i}}{k_i!}
+    \]
+  \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Frequency spectrum}
+
+  \begin{itemize}
+  \item Key problem: we cannot determine $f_i$ in observed sample
+    \begin{itemize}
+    \item because we don't know which type $w_i$ is
+    \item recall that population ranking $f_i$ $\neq$ Zipf ranking $f_r$
+    \end{itemize}
+  \item Use spectrum $\set{V_m}$ and sample size $V$ as statistics
+    \begin{itemize}
+    \item contains all information we have about observed sample
+    \end{itemize}
+  \item<2-> Can be expressed in terms of indicator variables
+    \begin{align*}
+      \IV{f_i = m} &=
+      \begin{cases}
+        1 & f_i = m\\
+        0 & \text{otherwise}
+      \end{cases}\\
+      \visible<3->{V_m &= \sum_{i=1}^S \IV{f_i = m}} \\
+      \visible<4->{V &= \sum_{i=1}^S \IV{f_i > 0} = \sum_{i=1}^S \bigl( 1 - \IV{f_i = 0} \bigr)}
+    \end{align*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The expected spectrum}
+
+  \begin{itemize}
+  \item It is easy to compute expected values for the frequency spectrum (and
+    variances because the $f_i$ are independent)
+    \begin{align*}
+      \Exp{\IV{f_i = m}} &= \p{f_i = m} = e^{-N\pi_i} \frac{(N\pi_i)^m}{m!}\\
+      \visible<2->{\Exp{V_m} &= \sum_{i=1}^S \Exp{\IV{f_i = m}} = \sum_{i=1}^S e^{-N\pi_i} \frac{(N\pi_i)^m}{m!}}\\
+      \visible<3->{\Exp{V} &= \sum_{i=1}^S \bigExp{1 - \IV{f_i = 0}} = \sum_{i=1}^S \bigl( 1 - e^{-N\pi_i} \bigr)}
+    \end{align*}
+  \item<4-> NB: $V_m$ and $V$ are \primary{not independent} because they are
+    derived from the same random variables $f_i$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sampling distribution of $V_m$ and $V$}
+
+  \begin{itemize}
+  \item Joint sampling distribution of $\set{V_m}$ and $V$ is complicated
+  \item \h{Approximation:} $V$ and $\set{V_m}$ asymptotically follow a \hh{multivariate normal} distribution
+    \begin{itemize}
+    \item motivated by the multivariate central limit theorem:\\ sum of many independent variables $\IV{f_i = m}$
+    \end{itemize}
+  \item Usually limited to first spectrum elements, e.g.\ $V_1, \ldots, V_{15}$
+    \begin{itemize}
+    \item approximation of discrete $V_m$ by continuous distribution
+      suitable only if $\Exp{V_m}$ is sufficiently large
+    \end{itemize}
+  \item<2-> Parameters of multivariate normal:
+    $\pmb{\mu} = (\Exp{V}, \Exp{V_1}, \Exp{V_2}, \ldots)$ and $\pmb{\Sigma}$ = covariance matrix
+    \[
+      \bigp{(V, V_1, \ldots, V_k) = \mathbf{v}} \sim
+      \frac{
+        e^{-\frac12 (\mathbf{v} - \pmb{\mu})^T \pmb{\Sigma}^{-1} (\mathbf{v} - \pmb{\mu})}
+      }{\small
+        \sqrt{(2\pi)^{k+1} \det \pmb{\Sigma}}
+      }
+    \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Type density function}
+
+  \begin{itemize}
+  \item Discrete sums of probabilities in $\Exp{V}$, $\Exp{V_m}$, $\ldots$ are inconvenient and computationally expensive
+  \item \h{Approximation:} continuous \h{type density function} $g(\pi)$
+    \begin{align*}
+      \abs{\setdef{w_i}{a \leq \pi_i \leq b}}
+      &= \int_a^b g(\pi) \dpi\\
+      \sum \setdef{\pi_i}{a \leq \pi_i \leq b}
+      &= \int_a^b \pi g(\pi) \dpi
+    \end{align*}
+  \item<2-> Normalization constraint:
+    \[
+      \int_0^{\infty} \pi g(\pi) \dpi = 1
+    \]
+  \item<2-> Good approximation for low-probability types, but probability mass of $w_1, w_2, \ldots$ ``smeared out'' over range
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Type density function}
+
+  \centering
+  \begin{tikzpicture}
+    \useasboundingbox (0, 0) rectangle (11, 7) ;
+    \node[anchor=south west] at (0, 0) {\includegraphics[width=11cm]{../plots/lnre_tdf_vs_prob}} ;
+    \visible<2->{
+      \node[anchor=south west] at (4.5, 3) {\includegraphics[width=7cm]{../plots/lnre_pdf_vs_prob}} ;
+    }
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+  \frametitle{ZM and fZM as LNRE models}
+
+  \begin{itemize}
+  \item Discrete Zipf-Mandelbrot population
+    \[
+      \pi_i := \frac{C}{(i + b) ^ a} \quad \text{for } i = 1, \ldots, S
+    \]
+  \item<2-> Corresponding type density function \citep{Evert:04}
+    \[
+      g(\pi) =
+      \begin{cases}
+        C\cdot \pi^{-\alpha-1} & A \leq \pi \leq B\\
+        0 & \text{otherwise}
+      \end{cases}
+    \]
+    \onslide<3->
+    with parameters
+    \begin{itemize}
+    \item $\primary{\alpha} = 1 / a$ ($0 < \alpha < 1$)
+    \item $\primary{B} = b \cdot \alpha / (1 - \alpha)$
+    \item $0 \leq \primary{A} < B$ determines $S$ (ZM with $S = \infty$ for $A = 0$)
+    \item[\hand] $C$ is a normalization factor, not a parameter
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{ZM and fZM as LNRE models}
+
+  \centering
+  \only<beamer:1| handout:0>{\includegraphics[width=11cm]{../plots/lnre_tdf_zm}}%
+  \only<beamer:2| handout:1>{\includegraphics[width=11cm]{../plots/lnre_tdf_fzm}}%
+\end{frame}
+
+\begin{frame}
+  \frametitle{Expectations as integrals}
+
+  \begin{itemize}
+  \item Expected values can now be expressed as integrals over $g(\pi)$
+    \begin{align*}
+      \Exp{V_m} &= \int_0^{\infty} \frac{(N\pi)^m}{m!} e^{-N\pi} g(\pi) \dpi\\
+      \Exp{V} &= \int_0^{\infty} \bigl( 1 - e^{-N\pi} \bigr) g(\pi) \dpi
+    \end{align*}
+  \item<2-> Reduce to simple closed form for ZM (approximation)
+    \begin{align*}
+      \Exp{V_m} &= \frac{C}{m!} \cdot N^{\alpha} \cdot \Gamma (m - \alpha) \\
+      \Exp{V} &= C \cdot N^{\alpha} \cdot \frac{\Gamma(1 - \alpha)}{\alpha}
+    \end{align*}
+  \item<2-> fZM (and exact solution for ZM) with incompl.\ Gamma function
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Parameter estimation from training corpus}
+
+  \begin{itemize}
+  \item For ZM, $\alpha = \frac{\Exp{V_1}}{\Exp{V}} \approx \frac{V_1}{V}$ can be estimated directly,\\
+    but prone to overfitting
+  \item General parameter fitting by \hh{MLE}:\\
+    maximize likelihood of observed spectrum $\mathbf{v}$
+    \[
+      \max_{\alpha, A, B}\; \bigpC{(V, V_1, \ldots, V_k) = \mathbf{v}}{\alpha, A, B}
+    \]
+  \item<2-> Multivariate normal approximation:\\
+    \[
+      \min_{\alpha, A, B}\; (\mathbf{v} - \pmb{\mu})^T \pmb{\Sigma}^{-1} (\mathbf{v} - \pmb{\mu})
+    \]
+  \item<2-> Minimization by gradient descent (BFGS, CG) or simplex search (Nelder-Mead)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Parameter estimation from training corpus}
+
+  \centering
+  \only<beamer:1| handout:1>{\includegraphics[width=11cm]{img/cost_bncBare_chisq_10}}%
+  \only<beamer:2| handout:0>{\includegraphics[width=11cm]{img/cost_brownWords_chisq_5}}%
+\end{frame}
+
+\begin{frame}
+  \frametitle{Goodness-of-fit}
+  \framesubtitle{\citep[Sec.~3.3]{Baayen:01}}
+
+  \begin{itemize}
+  \item How well does the fitted model explain the observed data?
+  \item For multivariate normal distribution:
+    \[
+      X^2 = (\mathbf{V} - \pmb{\mu})^T \pmb{\Sigma}^{-1} (\mathbf{V} - \pmb{\mu}) \sim \chi^2_{k + 1}
+    \]
+    where $\mathbf{V} = (V, V_1, \ldots, V_k)$
+  \item<2->[\So] Multivariate chi-squared test of \h{goodness-of-fit}
+    \begin{itemize}
+    \item replace $\mathbf{V}$ by observed $\mathbf{v}$ \so test statistic $x^2$
+    \item must reduce $\text{df} = k + 1$ by number of estimated parameters
+    \end{itemize}
+  \item<2->[]
+  \item<2-> NB: significant rejection of the LNRE model for $p < .05$
+  \end{itemize}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\logo{\includegraphics[width=4cm]{img/Macchiato}}
+\begin{frame}[c]
+  \begin{center}
+    \counterpoint{\huge Coffee break?}
+  \end{center}
+\end{frame}
+\hideLogo{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \section{Problems}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Interpretability of measures}
+
+\begin{frame}[c]
+  \frametitle{Empirical observations}
+  %% \framesubtitle{}
+
+  \centering
+  \includegraphics[width=11cm]{img/bare_bncS_obs_lexical_constants}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Parametric bootstrapping with LNRE models}
+
+  \begin{columns}[T]
+    \begin{column}{55mm}
+      \begin{itemize}
+      \item Use simulation experiments to gain better understanding of quantitative measures
+      \item Resampling (bootstrapping) leads to biased type counts
+      \item<2->[\So] Parametric bootstrapping based on LNRE population
+        \begin{itemize}
+        \item arbitrary sample size
+        \item intuitive notion of productivity \so parameters 
+        \item controlled manipulation of confounding factors
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}{45mm}
+      \visible<2->{\includegraphics[width=45mm]{img/lexconst_spectra}}%
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Parametric bootstrapping: sample size}
+  
+  \centering
+  \includegraphics[width=11cm]{img/lexconst_sample_size}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Parametric bootstrapping: frequent lexicalized types}
+
+  \centering
+  \includegraphics[width=11cm]{img/lexconst_echo_type}
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{LNRE models}
@@ -831,8 +1181,65 @@
   \includegraphics[width=11cm]{img/bare_brown_boot_fzm_a_S}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Research programme}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{My research programme for LNRE models}
+
+  \begin{itemize}
+  \item<1-> Improve efficiency \& numerical accuracy of implementation
+    \begin{itemize}
+    \item numerical integrals instead of differences of Gamma functions
+    \item efficient generation of large random samples
+    \end{itemize}
+  \item<2-> Analyze accuracy of LNRE approximations
+    \begin{itemize}
+    \item comprehensive simulation experiments, esp.\ for small samples
+    \end{itemize}
+  \item<3-> Specify more flexible LNRE population models
+    \begin{itemize}
+    \item my favourite: piecewise Zipfian type density functions
+    \item flexible approximation, but no deep mathematical justification
+    \end{itemize}
+  \item<4-> Develop hypothesis tests \& confidence intervals
+    \begin{itemize}
+    \item key challenge: goodness-of-fit \vs confidence region
+    \item prediction intervals for model-based extrapolation
+    \end{itemize}
+  \item<5-> Simulation experiments for productivity measures
+    \begin{itemize}
+    \item Can we find a quantitative measure that is robust against confounding factors and corresponds to intuitive notions of productivity \& lexical diversity?
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{My research programme for LNRE models}
+
+  \begin{itemize}
+  \item<1-> Is non-randomness a problem?
+    \begin{itemize}
+    \item not for morphological productivity \so \textsc{echo} correction
+    \item tricky to include explicitly in LNRE approach
+    \item[]
+    \end{itemize}
+  \item<2-> Do we need LNRE models for practical applications?
+    \begin{itemize}
+    \item better productivity measures + empirical sampling variation
+    \item e.g.\ by cross-validation \citep{Evert:Wankerl:Noeth:17}
+    \item[]
+    \end{itemize}
+  \item<3-> How important is semantics \& context?
+    \begin{itemize}
+    \item Does it make sense to measure productivity and lexical diversity purely in terms of type-token distributions?
+    \item e.g.\ register variation for morphological productivity
+    \item type-token ratio $\neq$ complexity of author's vocabulary
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \begin{frame}[c]
   \begin{center}

@@ -1,6 +1,6 @@
 %% \documentclass[handout,t]{beamer} % HANDOUT
-\documentclass[handout,notes=show,t]{beamer} % NOTES
-%% \documentclass[t]{beamer} % SLIDES
+%% \documentclass[handout,notes=show,t]{beamer} % NOTES
+\documentclass[t]{beamer} % SLIDES
 
 \usetheme{ZipfR}
 \usepackage{beamer-tools}
@@ -477,11 +477,157 @@
 
 \end{frame}
 
-\begin{frame}[c]
-  \begin{center}
-    \secondary{\huge interactive demo}
-  \end{center}
+\begin{frame}[fragile]
+  \frametitle{First steps with zipfR}
+
+  \begin{itemize}
+  \item Set up a folder for this course, and make sure it is your working directory in R (preferably as an RStudio project)
+  \item Install the most recent version of the zipfR package
+  \item Package, handouts, code samples \& data sets available from \url{http://zipfr.r-forge.r-project.org/lrec2018.html}
+  \item[]
+  \end{itemize}
+  
+\begin{alltt}
+> library(zipfR)
+
+> ?zipfR  \REM{documentation entry point}
+
+> vignette("zipfr-tutorial")  \REM{read the zipfR tutorial}
+\end{alltt} 
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Loading type-token data}
+
+  \begin{itemize}
+  \item Most convenient input: sequence of tokens as text file in vertical format (``one token per line'')
+    \begin{itemize}
+    \item[\hand] mapped to appropriate types: normalized word forms, word pairs, lemmatized, semantic class, n-gram of POS tags, \ldots
+    \item[\hand] language data should always be in UTF-8 encoding!
+    \item[\hand] large files can be compressed (\texttt{.gz}, \texttt{.bz2}, \texttt{.xz})
+    \item[]
+    \end{itemize}
+  \item<2-> Sample data: \verb|brown_adverbs.txt| on tutorial homepage
+    \begin{itemize}
+    \item lowercased adverb tokens from Brown corpus (original order)
+    \item[\hand] download and save to your working directory
+    \end{itemize}
+  \end{itemize}
+
+  \onslide<3->
+\begin{alltt}
+> adv <- readLines("brown_adverbs.txt", encoding="UTF-8")
+
+> head(adv, 30) \REM{mathematically, a ``vector'' of tokens}
+> length(adv)   \REM{sample size = 52,037 tokens}
+\end{alltt}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Descriptive statistics: type-frequency list}
+
+  \ungap[1]
+\begin{alltt}
+> adv.tfl <- vec2tfl(adv)
+> adv.tfl \begin{Rout}
+    k    f  type
+1   1 4859   not
+2   2 2084   n't
+3   3 1464    so
+4   4 1381  only
+5   5 1374  then
+6   6 1309   now
+7   7 1134  even
+8   8 1089    as
+    \(\vdots\)    \(\vdots\)     \(\vdots\)
+     N    V
+ 52037 1907
+\end{Rout}
+> N(adv.tfl)  \REM{sample size}
+> V(adv.tfl)  \REM{type count}
+\end{alltt}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Descriptive statistics: frequency spectrum}
+
+  \ungap[1]
+\begin{alltt}
+> adv.spc <- tfl2spc(adv.tfl)  \REM{or directly with \texttt{vec2spc}}
+> adv.spc \begin{Rout}
+    m  Vm
+1   1 762
+2   2 260
+3   3 144
+4   4  99
+5   5  69
+6   6  50
+7   7  40
+8   8  34
+    \(\vdots\)   \(\vdots\)
+     N    V
+ 52037 1907
+\end{Rout}
+> N(adv.spc)  \REM{sample size}
+> V(adv.spc)  \REM{type count}
+\end{alltt}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Descriptive statistics: vocabulary growth}
+
+  \begin{itemize}
+  \item VGC lists vocabulary size $V(N)$ at different sample sizes $N$
+  \item Optionally also spectrum elements $V_m(N)$ up to \texttt{m.max}
+  \end{itemize}
+  
+\begin{alltt}
+> adv.vgc <- vec2vgc(adv, m.max=2) 
+\end{alltt}
+
+  \begin{itemize}
+  \item Visualize descriptive statistics with \texttt{plot} method
+  \end{itemize}
+
+\begin{alltt}
+> plot(adv.tfl)              \REM{Zipf ranking}
+> plot(adv.tfl, log="xy")    \REM{logarithmic scale recommended}
+
+> plot(adv.spc)              \REM{barplot of frequency spectrum}
+
+> plot(adv.vgc, add.m = 1:2) \REM{vocabulary growth curve}
+\end{alltt}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Further example data sets}
+
+  \begin{description}[labelwidth=5cm]
+  \item[\texttt{?Brown}] words from Brown corpus
+  \item[\texttt{?BrownSubsets}] various subsets
+  \item[\texttt{?Dickens}] words from novels by Charles Dickens
+  \item[\texttt{?ItaPref}] Italian word-formation prefixes
+  \item[\texttt{?TigerNP}] NP and PP patterns from German Tiger treebank
+  \item[\texttt{?Baayen2001}] frequency spectra from \citet{Baayen:01}
+  \item[\texttt{?EvertLuedeling2001}] German word-formation affixes \citep[manually corrected data from][]{Evert:Luedeling:01}
+  \end{description}
+
+  \h{Practice:}
+  \begin{itemize}
+  \item Explore these data sets with descriptive statistics
+  \item Try different plot options (from help pages \texttt{?plot.tfl}, \texttt{?plot.spc}, \texttt{?plot.vgc})
+  \end{itemize}
+\end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{}
+
+% \begin{alltt}
+
+% \end{alltt}
+% \end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -976,7 +1122,7 @@
   \begin{itemize}
   \item Key problem: we cannot determine $f_i$ in observed sample
     \begin{itemize}
-    \item becasue we don't know which type $w_i$ is
+    \item because we don't know which type $w_i$ is
     \item recall that population ranking $f_i$ $\neq$ Zipf ranking $f_r$
     \end{itemize}
   \item Use spectrum $\set{V_m}$ and sample size $V$ as statistics
@@ -1043,7 +1189,7 @@
   \frametitle{Type density function}
 
   \begin{itemize}
-  \item Discrete sums of probabilities in $\Exp{V}$, $\Exp{V_m}$, ldots\ are inconvenient and computationally expensive
+  \item Discrete sums of probabilities in $\Exp{V}$, $\Exp{V_m}$, $\ldots$ are inconvenient and computationally expensive
   \item \h{Approximation:} continuous \h{type density function} $g(\pi)$
     \begin{align*}
       \abs{\setdef{w_i}{a \leq \pi_i \leq b}}
@@ -1134,7 +1280,7 @@
   \item General parameter fitting by \hh{MLE}:\\
     maximize likelihood of observed spectrum $\mathbf{v}$
     \[
-      \max_{\alpha, A, B}\; \bigpC{(V, V1, \ldots, V_k) = \mathbf{v}}{\alpha, A, B}
+      \max_{\alpha, A, B}\; \bigpC{(V, V_1, \ldots, V_k) = \mathbf{v}}{\alpha, A, B}
     \]
   \item<2-> Multivariate normal approximation:\\
     \[
