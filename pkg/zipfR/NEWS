@@ -17,7 +17,11 @@ Version 0.7:
     which is closely related to maximum likelihood estimation
   - parameter optimization now performs multiple runs with different random start
     values by default, improving robustness of the parameter estimation
-  - lnre.bootstrap() performs parametric bootstrapping from an LNRE model
+  - lnre.bootstrap() implements parametric bootstrapping from an LNRE model, and
+    the function bootstrap.confint() provides robust estimates of confidence limits
+  - rlnre() can directly generate type-frequency lists instead of token vectors, 
+    which is much more efficient for large samples (and essential for large-scale
+    bootstrapping experiments)
   - bootstrapped confidence intervals for model parameters can be obtained with
     confint() applied to an LNRE model object with bootstrap replicates
   - compute various productivity measures from observed frequency spectrum,

@@ -10,10 +10,8 @@
 }
 
 \usage{
-
-\method{confint}{lnre}(object, parm, level=0.95,
-        method=c("normal", "mad", "empirical"), plot=FALSE, breaks="Sturges", \dots)
-
+\method{confint}{lnre}(object, parm, level=0.95, method=c("mad", "normal", "empirical"), 
+        plot=FALSE, breaks="Sturges", \dots)
 }
 
 \arguments{
@@ -23,9 +21,9 @@
   \item{parm}{model parameter(s) for which confidence intervals are desired.
     If unspecified, all parameters as well as population diversity \eqn{S} and goodness-of-fit statistic \eqn{X^2} are shown.}
 
-  \item{level}{desired confidence level}
+  \item{level}{desired confidence level (two-sided)}
 
-  \item{method}{type of confidence interval to be estimated (see "Details" below)}
+  \item{method}{type of confidence interval to be estimated (see \code{\link{bootstrap.confint}} for details). Note that this parameter defaults to the asymmetric and more robust \code{mad} method here.}
 
   \item{plot}{if \code{TRUE}, plot bootstrapping histogram of the respective model parameter with density estimate and confidence interval}
 
@@ -35,30 +33,14 @@
 
 }
 
-\details{
+\value{
 
-  This function computes three types of confidence intervals:
-
-  \describe{
-
-    \item{\code{normal}:}{
-      Wald-type confidence interval based on normal approximation of the bootstrapped distribution (default).
-      This method is unreliable if the bootstrapping produces outlier results and can report confidence limits
-      outside the feasible parameter range (e.g. negative population diversity \eqn{S}).
-      For this reason, it is strongly recommended to use a more robust type of confidence interval.
-    }
-
-    \item{\code{mad}:}{
-      Robust asymmetric confidence intervals around the median based on a robust estimator of median absolute deviation (MAD).
-      This method is applicable in most situations and requires fewer bootstrap replicates than empirical confidence intervals.
-    }
-
-    \item{\code{empirical}:}{
-      The empirical inter-quantile range. This is the only method guaranteed to stay within the feasible parameter range,
-      but requires a large number of bootstrap replicates for reliable confidence intervals (e.g. at least 120 replicates
-      at 95\% confidence).
-    }
-    
+  A data frame with one numeric column for each selected model parameter (labelled with the parameter name) and four rows:
+    \enumerate{
+    \item the lower boundary of the confidence interval (labelled with the corresponding quantile, e.g. \code{2.5\%})
+    \item the upper boundary of the confidence interval (labelled with the corresponding quantile, e.g. \code{97.5\%})
+    \item an estimate of central tendency (labelled \code{center})
+    \item an estimate of spread on a scale comparable to standard deviaton (labelled \code{spread})
   }
 
 }
@@ -66,16 +48,20 @@
 \seealso{
 
   \code{\link{lnre}} for estimating LNRE models with bootstrap replicates,
-  \code{\link{lnre.bootstrap}} for the underlying parameteric bootstrapping code.
+  \code{\link{lnre.bootstrap}} for the underlying parameteric bootstrapping code, and
+  \code{\link{bootstrap.confint}} for the different methods of estimating confidence intervals.
 
 }
 
 \examples{
 \donttest{
 model <- lnre("fzm", spc=BrownAdj.spc, bootstrap=20)
-confint(model, "alpha", method="mad") # Zipf slope
-confint(model, "S", method="mad")     # population diversity
-confint(model, "S") # default normal approximation works well in this case
+confint(model, "alpha") # Zipf slope
+confint(model, "S")     # population diversity
+confint(model, "S", method="normal") # Gaussian approx works well in this case
+
+confint(model) # overview
+confint(model, "alpha", plot=TRUE) # visualize bootstrap distribution
 }
 }
 
