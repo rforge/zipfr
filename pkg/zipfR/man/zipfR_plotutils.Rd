@@ -181,26 +181,24 @@ zipfR.end.plot(shutdown=FALSE)
 }
 
 \examples{
-
+\dontrun{
 ## these graphics parameters will be set for every new plot
-
-\dontrun{zipfR.par(init.par=list(bg="lightblue", cex=1.3))}
-\dontrun{zipfR.par(width=12, height=9)}
+zipfR.par(init.par=list(bg="lightblue", cex=1.3))
+zipfR.par(width=12, height=9)
 
 ## will be shown on screen or saved to specified file, depending on
 ## selected device (eps -> "myplot.eps", pdf -> "myplot.pdf", etc.)
 
-\dontrun{zipfR.begin.plot(filename="myplot")}
-\dontrun{plot.spc(Brown100k.spc)}
-\dontrun{zipfR.end.plot()}
+zipfR.begin.plot(filename="myplot")
+plot.spc(Brown100k.spc)
+zipfR.end.plot()
 
 ## By starting an R script "myplots.R" with this command, you can
 ## display plots on screen when stepping through the script in an
 ## interactive session, or save them to disk files in various
 ## graphics formats with "R --no-save --args --pdf < myplots.R" etc.
-
-\dontrun{zipfR.pick.device()}
-
+zipfR.pick.device()
+}
 }
 
 \keyword{ device }

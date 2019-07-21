@@ -71,14 +71,12 @@
 }
 
 \examples{
-
-\dontrun{
+\donttest{
 model <- lnre("fzm", spc=BrownAdj.spc, bootstrap=20)
 confint(model, "alpha", method="mad") # Zipf slope
 confint(model, "S", method="mad")     # population diversity
 confint(model, "S") # default normal approximation works well in this case
 }
-
 }
 
 \keyword{ htest }

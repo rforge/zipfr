@@ -1,5 +1,5 @@
 importFrom(stats, density, median, na.omit, nlm, optim, sd, uniroot)
-importFrom(stats, dbinom, rhyper, runif, rnorm, qnorm, pchisq, pbeta, qbeta, pgamma, qgamma)
+importFrom(stats, dbinom, rhyper, runif, rbinom, rmultinom, rnorm, qnorm, pchisq, pbeta, qbeta, pgamma, qgamma)
 importFrom(utils, read.delim, setTxtProgressBar, txtProgressBar, write.table)
 importFrom(grDevices, dev.cur, dev.list, dev.new, dev.off, dev.set, pdf, png, postscript)
 importFrom(graphics, abline, barplot, hist, lines, par, plot, points, segments)

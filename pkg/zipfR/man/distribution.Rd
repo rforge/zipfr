@@ -36,7 +36,7 @@
   ltdlnre(model, x, base=10, log.x=FALSE, \dots)
   ldlnre(model, x, base=10, log.x=FALSE, \dots)
 
-  rlnre(model, n, \dots)
+  rlnre(model, n, what=c("tokens", "tfl"), \dots)
 
 }
 
@@ -67,6 +67,9 @@
   \item{n}{size of random sample to generate.  If \code{length(n) > 1},
     the length is taken to be the number required.}
 
+  \item{what}{whether to return the sample as a vector of tokens or as
+    a type-frequency list (usually more efficient)}
+    
   \item{\dots}{further arguments are passed through to the method
   implementations (currently unused)}
   
@@ -74,8 +77,12 @@
 
 \value{
 
-  For \code{rnlre}, a factor of length \code{n}, representing a random
-  sample from the population described by the specified LNRE model.
+  For \code{rnlre}, either a factor of length \code{n} (\code{what="tokens"},
+  the default) or a \code{\link{tfl}} object (\code{what="tfl"}), representing
+  a random sample from the population described by the specified LNRE model.
+  Note that the type-frequency list is a sufficient statistic, i.e. it provides
+  all relevant information from the sample. For large \code{n}, type-frequency
+  lists are generated more efficiently and with less memory overhead.
 
   For all other functions, a vector of non-negative numbers of the same
   length as the second argument (\code{x}, \code{p} or \code{q}).
@@ -155,11 +162,12 @@
 \seealso{
 
   \code{\link{lnre}} for more information about LNRE models and how to
-  initialize them
+  initialize them.
 
-  random samples generated with \code{rnlre} can be further processed
+  Random samples generated with \code{rnlre} can be further processed
   with the functions \code{\link{vec2tfl}}, \code{\link{vec2spc}} and
-  \code{\link{vec2vgc}}
+  \code{\link{vec2vgc}} (for token vectors) and \code{\link{tfl2spc}} 
+  (for type-frequency lists).
   
 }
 
@@ -167,22 +175,23 @@
 \keyword{ models }
 
 \examples{
-
 ## define ZM and fZM LNRE models 
 ZM <- lnre("zm", alpha=.8, B=1e-3)
 FZM <- lnre("fzm", alpha=.8, A=1e-5, B=.05)
 
 ## random samples from the two models
-head(table(rlnre(ZM, 10000)))
-head(table(rlnre(FZM, 10000)))
+vec2tfl(rlnre(ZM, 10000))
+vec2tfl(rlnre(FZM, 10000))
+rlnre(FZM, 10000, what="tfl") # more efficient
 
 ## plot logarithmic type density functions
 x <- 10^seq(-6, 1, by=.01)  # pi = 10^(-6) .. 10^(-1)
 y.zm <- ltdlnre(ZM, x)
 y.fzm <- ltdlnre(FZM, x)
-\dontrun{plot(x, y.zm, type="l", lwd=2, col="red", log="x", ylim=c(0,14000))}
-\dontrun{lines(x, y.fzm, lwd=2, col="blue")}
-\dontrun{legend("topright", legend=c("ZM", "fZM"), lwd=3, col=c("red", "blue"))}
+\donttest{
+plot(x, y.zm, type="l", lwd=2, col="red", log="x", ylim=c(0,14000))
+lines(x, y.fzm, lwd=2, col="blue")
+legend("topright", legend=c("ZM", "fZM"), lwd=3, col=c("red", "blue"))}
 
 ## probability pi_k of k-th type according to FZM model
 k <- 10
@@ -192,10 +201,10 @@ plnre(FZM, tqlnre(FZM, k-1)) - plnre(FZM, tqlnre(FZM, k))
 tplnre(ZM, 1e-6)
 
 ## lower tail fails for infinite population size
-\dontrun{tplnre(ZM, 1e-3, lower=TRUE)}
+\dontrun{
+tplnre(ZM, 1e-3, lower=TRUE)}
 
 ## total probability mass assigned to types with pi <= 1e-6
 plnre(ZM, 1e-6)
-  
 }
 

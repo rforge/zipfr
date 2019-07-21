@@ -1,5 +1,19 @@
+For release 0.7:
+  - factor out confint estimators from confint.lnre so they can be used with other bootstrapping tasks
   - implement "lexical constants" as productivity measures (lexconst.spc, lexconst.lnre?) with (approximate) confidence intervals for LNRE models
+  - add code examples for lnre.bootstrap (once implementation of confint estimators and productivity measures is complete)
+
+Further tasks:  
+  - revise all built-in data sets
+    - update internal format (e.g. avoid factors, make N numeric rather than integer, etc) so they are identical after round-trip through disk file
+    - convert all factors (for types) to character
+    - verify that encodings for non-ASCII data are set appropriately
+    - save with xz compression, especially for larger data sets
+    - but make sure to use version=2 so the package is still compatible with R < 3.5.0
+  - implement lnre.productivity.measures()
+    - empirical bootstrap estimates should be fairly easy
+    - approximate expectation and variance estimates where the mathematics can be worked out
+    - don't forget to remove from .Rbuildignore then!
   - complete implementation of posterior type distributions for ZM and fZM models (after writing down the mathematical equations precisely)
   - custom code for posterior density, extended to m=0 for models with finite S
-  - auto.gzfile() helper no longer needed -> remove
-  - add encoding options to read.tfl
+  - model-based Good-Turing estimates with function gtlnre()

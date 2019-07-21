@@ -77,11 +77,9 @@
 \keyword{ file }
 
 \examples{
-
 \dontrun{
-
-## examples will not be run during package compilation
-## since they would require accessing external files
+## These are just illustrative examples. Users should fill in their
+## own files instead of the dummy names used here.
 
 ## suppose that the current working directory contains
 ## 100 spc files named: rand.1.spc, rand.2.spc, ...,
@@ -111,9 +109,5 @@ V(vgc.list[["elephant"]])
 ## of course, tfl-reading works in the same way (assuming
 ## that the animals directory also contains some tfl files):
 tfl.list <- read.multiple.objects("/home/me/animals","sounds","tfl")
-
-
-
 }
-
 }

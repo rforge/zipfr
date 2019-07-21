@@ -1,9 +1,8 @@
-tfl <- function  (f, k=1:length(f), type=NULL, f.min=min(f), f.max=max(f),
+tfl <- function  (f, k=seq_along(f), type=NULL, f.min=min(f), f.max=max(f),
                   incomplete=!(missing(f.min) && missing(f.max)), N=NA, V=NA,
                   delete.zeros=FALSE)
 {
   if (! (is.numeric(f) && all(f >= 0))) stop("'f' must be non-negative integer vector")
-  if (length(f) == 0 && missing(k)) k <- integer(0)   # since 1:0 = c(1,0)
   if (length(k) != length(f)) stop("'k' and 'f' must have the same length")
   hasTypes <- !is.null(type)
   if (hasTypes && length(type) != length(k)) stop("'type' must have the same length as 'k' and 'f'")
@@ -49,7 +48,10 @@ tfl <- function  (f, k=1:length(f), type=NULL, f.min=min(f), f.max=max(f),
   }
   
   tfl <- data.frame(k=k, f=f)
-  if (hasTypes) tfl$type <- type
+  if (hasTypes) {
+    tfl$type <- type
+    rownames(tfl) <- type
+  }
   attr(tfl, "N") <- N
   attr(tfl, "V") <- V
   attr(tfl, "f.min") <- f.min

@@ -1,4 +1,4 @@
-read.tfl <- function (file, encoding="")
+read.tfl <- function (file, encoding=getOption("encoding"))
 {
   tmp <- read.delim(auto.gzfile(file, encoding=encoding), as.is=TRUE, quote="", comment.char="")
   vars <- colnames(tmp)

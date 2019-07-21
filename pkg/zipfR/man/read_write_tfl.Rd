@@ -14,9 +14,9 @@
 
 \usage{
 
-  read.tfl(file, encoding="")
+  read.tfl(file, encoding=getOption("encoding"))
 
-  write.tfl(tfl, file, encoding="")
+  write.tfl(tfl, file, encoding=getOption("encoding"))
 
 }
 
@@ -28,7 +28,7 @@
 
   \item{tfl}{a type frequency list, i.e.\ an object of class \code{tfl}}
 
-  \item{encoding}{if non-empty, specifies the character encoding of the disk
+  \item{encoding}{specifies the character encoding of the disk
     file to be read or written to.  See \code{\link{file}} for details.}
 }
 
@@ -41,8 +41,8 @@
 
 \details{
 
-  If the filename \code{file} ends in the extension \code{.gz}, the disk file
-  will automatically be decompressed (\code{read.tfl}) and compressed (\code{write.tfl}).
+  If the filename \code{file} ends in the extension \code{.gz}, \code{.bz2} pr \code{.xz},
+  the disk file will automatically be decompressed (\code{read.tfl}) and compressed (\code{write.tfl}).
 
   The \code{.tfl} file format stores neither the values of \code{N} and
   \code{V} nor the range of type frequencies explicitly.  Therefore,
@@ -94,21 +94,16 @@
 \keyword{ file }
 
 \examples{
-
-\dontrun{
-
-## examples will not be run during package compilation
-## since they would require accessing and writing to
-## external files
-
-## load Brown tfl and write it to external file
-data(Brown.tfl)
-write.tfl(Brown.tfl,"brown.tfl")
-## now brown.tfl is external file with fields
-## k (an id), f (frequency), type (word)
+## save type-frequency list for Brown corpus to external file
+fname <- tempfile(fileext=".tfl.gz") # automatically compresses file
+write.tfl(Brown.tfl, fname)
+## file <fname> contains a compressed TAB-delimited table with fields
+##   k    ... type ID (usually Zipf rank)
+##   f    ... frequency of type
+##   type ... the type itself (here a word form)
 
 ## read it back in
-New.tfl <- read.tfl("brown.tfl")
+New.tfl <- read.tfl(fname)
 
 ## same as Brown.tfl
 summary(New.tfl)
@@ -117,14 +112,15 @@ print(New.tfl)
 print(Brown.tfl)
 head(New.tfl)
 head(Brown.tfl)
+stopifnot(isTRUE(all.equal(New.tfl, Brown.tfl))) # should by identical
 
-## suppose you have a text file with a
-## frequency list, one f per line, e.g.:
-## f
-## 14
-## 12
-## 31
-## ...
+\dontrun{
+## suppose you have a text file with a frequency list, one f per line, e.g.:
+##   f
+##   14
+##   12
+##   31
+##   ...
 
 ## you can import this with read.tfl
 MyData.tfl <- read.tfl("mylist.txt")
@@ -134,7 +130,5 @@ print(MyData.tfl) # ids in column k added by zipfR
 ## from this you can generate a spectrum with tfl2spc
 MyData.spc <- tfl2spc(MyData.tfl)
 summary(MyData.spc)
-
 }
-
 }

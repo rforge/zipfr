@@ -40,8 +40,8 @@
 
 \details{
 
-  If the filename \code{file} ends in the extension \code{.gz}, the disk file
-  will automatically be decompressed (\code{read.spc}) and compressed (\code{write.spc}).
+  If the filename \code{file} ends in the extension \code{.gz}, \code{.bz2} or \code{.xz},
+  the disk file will automatically be decompressed (\code{read.spc}) or compressed (\code{write.spc}).
 
   The \code{.spc} file format does not store the values of \code{N},
   \code{V} and \code{VV} explicitly.  Therefore, incomplete frequency
@@ -88,34 +88,28 @@
 \keyword{ file }
 
 \examples{
-
-\dontrun{
-
-## examples will not be run during package compilation
-## since they would require accessing and writing to
-## external files
-
-## load Italian ultra- data
-## and write corresponding spectrum to external text file
-data(ItaUltra.spc)
-write.spc(ItaUltra.spc,"ultra.spc")
-## now ultra.spc is a text file with columns m and Vm
+## save Italian ultra- frequency spectru to external text file
+fname <- tempfile(fileext=".spc")
+write.spc(ItaUltra.spc, fname)
+## now <fname> is a TAB-delimited text file with columns m and Vm
 
 ## we ready it back in
-New.spc <- read.spc("ultra.spc")
+New.spc <- read.spc(fname)
 
 ## same spectrum as ItaUltra.spc, compare:
 summary(New.spc)
 summary(ItaUltra.spc)
 
-## DON'T do the following, incomplete spectrum will not be
-## restored properly!!!
-zm <- lnre("zm",ItaUltra.spc) # estimate model
-zm.spc <- lnre.spc(zm,N(zm)) # incomplete spectrum from model
-write.spc(zm.spc,"var.spc") # warnings
-bad.spc <- read.spc("/Users/baroni/Desktop/var.spc")
-## latter is DIFFERENT from zm.spc!!!
+stopifnot(isTRUE(all.equal(New.spc, ItaUltra.spc))) # should be identical
 
+\dontrun{
+## DON'T do the following, incomplete spectrum will not be restored properly !!!
+zm <- lnre("zm", ItaUltra.spc) # estimate model
+zm.spc <- lnre.spc(zm,N(zm))   # incomplete spectrum from model
+write.spc(zm.spc, fname)       # WARNINGS
+bad.spc <- read.spc(fname)     # but this function cannot know something is wrong
+
+summary(zm.spc)
+summary(bad.spc) # note that N and V are completely wrong !!!
 }
-
 }

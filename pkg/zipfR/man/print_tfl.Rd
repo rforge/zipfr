@@ -66,7 +66,6 @@
 \keyword{ print }
 
 \examples{
-
 ## load Brown tfl
 data(Brown.tfl)
 
@@ -74,10 +73,8 @@ data(Brown.tfl)
 summary(Brown.tfl)
 print(Brown.tfl)
 
-## the whole type list (don't try
-## this unless you have some time to
-## spare)
-\dontrun{print(Brown.tfl,all=TRUE)}
-
+## the whole type list (don't try this unless you have some time to spare)
+\dontrun{
+print(Brown.tfl,all=TRUE)}
 }
 

@@ -39,8 +39,8 @@
 
 \details{
 
-  If the filename \code{file} ends in the extension \code{.gz}, the disk file
-  will automatically be decompressed (\code{read.vgc}) and compressed (\code{write.vgc}).
+  If the filename \code{file} ends in the extension \code{.gz}, \code{.bz2} or \code{.xz}, 
+  the disk file will automatically be decompressed (\code{read.vgc}) or compressed (\code{write.vgc}).
 
 }
 
@@ -98,21 +98,13 @@
 \keyword{ file }
 
 \examples{
-
-\dontrun{
-
-## examples will not be run during package compilation
-## since they would require accessing and writing to
-## external files
-
-## load Italian ultra- prefix vgc
-## and write to external text file
-data(ItaUltra.emp.vgc)
-write.vgc(ItaUltra.emp.vgc,"ultra.vgc")
-## now ultra.vgc is a text file with columns N, V and V1
+## save Italian ultra- prefix VGC to external text file
+fname <- tempfile(fileext=".vgc")
+write.vgc(ItaUltra.emp.vgc, fname)
+## now <fname> is a TAB-delimited text file with columns N, V and V1
 
 ## we ready it back in
-New.vgc <- read.vgc("ultra.vgc")
+New.vgc <- read.vgc(fname)
 
 ## same vgc as ItaUltra.emp.vgc, compare:
 summary(New.vgc)
@@ -120,6 +112,5 @@ summary(ItaUltra.emp.vgc)
 head(New.vgc)
 head(ItaUltra.emp.vgc)
 
-}
-
+stopifnot(isTRUE(all.equal(New.vgc, ItaUltra.emp.vgc))) # should be identical
 }

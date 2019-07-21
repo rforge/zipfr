@@ -110,23 +110,21 @@ vec2vgc(x)
 
 sample.spc <- vec2spc(x)
 exp.spc <- lnre.spc(model, 100000)
-\dontrun{ plot(exp.spc, sample.spc) }
+\donttest{plot(exp.spc, sample.spc)}
 
 sample.vgc <- vec2vgc(x, m.max=1, steps=500)
 exp.vgc <- lnre.vgc(model, N=N(sample.vgc), m.max=1)
-\dontrun{ plot(exp.vgc, sample.vgc, add.m=1) }
+\donttest{plot(exp.vgc, sample.vgc, add.m=1)}
 
-
+\dontrun{
 ## load token vector from a file in one-token-per-line format
-
-\dontrun{ x <- readLines(filename) }
-\dontrun{ x <- readLines(file.choose()) # with file selection dialog } 
+x <- readLines(filename)
+x <- readLines(file.choose()) # with file selection dialog 
 
 ## you can also perform whitespace tokenization and filter the data
-
-\dontrun{ brown <- scan("brown.pos", what=character(0), quote="") }
-\dontrun{ nouns <- grep("/NNS?$", brown, value=TRUE) }
-\dontrun{ plot(vec2spc(nouns)) }
-\dontrun{ plot(vec2vgc(nouns, m.max=1), add.m=1) }
-
+brown <- scan("brown.pos", what=character(0), quote="")
+nouns <- grep("/NNS?$", brown, value=TRUE)
+plot(vec2spc(nouns))
+plot(vec2vgc(nouns, m.max=1), add.m=1)
+}
 }

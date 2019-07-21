@@ -2,8 +2,11 @@
 ##  Parametric bootstrapping can be used to obtain approximate confidence intervals for paramters, predictions, etc.
 ##
 
-lnre.bootstrap <- function (model, N, ESTIMATOR, STATISTIC, replicates=100, simplify=TRUE, verbose=TRUE, seed=NULL, ...) {
+lnre.bootstrap <- function (model, N, ESTIMATOR, STATISTIC, replicates=100, sample=c("spc", "tfl", "tokens"), 
+                            simplify=TRUE, verbose=TRUE, seed=NULL, ...) {
   if (! inherits(model, "lnre")) stop("first argument must belong to a subclass of 'lnre'")
+  sample <- match.arg(sample)
+  stopifnot(replicates >= 1)
   .result <- list()
   .estimator.errors <- 0
   .statistic.errors <- 0
@@ -14,9 +17,11 @@ lnre.bootstrap <- function (model, N, ESTIMATOR, STATISTIC, replicates=100, simp
   if (!is.null(seed)) set.seed(seed)
   .got <- 0
   while (.got < replicates) {
-    .sample <- rlnre(model, N)
-    .spc <- vec2spc(.sample)
-    .estimated.model <- try(suppressWarnings(ESTIMATOR(.spc, ...)), silent=TRUE)
+    .sample <- switch(sample,
+                      tokens = rlnre(model, N, what="tokens"),
+                      tfl = rlnre(model, N, what="tfl"),
+                      spc = tfl2spc(rlnre(model, N, what="tfl")))
+    .estimated.model <- try(suppressWarnings(ESTIMATOR(.sample, ...)), silent=TRUE)
     if (is(.estimated.model, "try-error")) {
       .estimator.errors <- .estimator.errors + 1
       if (.estimator.errors > replicates) stop("failure rate for model estimation > 50%, procedure aborted")
@@ -37,12 +42,17 @@ lnre.bootstrap <- function (model, N, ESTIMATOR, STATISTIC, replicates=100, simp
     if (.estimator.errors > 0) cat("[model estimation failed for", .estimator.errors, "samples]\n")
     if (.statistic.errors > 0) cat("[statistics extraction failed for", .statistic.errors, "samples]\n")
   }
-  .summary <- if (simplify) do.call(rbind, .result) else .result
-  attr(.summary, "N") <- N
-  attr(.summary, "estimator.errors") <- .estimator.errors
-  attr(.summary, "statistic.errors") <- .statistic.errors
-  attr(.summary, "model") <- model
-  .summary
+  
+  if (simplify) {
+    do.call(rbind, .result)
+  }
+  else {
+    attr(.result, "N") <- N
+    attr(.result, "estimator.errors") <- .estimator.errors
+    attr(.result, "statistic.errors") <- .statistic.errors
+    attr(.result, "model") <- model
+    .result
+  }
 }
 
 ## ***TODO*** -- implement and document prediction intervals as predict.lnre method (? or in EV, EVm, ...)

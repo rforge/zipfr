@@ -9,4 +9,4 @@ qlnre <- function (model, p, lower.tail=TRUE, ...)  UseMethod("qlnre")
 ltdlnre <- function (model, x, base=10, log.x=FALSE, ...)  UseMethod("ltdlnre")
 ldlnre <- function (model, x, base=10, log.x=FALSE, ...)  UseMethod("ldlnre")
 
-rlnre <- function (model, n, ...)  UseMethod("rlnre")
+rlnre <- function (model, n, what=c("tokens", "tfl"), ...)  UseMethod("rlnre")

@@ -1,4 +1,4 @@
-write.tfl <- function (tfl, file, encoding="")
+write.tfl <- function (tfl, file, encoding=getOption("encoding"))
 {
   if (! inherits(tfl, "tfl")) stop("'tfl' argument must be of class 'tfl'")
   if ( (length(file) != 1) || (! is.character(file)) )

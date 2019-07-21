@@ -21,7 +21,7 @@
 
 \usage{
 
-  tfl(f, k=1:length(f), type=NULL, f.min=min(f), f.max=max(f),
+  tfl(f, k=seq_along(f), type=NULL, f.min=min(f), f.max=max(f),
       incomplete=!(missing(f.min) && missing(f.max)), N=NA, V=NA,
       delete.zeros=FALSE)
 
@@ -95,7 +95,8 @@
   }
 
   The data frame always has to be sorted with respect to the \code{k}
-  column (ascending order). 
+  column (ascending order).  If a \code{type} column is present, 
+  rownames are set to the types and can be used for character indexing.
   
   The following attributes are used to store additional information
   about the frequency spectrum:

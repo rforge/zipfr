@@ -110,7 +110,7 @@ plnre.lnre.zm <- function (model, q, lower.tail=TRUE, ...)
 qlnre.lnre.zm <- function (model, p, lower.tail=TRUE, ...)
 {
   if (! inherits(model, "lnre.zm")) stop("first argument must be object of class 'lnre.zm'")
-  if (lower.tail) p <- 1 - p
+  if (!lower.tail) p <- 1 - p
   
   alpha <- model$param$alpha
   B <- model$param$B
