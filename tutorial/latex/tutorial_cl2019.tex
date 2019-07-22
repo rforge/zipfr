@@ -33,11 +33,46 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{Outline}
-\frame{ 
+\begin{frame}
   \frametitle{Outline}
-  \tableofcontents
+  \begin{columns}[t]
+    \begin{column}{5cm}
+      %% section 1 is this outline page
+      \tableofcontents[sections={2}]
+      \vspace*{1em}
+      \tableofcontents[sections={3}]
+    \end{column}
+    \begin{column}{5cm}
+      \tableofcontents[sections={4}]
+      \vspace*{1em}
+      \tableofcontents[sections={5}]
+    \end{column}    
+  \end{columns}
+\end{frame}
+
+%% also show two-column TOC at the start of each subsection
+\AtBeginSubsection[]
+{
+  \begin{frame}
+    \frametitle{Outline}
+    
+    \begin{columns}[t]
+      \begin{column}{5cm}
+        \tableofcontents[current,currentsubsection,sections={2}]
+        \vspace*{1em}
+        \tableofcontents[current,currentsubsection,sections={3}]
+      \end{column}
+      \begin{column}{5cm}
+        \tableofcontents[current,currentsubsection,sections={4}]
+        \vspace*{1em}
+        \tableofcontents[current,currentsubsection,sections={5}]
+      \end{column}
+    \end{columns}
+  \end{frame}
 }
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
@@ -663,6 +698,8 @@ as     8 1089    as
   \end{itemize}
 \end{frame}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{LNRE models}
 
@@ -1354,11 +1391,11 @@ as     8 1089    as
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Part 2}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Applications \& examples}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\subsection{Applications \& examples (zipfR)}
+\subsection{Productivity \& lexical~diversity}
 
 \begin{frame}
   \frametitle{Measuring morphological productivity}
@@ -1462,32 +1499,8 @@ as     8 1089    as
   \includegraphics[width=11cm]{img/bare_bncS_obs_lexical_constants}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Simulation experiments based on LNRE models}
-
-  \begin{itemize}
-  \item Systematic study of size dependence and other aspects of productivity
-    measures based on samples from LNRE model
-  \item LNRE model \so well-defined population
-  \item Random sampling helps to assess variability of measures
-  \item Expected values $\Exp{\mathcal{P}}$ etc.\ can often be computed directly\\ (or approximated) \so computationally efficient
-  \item[\So] LNRE models as tools for understanding productivity measures
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[c]
-  \frametitle{Simulation: sample size}
-
-  \centering
-  \includegraphics[width=11cm]{img/lexconst_sample_size}
-\end{frame}
-
-\begin{frame}[c]
-  \frametitle{Simulation: frequent lexicalized types}
-
-  \centering
-  \includegraphics[width=11cm]{img/lexconst_echo_type}
-\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Practical LNRE modelling}
 
 \begin{frame}[c]
   \begin{center}
@@ -1503,7 +1516,80 @@ as     8 1089    as
 % \end{alltt}
 % \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Bootstrapping experiments}
 
+\begin{frame}
+  \frametitle{Bootstrapping}
+
+  \begin{itemize}
+  \item<1-> An empirical approach to sampling variation:
+    \begin{itemize}
+    \item take many random samples from the same population
+    \item analyse distribution e.g.\ of productivity measures\\
+      (mean, median, s.d., boxplot, histogram, \ldots)
+    \item alternatively, estimate LNRE model from each sample
+      and analyse distribution of model parameters (\so later)
+    \item problem: how to obtain the additional samples?
+    \end{itemize}
+  \item<2-> Bootstrapping \citep{Efron:79}
+    \begin{itemize}
+    \item resample from observed data \emph{with replacement}
+    \item this approach is not suitable for type-token distributions
+      (resamples underestimate vocabulary size $V$!)
+    \end{itemize}
+  \item<3-> Parametric bootstrapping
+    \begin{itemize}
+    \item use fitted LNRE model to generate samples, i.e.\ sample from the population described by the model
+    \item advantage: ``correct'' parameter values are known
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Parametric bootstrapping with LNRE models}
+
+  \begin{columns}[T]
+    \begin{column}{55mm}
+      \begin{itemize}
+      \item Use simulation experiments to gain better understanding of quantitative measures
+        \begin{itemize}
+        \item LNRE model = well-defined population
+      \end{itemize}
+      \item<2-> Parametric bootstrapping based on LNRE population
+        \begin{itemize}
+        \item dependence on sample size
+        % \item intuitive notion of productivity \so parameters 
+        \item controlled manipulation of confounding factors
+        \item empirical sampling distribution \so variability
+        \end{itemize}
+      \item<2-> $\Exp{\mathcal{P}}$ etc.\ can be computed directly in simple cases
+      \end{itemize}
+    \end{column}
+    \begin{column}{45mm}
+      \visible<1->{\includegraphics[width=45mm]{img/lexconst_spectra}}%
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[c]
+  \frametitle{Experiment: sample size}
+
+  \centering
+  \includegraphics[width=11cm]{img/lexconst_sample_size}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Experiment: frequent lexicalized types}
+
+  \centering
+  \includegraphics[width=11cm]{img/lexconst_echo_type}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{LNRE as Bayesian prior}
 
 \begin{frame}[c]
   \frametitle{Posterior distribution}
@@ -1514,8 +1600,13 @@ as     8 1089    as
   \only<beamer:3| handout:0>{\includegraphics[width=11cm]{img/posterior_zm_9_2}}%
 \end{frame}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Limitations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Challenges}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Model inference}
 
 \begin{frame}
   \frametitle{How reliable are the fitted models?}
@@ -1543,32 +1634,6 @@ as     8 1089    as
     \item[\hand] especially critical for small samples ($N < $ 10,000)
     \end{itemize}
   \end{enumerate}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Bootstrapping}
-
-  \begin{itemize}
-  \item<1-> An empirical approach to sampling variation:
-    \begin{itemize}
-    \item take many random samples from the same population
-    \item estimate LNRE model from each sample
-    \item analyse distribution of model parameters, goodness-of-fit, etc.
-      (mean, median, s.d., boxplot, histogram, \ldots)
-    \item problem: how to obtain the additional samples?
-    \end{itemize}
-  \item<2-> Bootstrapping \citep{Efron:79}
-    \begin{itemize}
-    \item resample from observed data \emph{with replacement}
-    \item this approach is not suitable for type-token distributions
-      (resamples underestimate vocabulary size $V$!)
-    \end{itemize}
-  \item<3-> Parametric bootstrapping
-    \begin{itemize}
-    \item use fitted model to generate samples, i.e.\ sample from the population described by the model
-    \item advantage: ``correct'' parameter values are known
-    \end{itemize}
-  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -1627,6 +1692,9 @@ as     8 1089    as
     \end{itemize}
   \end{enumerate}
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Zipf's law}
 
 \begin{frame}[c]
   \frametitle{How well does Zipf's law hold?} 
@@ -1728,7 +1796,32 @@ as     8 1089    as
   \end{center}
 \end{frame}
 
+\newcommand{\ECHO}[1]{\only<beamer:1-2| handout:0>{\primary<2>{#1}}\only<beamer:3-| handout:1>{\primary{\textsc{echo}}}}%
 \begin{frame}
+  \frametitle{The ECHO correction}
+  \framesubtitle{\citep{Baroni:Evert:07a}}
+
+  \begin{itemize}
+  \item Assumption: repetition of type within short span is not a new lexical access or spontaneous formation
+  \item<3-> Replace every repetition within span by special type \textsc{echo}
+    \begin{itemize}
+    \item $N$, $V$ and $V_1$ are not affected $\so$ same VGC and $\mathcal{P}$
+    \item ECHO correction as pre-processing step $\so$ no modifications to LNRE models or other analysis software needed 
+    \end{itemize}
+  \item<4-> What is an appropriate span size?\\
+    Repetition within textual unit (\so document frequencies)
+  \end{itemize}
+
+  \begin{block}{}
+    A fine example. \ECHO{A} very \ECHO{fine} \ECHO{example}. Only the \ECHO{finest} \ECHO{examples}. \ECHO{The} \ECHO{examples} are \ECHO{fine}. \ldots
+
+    \vspace{1ex}
+    The cat sat on \ECHO{the} mat. Another very fine \ECHO{cat} \ECHO{sat} down \ECHO{on} \ECHO{the} \ECHO{mat}. Two \ECHO{mats} are \ECHO{fine}. \ldots
+  \end{block}
+  
+\end{frame}
+
+  \begin{frame}
   \frametitle{The ECHO correction}
   \framesubtitle{\citep{Baroni:Evert:07a}}
 
@@ -1747,7 +1840,7 @@ as     8 1089    as
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\subsection{Significance testing: A proposal}
+\subsection{Significance testing}
 
 \begin{frame}
   \frametitle{Case study: Iris Murdoch \& early symptoms of AD}
@@ -1886,7 +1979,6 @@ as     8 1089    as
   \end{tabular}
 \end{frame}
 
-
 \begin{frame}[c]
   \frametitle{Cross-validated measures depend on fold size!}
 
@@ -1896,21 +1988,62 @@ as     8 1089    as
   \only<beamer:3| handout:2>{\includegraphics[width=10cm]{img/lexconst_binsize_BNC}\hh{C}}%
 \end{frame}
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Conclusion \& outlook}
+\subsection{Outlook}
 
-\begin{frame}
-  \frametitle{Future plans for zipfR}
+\begin{frame}[c]
+  \frametitle{Research programme for LNRE models}
 
   \begin{itemize}
-  \item More efficient LNRE sampling \& parametric bootstrapping
-  \item Improve parameter estimation (minimization algorithm)
-  \item Better computation accuracy by numerical integration
-  \item Extended Zipf-Mandelbrot LNRE model: piecewise power law
-  \item Development of robust and interpretable productivity measures, using LNRE simulations
-  \item Computationally expensive modelling (MCMC) for accurate inference from small samples
+  \item Improve efficiency \& numerical accuracy of implementation
+    \begin{itemize}
+    \item numerical integrals instead of differences of Gamma functions
+    \item better parameter estimation (gradient, aggregated spectrum)
+    \end{itemize}
+  \item Analyze accuracy of LNRE approximations
+    \begin{itemize}
+    \item comprehensive simulation experiments, esp.\ for small samples
+    \end{itemize}
+  \item Specify more flexible LNRE population models
+    \begin{itemize}
+    \item my favourite: piecewise Zipfian type density functions
+    \item \citet{Baayen:01}: mixture distributions (different parameters)
+    \end{itemize}
+  \item Develop hypothesis tests \& confidence intervals
+    \begin{itemize}
+    \item key challenge: goodness-of-fit \vs confidence region
+    \item prediction intervals for model-based extrapolation
+    \end{itemize}
+  \item Simulation experiments for productivity measures
+    \begin{itemize}
+    \item Can we find a quantitative measure that is robust against confounding factors and corresponds to intuitive notions of productivity \& lexical diversity?
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Research programme for LNRE models}
+
+  \begin{itemize}
+  \item Is non-randomness a problem?
+    \begin{itemize}
+    \item not for morphological productivity \so \textsc{echo} correction
+    \item tricky to include explicitly in LNRE approach
+    \item[]
+    \end{itemize}
+  \item Do we need LNRE models for practical applications?
+    \begin{itemize}
+    \item better productivity measures + empirical sampling variation
+    \item based on cross-validation approach \citep{Evert:Wankerl:Noeth:17}
+    \item[]
+    \end{itemize}
+  \item How important is semantics \& context?
+    \begin{itemize}
+    \item Does it make sense to measure productivity and lexical diversity purely in terms of type-token distributions?
+    \item e.g.\ register variation for morphological productivity
+    \item e.g.\ semantic preferences in productive slots of construction
+    \item type-token ratio $\neq$ complexity of author's vocabulary
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -1922,7 +2055,7 @@ as     8 1089    as
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% References (if any)
+%% References
 
 \frame[allowframebreaks]{
   \frametitle{References}
