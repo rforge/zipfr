@@ -1,7 +1,8 @@
 For release 0.7:
-  - factor out confint estimators from confint.lnre so they can be used with other bootstrapping tasks
-  - implement "lexical constants" as productivity measures (lexconst.spc, lexconst.lnre?) with (approximate) confidence intervals for LNRE models
-  - add code examples for lnre.bootstrap (once implementation of confint estimators and productivity measures is complete)
+  - implement further "lexical constants" as productivity measures, with improved documentation
+  - also include measures that require token vector (such as MTLD)?
+  - add code examples for lnre.bootstrap() (once implementation of confint estimators and productivity measures is complete)
+  - add examples for productivity.measures()
 
 Further tasks:  
   - revise all built-in data sets

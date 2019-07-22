@@ -25,7 +25,7 @@ Version 0.7:
   - bootstrapped confidence intervals for model parameters can be obtained with
     confint() applied to an LNRE model object with bootstrap replicates
   - compute various productivity measures from observed frequency spectrum,
-    vocabulary growth curve or token vector
+    type-frequency list, vocabulary growth curve or token vector
   - merge() method for two or more type frequency lists
   - new example data sets from Evert & Luedeling (2001) and Baayen (2001)
 

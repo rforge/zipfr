@@ -122,5 +122,7 @@ S3method(postldlnre, lnre)
 # S3method(postqlnre, lnre.zm)
 # S3method(postqlnre, lnre.fzm)
 
+S3method(productivity.measures, default)
+S3method(productivity.measures, tfl)
 S3method(productivity.measures, spc)
 S3method(productivity.measures, vgc)

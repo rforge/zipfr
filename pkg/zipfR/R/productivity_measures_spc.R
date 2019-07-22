@@ -9,7 +9,11 @@ productivity.measures.spc <- function (obj, measures, ...)
   if (m.max == 0) m.max <- Inf
 
   ## check which measures can be computed from the available spectrum
-  idx.ok <- (measures %in% qw("R C V TTR")) | (measures %in% qw("H P Hapax") & m.max >= 1) | (measures %in% qw("S") & m.max >= 2) | (m.max == Inf)
+  idx.ok <- (
+    (measures %in% qw("R C V TTR")) | 
+    (measures %in% qw("H P Hapax") & m.max >= 1) | 
+    (measures %in% qw("S") & m.max >= 2) | 
+    (m.max == Inf))
   res <- numeric(length(measures))
   res[!idx.ok] <- NA
 
