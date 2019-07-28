@@ -18,3 +18,6 @@ Further tasks:
   - complete implementation of posterior type distributions for ZM and fZM models (after writing down the mathematical equations precisely)
   - custom code for posterior density, extended to m=0 for models with finite S
   - model-based Good-Turing estimates with function gtlnre()
+  - improve performance of sample.tfl / zipfR.tflsplit with rmvhyper (from package extraDistr)?
+    - adds dependency on a heavy Rcpp-based package only because of a rarely-used function
+    - alternative: re-implement incremental splitting procedure with rhyper() in C

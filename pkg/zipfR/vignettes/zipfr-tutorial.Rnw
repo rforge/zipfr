@@ -9,11 +9,8 @@
 
 \usepackage{natbib}
 
-\usepackage{vmargin}
-\setpapersize[portrait]{A4}
-\setmarginsrb{30mm}{25mm}{30mm}{15mm}% left, top, right, bottom
-{0pt}{0mm}% head heigth / separation
-{12pt}{15mm}% bottom height / separation
+\usepackage[a4paper]{geometry}
+\geometry{left=30mm, right=30mm, top=20mm, bottom=25mm}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -559,7 +556,7 @@ Notice the use of the argument \texttt{N0} to highlight the position
 of $N_0$ (the estimation size) with a vertical line (see the
 \texttt{plot.vgc} documentation).
 
-As an exercise, you should now use the \emph{ri-} data to estimatea ZM and
+As an exercise, you should now use the \emph{ri-} data to estimate ZM and
 GIGP models and look at the model summaries (it is instructive to compare the
 predictions of the three models for the population vocabulary size $S$).  Then
 add the expected values of the ZM and GIGP models to the comparative spectrum
@@ -905,8 +902,8 @@ ratios are quite close:
 @ 
 %
 Let us now move on to the probably more interesting question of estimating the
-proportion of OOV \emph{tokens} in larger samples, given our lexicon of 5,157
-types. First, we generate a model-derived spectrum at the desired $N$. From
+proportion of OOV \emph{tokens} in larger samples, given our lexicon of 6,477 types. 
+First, we generate a model-derived spectrum at the desired $N$. From
 this, we obtain the expected $V$ estimate and, by subtracting $V_{seen}$ from
 $V$, an estimate of the number of OOV types ($V_{OOV}$). At this point, we
 make the best-case scenario (but not completely unreasonable) assumption that
@@ -923,7 +920,7 @@ twice, we multiply the number of twice-occurring types by 2, and so on --
 finally, to get the overall token frequency of the classes involved, we sum
 all these values).
 
-We estimate the spectrum from our ZM model at $N$ = 1,170,811, so that
+We estimate the spectrum from our ZM model at $N$ = 1,006,770, so that
 the result will be directly comparable to the observed spectrum from
 the whole Brown:
 
