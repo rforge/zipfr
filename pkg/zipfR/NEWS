@@ -2,14 +2,19 @@ RECENT CHANGES to the 'zipfR' package:
 
 Upcoming:
 
-  - posterior distribution functions using LNRE models as a Bayesian prior,
-    with type density postdlnre(), log-transformed density postldlnre(), as well as
-    cumulative probability postplnre() and quantiles postqlnre() for selected models
-  - parallelization of lnre.bootstrap(), using fork on Unix-like platforms or with
-    a properly initialized snow cluster
-  - Good-Turing estimates with gtlnre()
+  - lnre.productivity.measures() computes expected values of productivity measures 
+    based on LNRE model (either by approximation or by parametric bootstrapping)
 
-Version 0.7:
+Version 0.6-70:
+
+  - parallelization of lnre.bootstrap(), using forked processed on Unix-like platforms
+    or with a properly initialized snow cluster (based on the 'parallel' package)
+  - bootstrapped confidence intervals in lnre() are speeded up substantially
+  - additional productivity measures and some other improvements to productivity.measures()
+  - plot.tfl() now also plots relative frequencies (pmw) for comparison across 
+    different sample sizes
+
+Version 0.6-66:
 
   - default minimization algorithm changed to "Nelder-Mead", since "Custom" often
     failed to converge on problematic data sets

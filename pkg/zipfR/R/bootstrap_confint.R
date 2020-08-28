@@ -1,6 +1,11 @@
-bootstrap.confint <- function (x, level=0.95, method=c("normal", "mad", "empirical")) {
+bootstrap.confint <- function (x, level=0.95, method=c("normal", "mad", "empirical"), 
+                               data.frame=FALSE) {
   method <- match.arg(method)
   .sig.level <- (1 - level) / 2  # one-sided significance level corresponding to selected confidence level
+  if (inherits(x, "data.frame")) {
+    if (!all(sapply(x, is.numeric))) stop("all columns of data.frame x must be numeric")
+    x <- as.matrix(x)
+  }
   if (!(is.matrix(x) && is.numeric(x))) stop("x must be a numeric matrix")
   replicates <- nrow(x)
   
@@ -54,5 +59,5 @@ bootstrap.confint <- function (x, level=0.95, method=c("normal", "mad", "empiric
   .res.table <- apply(x, 2, confint.wrap)
   rownames(.res.table) <- confint.labels
 
-  .res.table
+  if (data.frame) as.data.frame(.res.table, optional=TRUE) else .res.table
 }

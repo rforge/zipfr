@@ -4,14 +4,14 @@
 
 \description{
 
-  This function implements parametric bootstrapping for LNRE models, i.e. it draws a specified number of random samples from a trained \code{lnre} object.  For each sample, a new model is estimated and user-defined information is extracted from this model.  See \sQuote{Details} and \sQuote{Examples} below for other use cases.
+  This function implements parametric bootstrapping for LNRE models, i.e. it draws a specified number of random samples from the population described by a given \code{lnre} object.  For each sample, two callback functions are applied to perform transformations and/or extract statistics.  In an important application (bootstrapped confidence intervals for model parameters), the first callback estimates a new LNRE model and the second callback extracts the relevant parameters from this model.  See \sQuote{Use Cases} and \sQuote{Examples} below for other use cases.
   
 }
 
 \usage{
 lnre.bootstrap(model, N, ESTIMATOR, STATISTIC, 
                replicates=100, sample=c("spc", "tfl", "tokens"),
-               simplify=TRUE, verbose=TRUE, seed=NULL, \dots)
+               simplify=TRUE, verbose=TRUE, parallel=1L, seed=NULL, \dots)
 }
 
 \arguments{
@@ -21,11 +21,11 @@ lnre.bootstrap(model, N, ESTIMATOR, STATISTIC,
   \item{N}{a single positive integer, specifying the size \eqn{N} (i.e. token count) of the individual bootstrap samples}
 
   \item{ESTIMATOR}{
-    a callback function, normally used for estimating LNRE models in the bootstrap procedure.  It is called once for each bootstrap sample with the sample as first argument (in the form determined by \code{sample}).  Additional arguments (\code{\dots}) are passed through to the callback, so it is possible to use \code{ESTIMATOR=lnre} with appropriate settings.  It is valid to set \code{ESTIMATOR=identity} to pass samples through to the \code{STATISTIC} callback.
+    a callback function, normally used for estimating LNRE models in the bootstrap procedure.  It is called once for each bootstrap sample with the sample as first argument (in the form determined by \code{sample}).  Additional arguments (\code{\dots}) are passed on to the callback, so it is possible to use \code{ESTIMATOR=lnre} with appropriate settings.  If this step is not needed, set \code{ESTIMATOR=identity} to pass samples through to the \code{STATISTIC} callback.
   }
 
   \item{STATISTIC}{
-    a callback function, normally used to extract model parameters and other relevant statistics from the bootstrapped LNRE models.  It is called once for each  bootstrap sample, with the value returned by \code{ESTIMATOR} as its single argument.  The return values are automatically aggregated across all bootstrap samples (see \sQuote{Value} below).  It is valid to set \code{STATISTIC=identity} in order to pass through the results of the \code{ESTIMATOR} callback.
+    a callback function, normally used to extract model parameters and other relevant statistics from the bootstrapped LNRE models.  It is called once for each  bootstrap sample, with the value returned by \code{ESTIMATOR} as its single argument.  The return values are automatically aggregated across all bootstrap samples (see \sQuote{Value} below).  If this step is not needed, set \code{STATISTIC=identity} in order to pass through the results of the \code{ESTIMATOR} callback.  Note that \code{STATISTIC} \bold{must not} return \code{NULL}, which is used internally to signal errors.
   }
 
   \item{replicates}{a single positive integer, specifying the number of bootstrap samples to be generated}
@@ -36,7 +36,9 @@ lnre.bootstrap(model, N, ESTIMATOR, STATISTIC,
 
   \item{simplify}{if \code{TRUE}, use \code{rbind()} to combine list of results into a single data structure. In this case, the estimator should return either a vector of fixed length or a single-row data frame or matrix.  No validation is carried out before attempting the simplification.}
 
-  \item{verbose}{if \code{TRUE}, shows progress bar in R console during execution (which can take quite a long time)}
+  \item{verbose}{if \code{TRUE}, show progress bar in R console during the bootstrapping process (which can take a long time). The progress bar may be updated quite infrequently if parallel processing is enabled.}
+
+  \item{parallel}{whether to enable parallel processing. Either an integer specifying the number of worker processes to be forked, or a pre-initialised \pkg{snow} cluster created with \code{\link{makeCluster}}; see \sQuote{Details} below.}
 
   \item{seed}{a single integer value used to initialize the RNG in order to generate reproducible results}
   
@@ -51,8 +53,7 @@ lnre.bootstrap(model, N, ESTIMATOR, STATISTIC,
   \itemize{
     \item \code{N} = sample size of the bootstrap replicates
     \item \code{model} = the LNRE model from which samples were generated
-    \item \code{estimator.errors} = number of failures of the \code{ESTIMATOR} callback
-    \item \code{statistic.errors} = number of failures of the \code{STATISTIC} callback
+    \item \code{errors} = number of samples for which either the \code{ESTIMATOR} or the \code{STATISTIC} callback produced an error
   }
   
   If \code{simplify=TRUE}, the statistics are combined with \code{rbind()}.  This is performed unconditionally, so make sure that \code{STATISTIC} returns a suitable value for all samples, typically vectors of the same length or single-row data frames with the same columns.
@@ -72,7 +73,18 @@ lnre.bootstrap(model, N, ESTIMATOR, STATISTIC,
     \item The callback function \code{STATISTIC} is used to extract relevant information for each sample. If \code{STATISTIC} fails, the procedure is repeated from step 2 with a different sample.  The callback will typically return a vector of fixed length or a single-row data frame, and the results for all bootstrap samples are combined into a matrix or data frame if \code{simplify=TRUE}.
   }
   
-  \bold{Warning:} Keep in mind that sampling a token vector can be slow and consume large amounts of memory for very large \code{N} (much more than 1 million tokens). If possible, use \code{sample="spc"} or \code{sample="tfl"}, which can be generated more efficiently.
+  \bold{Warning:} Keep in mind that sampling a token vector can be slow and consume large amounts of memory for very large \code{N} (several million tokens). If possible, use \code{sample="spc"} or \code{sample="tfl"}, which can be generated more efficiently.
+
+  \bold{Parallelisation}
+  
+  Since bootstrapping is a computationally expensive procedure, it is usually desirable to use parallel processing.  \code{lnre.bootstrap} supports two types of parallelisation, based on the \pkg{parallel} package:
+  \itemize{
+    \item On Unix platforms, you can set \code{parallel} to an integer number in order to fork the specified number of worker processes, utilising multiple cores on the same machine.  The \code{\link{detectCores}} function shows how many cores are available, but due to hyperthreading and memory contention, it is often better to set \code{parallel} to a smaller value.  Note that forking may be unstable especially in a GUI environment, as explained on the \code{mcfork} manpage.
+    
+    \item On all platforms, you can pass a pre-initialised \pkg{snow} cluster in the \code{argument}, which consists of worker processes on the same machine or on different machines.  A suitable cluster can be created with \code{\link{makeCluster}}; see the \pkg{parallel} package documentation for further information.  It is your responsibility to set up the cluster so that all required data sets, packages and custom functions are available on the worker processes; \code{lnre.bootstrap} will only ensure that the \pkg{zipfR} package itself is loaded.
+  }
+
+  Note that parallel processing is not enabled by default and will only be used if \code{parallel} is set accordingly.
 
 }
 

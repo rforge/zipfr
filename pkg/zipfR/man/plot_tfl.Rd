@@ -15,7 +15,7 @@
        min.rank=1, max.rank=NA, log="", 
        type=c("p","l","b","c","o","h","s"),
        bw=zipfR.par("bw"), cex=1,
-       xlim=NULL, ylim=NULL,
+       xlim=NULL, ylim=NULL, freq=TRUE,
        xlab="rank", ylab="frequency", legend=NULL,
        main="Type-Frequency List (Zipf ranking)",
        pch=NULL, lty=NULL, lwd=NULL, col=NULL)
@@ -46,6 +46,9 @@
 
   \item{xlim, ylim}{visible range on x- and y-axis.  The default values
     are automatically determined to fit the selected data in the plot.}
+
+  \item{freq}{if \code{freq=FALSE}, plot relative frequency (per million words) instead of
+    absolute frequency on the y-axis.}
 
   \item{xlab, ylab}{labels for the x-axis and y-axis.}
 

@@ -18,7 +18,7 @@
        m.max=15, runs=5,
        method=c("Nelder-Mead", "NLM", "BFGS", "SANN", "Custom"),
        exact=TRUE, sampling=c("Poisson", "multinomial"),
-       bootstrap=0, verbose=TRUE,
+       bootstrap=0, verbose=TRUE, parallel=1L,
        \dots)
 
 }
@@ -76,6 +76,9 @@
     time-consuming and should not be used if the underlying sample size
     is very large (roughly, more than 1 million tokens).  See
     \code{\link{lnre.bootstrap}} for further information and warnings.}
+
+  \item{parallel}{whether to use parallelisation for the bootstrapping procedure
+    (highly recommended). See \code{\link{lnre.bootstrap}} for details.}
 
   \item{verbose}{if \code{TRUE}, a progress bar will be shown in the R console
     during the bootstrapping procedure}

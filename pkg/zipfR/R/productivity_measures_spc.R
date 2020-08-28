@@ -1,6 +1,6 @@
-productivity.measures.spc <- function (obj, measures, ...)
+productivity.measures.spc <- function (obj, measures, data.frame=TRUE, ...)
 {
-  supported <- qw("K D R S H C P TTR Hapax V")
+  supported <- qw("V TTR R C k U W P Hapax H S alpha2 K D")
   if (missing(measures)) measures <- supported
   measures <- sapply(measures, match.arg, choices=supported)
   res <- numeric(length(measures))
@@ -10,9 +10,9 @@ productivity.measures.spc <- function (obj, measures, ...)
 
   ## check which measures can be computed from the available spectrum
   idx.ok <- (
-    (measures %in% qw("R C V TTR")) | 
-    (measures %in% qw("H P Hapax") & m.max >= 1) | 
-    (measures %in% qw("S") & m.max >= 2) | 
+    (measures %in% qw("V TTR R C k U W")) | 
+    (measures %in% qw("P Hapax H") & m.max >= 1) | 
+    (measures %in% qw("S alpha2") & m.max >= 2) | 
     (m.max == Inf))
   res <- numeric(length(measures))
   res[!idx.ok] <- NA
@@ -20,21 +20,21 @@ productivity.measures.spc <- function (obj, measures, ...)
   ## now compute all selected productivity measures
   res[idx.ok] <- sapply(measures[idx.ok], function (M.) {
     switch(M.,
-           ## measures based on single spectrum element: expectations are exact
+           ## measures based on V and N
+           V = V(obj),
+           TTR = V(obj) / N(obj),
            R = V(obj) / sqrt(N(obj)),
            C = log( V(obj) ) / log( N(obj) ),
+           k = log( V(obj) ) / log(log( N(obj) )),
+           U = log( N(obj) )^2 / ( log(N(obj)) - log(V(obj)) ),
+           W = N(obj) ^ (V(obj) ^ 0.172),
+           ## measures based on hapax count (V1)
            P = Vm(obj, 1) / N(obj),
-           TTR = V(obj) / N(obj),
-           V = V(obj),
-           ## measures based on two spectrum elements: expectations based on
-           ## rough normal approximation of the distribution of Vm / V
-           ##  - assumption: Vm and (V - Vm) are independent (not actually true)
-           ##  - then Vm / (Vm + (V - Vm)) is roughly normal (Evert 2004b, Lemma A.8, p. 179)
-           ##  - with E[Vm / V] = E[Vm] / E[V]
-           ##  - H also assumes that the transformation 1 / (1 - Vm / V) doesn't skew the distribution
-           S = Vm(obj, 2) / V(obj),
-           H = 100 * log( N(obj) ) / (1 - Vm(obj, 1) / V(obj)),
            Hapax = Vm(obj, 1) / V(obj),
+           H = 100 * log( N(obj) ) / (1 - Vm(obj, 1) / V(obj)),
+           ## measures based on the first two spectrum elements (V1 and V2)
+           S = Vm(obj, 2) / V(obj),
+           alpha2 = 1 - 2 * Vm(obj, 2) / Vm(obj, 1),
            ## Yule K and Simpson D can only be computed from full spectrum
            K = {
              m <- as.numeric(obj$m)
@@ -49,5 +49,5 @@ productivity.measures.spc <- function (obj, measures, ...)
   })
 
   names(res) <- measures
-  res
+  if (data.frame) as.data.frame(t(res), optional=TRUE) else res
 }

@@ -2,7 +2,7 @@ plot.tfl <- function (x, y, ...,
                       min.rank=1, max.rank=NA, log=c("","x","y","xy"), 
                       type=c("p","l","b","c","o","h","s"),
                       bw=zipfR.par("bw"), cex=1,
-                      xlim=NULL, ylim=NULL, 
+                      xlim=NULL, ylim=NULL, freq=TRUE,
                       xlab="rank", ylab="frequency", legend=NULL,
                       main="Type-Frequency List (Zipf ranking)",
                       pch=NULL, lty=NULL, lwd=NULL, col=NULL)
@@ -21,6 +21,7 @@ plot.tfl <- function (x, y, ...,
   if (any(sapply(TFLs, function (.TFL) attr(.TFL, "incomplete")))) stop("plotting of incomplete type-frequency lists is not supported")
   x.log <- log == "x" || log == "xy"
   y.log <- log == "y" || log == "xy"
+  if (missing(ylab) && !freq) ylab <- "relative frequency (per million words)"
 
   ## determine range of ranks available & check requested min/max
   max.rank.available <- max(sapply(TFLs, function (.TFL) length(.TFL$f)))
@@ -34,9 +35,14 @@ plot.tfl <- function (x, y, ...,
   ranks <- min.rank:max.rank
 
   ## collect list of Zipf-ranked type frequency vectors, then determine default range for y-axis
-  freqs <- lapply(TFLs, function (.TFL) sort(.TFL$f, decreasing=TRUE))
-  f.max <- max(unlist(lapply(freqs, function (.F) na.omit(.F[ranks]))))
-  
+  freqs <- lapply(TFLs, function (.TFL) {
+    res <- sort(.TFL$f, decreasing=TRUE)
+    if (freq) res else 1e6 * res / N(.TFL) # rescale to rel.freq. pmw if freq=FALSE
+  })
+  tmp <- unlist(lapply(freqs, function (.F) na.omit(.F[ranks])))
+  f.max <- max(tmp)
+  f.min <- if (freq) 1 else min(tmp)
+    
   ## get default styles unless manually overridden
   if (missing(pch)) pch <- zipfR.par("pch", bw.mode=bw)
   if (missing(lty)) lty <- zipfR.par("lty", bw.mode=bw)
@@ -45,8 +51,8 @@ plot.tfl <- function (x, y, ...,
   
   ## choose suitable ranges on the axes, unless specified by user
   if (missing(xlim)) xlim <- c(min.rank, max.rank)
-  if (missing(ylim)) ylim <- if (y.log) c(2/3, 1.5*f.max) else c(0, 1.05 * f.max)
-
+  if (missing(ylim)) ylim <- if (y.log) c(2/3*f.min, 1.5*f.max) else c(0, 1.05 * f.max)
+      
   ## set up plotting region and labels
   plot(1, 1, type="n", xlim=xlim, ylim=ylim, log=log, xaxs="r", yaxs="i",
        xlab=xlab, ylab=ylab, main=main)

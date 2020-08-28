@@ -12,18 +12,20 @@
 \usage{
 
 bootstrap.confint(x, level=0.95, 
-                  method=c("normal", "mad", "empirical"))
+                  method=c("normal", "mad", "empirical"),
+                  data.frame=FALSE)
 
 }
 
 \arguments{
 
-  \item{x}{a numeric matrix, with rows corresponding to bootstrap replicates and columns corresponding to different statistics or coefficients. The matrix should have column labels, which will be preserved in the result.}
+  \item{x}{a numeric matrix, with rows corresponding to bootstrap replicates and columns corresponding to different statistics or coefficients. The matrix should have column labels, which will be preserved in the result.  A data frame with numeric columns is automatically converted to a matrix.}
 
   \item{level}{desired confidence level (two-sided)}
 
   \item{method}{type of confidence interval to be estimated (see "Details" below)}
 
+  \item{data.frame}{if \code{TRUE}, the return value is converted to a data frame}
 }
 
 \details{
@@ -71,7 +73,9 @@ bootstrap.confint(x, level=0.95,
     \item an estimate of central tendency (labelled \code{center})
     \item an estimate of spread on a scale comparable to standard deviaton (labelled \code{spread})
   }
-
+  
+  If \code{data.frame=TRUE}, the matrix is converted to a data frame.
+  
 }
 
 \seealso{

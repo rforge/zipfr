@@ -93,8 +93,8 @@
   and there is no standardized notation for the upper incomplete Beta
   function, so \eqn{B^*}{B*} is used here as an ad-hoc symbol.
   \code{Rbeta} returns the corresponding regularized Beta function,
-  \eqn{I(x;a,b)} (\code{lower=FALSE}) or \eqn{I^*(x;a,b)}{I*(x;a,b)}
-  (\code{lower=TRUE}).  If \code{log=TRUE}, the returned values are on
+  \eqn{I(x;a,b)} (\code{lower=TRUE}) or \eqn{I^*(x;a,b)}{I*(x;a,b)}
+  (\code{lower=FALSE}).  If \code{log=TRUE}, the returned values are on
   logarithmic scale as specified by the \code{base} parameter.
 
   \code{Ibeta.inv} and \code{Rbeta.inv} compute the inverse of the

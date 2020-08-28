@@ -4,7 +4,7 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
                   m.max=15, runs=5,
                   method=c("Nelder-Mead", "NLM", "BFGS", "SANN", "Custom"),
                   exact=TRUE, sampling=c("Poisson", "multinomial"),
-                  bootstrap=0, verbose=TRUE,
+                  bootstrap=0, verbose=TRUE, parallel=1L,
                   ...)
 {
   type <- match.arg(type)
@@ -81,7 +81,7 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
     
     if (bootstrap > 0) {
       model$bootstrap <- lnre.bootstrap(
-        model, N(spc), ESTIMATOR=lnre, STATISTIC=identity, replicates=bootstrap, simplify=FALSE, verbose=verbose,
+        model, N(spc), ESTIMATOR=lnre, STATISTIC=identity, replicates=bootstrap, simplify=FALSE, verbose=verbose, parallel=parallel,
         type=type, cost=cost, m.max=m.max, method=method, exact=exact, sampling=sampling, debug=FALSE, ...)
     }
   }
