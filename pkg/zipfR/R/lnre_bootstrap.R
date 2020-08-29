@@ -4,9 +4,12 @@
 
 lnre.bootstrap <- function (model, N, ESTIMATOR, STATISTIC, replicates=100, sample=c("spc", "tfl", "tokens"), 
                             simplify=TRUE, verbose=TRUE, parallel=1L, seed=NULL, ...) {
-  if (! inherits(model, "lnre")) stop("first argument must belong to a subclass of 'lnre'")
-  sample <- match.arg(sample)
+  if (!inherits(model, "lnre")) stop("first argument must belong to a subclass of 'lnre'")
+  if (!is.function(sample)) sample <- match.arg(sample)
   stopifnot(replicates >= 1)
+  stopifnot(is.function(ESTIMATOR))
+  stopifnot(is.function(STATISTIC))
+
   par.method <- "single"
   if (inherits(parallel, "cluster")) {
     n.proc <- length(clusterCall(parallel, function () library(zipfR)))
@@ -17,6 +20,7 @@ lnre.bootstrap <- function (model, N, ESTIMATOR, STATISTIC, replicates=100, samp
     n.proc <- as.integer(n.proc)
     if (n.proc > 1) par.method <- "fork"
   }
+
   ## select batch size so that
   ##  - each batch computes at most 10 replicate pre process
   ##  - there are at least 10 batches (assuming that small value of replicates indicates high computational cost)
@@ -26,11 +30,14 @@ lnre.bootstrap <- function (model, N, ESTIMATOR, STATISTIC, replicates=100, samp
   
   ## worker function that generates and processes a single sample
   ## (all parameters should be bound by the closure, so no arguments need to be passed)
-  .worker <- function (.) {
-    .sample <- switch(sample,
-                      tokens = rlnre(model, N, what="tokens"),
-                      tfl = rlnre(model, N, what="tfl"),
-                      spc = tfl2spc(rlnre(model, N, what="tfl")))
+  SAMPLER <- if (is.function(sample)) sample else
+    switch(sample,
+           tokens = function (model, n) rlnre(model, n, what="tokens"),
+           tfl = function (model, n) rlnre(model, n, what="tfl"),
+           spc = function (model, n) tfl2spc(rlnre(model, n, what="tfl")))
+
+  .worker <- function (n) {
+    .sample <- SAMPLER(model, n)
     .estimated.model <- try(suppressWarnings(ESTIMATOR(.sample, ...)), silent=TRUE)
     if (is(.estimated.model, "try-error")) return(NULL)
     .stats <- try(suppressWarnings(STATISTIC(.estimated.model)), silent=TRUE)
@@ -57,9 +64,9 @@ lnre.bootstrap <- function (model, N, ESTIMATOR, STATISTIC, replicates=100, samp
     n <- n.proc * ceiling(n / n.proc) # round up to multiple of workers
     batch <- switch(
       par.method,
-      single = list(.worker()),
-      fork = mclapply(seq_len(n), .worker, mc.cores=n.proc),
-      cluster = clusterApply(parallel, seq_len(n), .worker),
+      single = list(.worker(N)),
+      fork = mclapply(rep(N, n), .worker, mc.cores=n.proc),
+      cluster = clusterApply(parallel, rep(N, n), .worker),
       stop("internal error (invalid par.method)"))
     stopifnot(n == length(batch)) # sanity check
     for (res in batch) {
@@ -72,6 +79,7 @@ lnre.bootstrap <- function (model, N, ESTIMATOR, STATISTIC, replicates=100, samp
     }
     if (verbose) setTxtProgressBar(.progress, min(.got, replicates))
   }
+
   if (verbose) {
     close(.progress)
     if (.errors > 0) cat("[bootstrap failed for", .errors, "samples]\n")

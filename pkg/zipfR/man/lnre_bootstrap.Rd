@@ -32,6 +32,8 @@ lnre.bootstrap(model, N, ESTIMATOR, STATISTIC,
   
   \item{sample}{
     the form in which each sample is passed to \code{ESTIMATOR}: as a frequency spectrum (\code{spc}, the default), as a type-frequency list (\code{tfl}) or as a factor vector representing the token sequence (\code{tokens}). \bold{Warning:} The latter can be computationally expensive for large \code{N}.
+    
+    Alternatively, a callback function that will be invoked with arguments \code{model} and \code{replicates} and must return a random sample in the format expected by \code{ESTIMATOR}.  See \sQuote{Use Cases} below for typical applications.
   }
 
   \item{simplify}{if \code{TRUE}, use \code{rbind()} to combine list of results into a single data structure. In this case, the estimator should return either a vector of fixed length or a single-row data frame or matrix.  No validation is carried out before attempting the simplification.}
@@ -66,7 +68,7 @@ lnre.bootstrap(model, N, ESTIMATOR, STATISTIC,
   The parametric bootstrapping procedure works as follows:
   
   \enumerate{
-    \item \code{replicates} random samples of \code{N} tokens each are drawn from the population described by the LNRE model \code{model}
+    \item \code{replicates} random samples of \code{N} tokens each are drawn from the population described by the LNRE model \code{model} (possibly using a callback function provided in argument \code{sample})
     
     \item Each sample is passed to the callback function \code{ESTIMATOR} in the form determined by \code{sample} (a frequency spectrum, type-frequency list, or factor vector of tokens). If \code{ESTIMATOR} fails, it is re-run with a different sample, otherwise the return value is passed on to \code{STATISTIC}.  Use \code{ESTIMATOR=identity} to pass the original sample through to \code{STATISTIC}.
     
@@ -115,6 +117,14 @@ lnre.bootstrap(model, N, ESTIMATOR, STATISTIC,
       \emph{Either} use \code{STATISTIC=identity} and \code{simplify=FALSE} to return a list of \code{vgc} objects, which can be plotted or processed further with \code{sapply()}. This strategy is particulary useful if one or more \eqn{V_m} are desired in addition to \eqn{V}.
       
       \emph{Or} use \code{STATISTIC=function (x) x$V} to extract y-coordinates for the growth curve and combine them into a matrix with \code{simplify=TRUE}, so that prediction intervals can be computed directly.  Note that the corresponding x-coordinates are not returned and have to be inferred from \code{N} and \code{stepsize}.
+    }
+  
+    \item{Simulating \bold{non-randomness} and \bold{mixture distributions}:}{
+      More complex populations and non-random samples can be simulated by providing a user callback function in the \code{sample} argument.  This callback is invoked with parameters \code{model} and \code{n} and has to return a sample of size \code{n} in the format expected by \code{ESTIMATOR}.
+      
+      For simulating non-randomness, the callback will typically use \code{rlnre} to generate a random sample and then apply some transformation.
+      
+      For simulating mixture distributions, it will typically generate multiple samples from different populations and merge them; the proportion of tokens from each population should be determined by a multinomial random variable.  Individual populations might consist of LNRE models, or a finite number of \dQuote{lexicalised} types.  Note that only a single LNRE model will be passed to the callback; any other parameters have to be injected as bound variables in a local function definition.
     }
   
   }
