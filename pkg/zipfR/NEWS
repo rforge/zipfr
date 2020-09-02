@@ -11,6 +11,8 @@ Version 0.6-70:
     or with a properly initialized snow cluster (based on the 'parallel' package)
   - bootstrapped confidence intervals in lnre() are speeded up substantially
   - additional productivity measures and some other improvements to productivity.measures()
+  - lnre.productivity.measures() computes approximate expectations for samples from LNRE
+    population or estimates sampling distribution by parametric bootstrapping
   - plot.tfl() now also plots relative frequencies (pmw) for comparison across 
     different sample sizes
 

@@ -1,11 +1,4 @@
 For release 0.7:
-  - implement further "lexical constants" as productivity measures, with improved documentation (computed from TFL, SPC or VGC)
-  - implement lnre.productivity.measures() based on LNRE model and target sample size
-    - either empirical bootstrapping -> mean + s.d. + confint
-    - or approximation with expected values / variances (as rough approximation, explained in man page)
-    - if N is missing, compute population values where possible
-    - perhaps implement "moments" of frequency spectrum (if possible) to compute expected H (etc.) accurately?
-    - don't forget to remove from .Rbuildignore then!
   - implement MTLD (and perhaps other measures based on token vector) separately; doesn't fit in API for productivity measures
   - add code examples for lnre.bootstrap() (once implementation of confint estimators and productivity measures is complete)
   - add examples for productivity.measures()

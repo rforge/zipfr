@@ -35,7 +35,7 @@ export(postdlnre, postldlnre, postplnre, postqlnre)
 export(read.multiple.objects)
 export(lnre.bootstrap, bootstrap.confint)
 
-export(productivity.measures)
+export(productivity.measures, lnre.productivity.measures)
 
 S3method(plot, spc)
 S3method(plot, tfl)

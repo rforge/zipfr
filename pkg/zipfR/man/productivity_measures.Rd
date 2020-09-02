@@ -116,14 +116,29 @@ productivity.measures(obj, measures, data.frame=TRUE, ...)
     \item{\code{K}:}{
       Yule's (1944) \eqn{K = 10^4 \cdot \frac{ \sum_m m^2 V_m - N}{ N^2 }}{K = 10000 * (SUM(m) m^2 Vm - N) / N^2} \cr
       (only for complete frequency spectrum or type-frequency list). Herdan (1955) proposes an almost equivalent measure \eqn{v_m \approx \sqrt{K}}{v_m ~ sqrt(K)} based on a different derviation. Both measures converge for large \eqn{N} and \eqn{V}.
+      Yule's \eqn{K} is almost identical to Simpson's \eqn{D} and is an unbiased estimator for the same population coefficient \eqn{\delta} under an independent Poisson sampling scheme.
+      A measure of \emph{lexical poverty}, i.e. smaller values correpond to higher productivity.
     }
     \item{\code{D}:}{
       Simpson's (1949) \eqn{D = \sum_m V_m \frac{m}{N}\cdot \frac{m-1}{N-1}}{D = SUM(m) Vm * (m / N) * ((m - 1) / (N - 1))} \cr
       (only for complete frequency spectrum or type-frequency list) is a slightly modified version of Yule's \eqn{K}.
-      Simpson claims that it is an unbiased estimator for a population coefficient representing the probability of picking the same type twice in two consecutive draws from the population.
+      This measure is an unbiased estimator for a population coefficient \eqn{\delta}, representing the probability of picking the same type twice in two consecutive draws from the population. 
+      A measure of \emph{lexical poverty}, i.e. smaller values correpond to higher productivity.
+    }
+    \item{\code{Entropy}:}{
+      Entropy of the sample frequency distribution \eqn{-\sum_m V_m \frac{m}{N} \log_2 \frac{m}{N}}{- SUM(m) Vm * (m / N) * log2(m / N)} \cr
+      (only for complete frequency spectrum or type-frequency list). This is not a reliable estimator of population entropy. It is therefore not recommended as a productivity measure and has only been included for evaluation studies.
+      A measure of \emph{lexical poverty}, i.e. smaller values correpond to higher productivity.
+    }
+    \item{\code{eta}:}{
+      Normalised entropy or \emph{evenness} \eqn{\eta = \text{Entropy} / \log_2 V}{eta = Entropy / log2(V)}\cr
+      (only for complete frequency spectrum or type-frequency list) where \eqn{\log_2 V}{log2(V)} is the largest possible value for a sample with the observed vocabulary size (obtained for a uniform distribution).  Therefore, \eqn{0 \le \eta \le 1}.
+      Not recommended as a productivity measure because it is expected to produce erratic and counterintuitive results.
     }
 %%    \item{\code{}:}{}
   }
+
+  See Sec. 2.1 of the technical report \href{https://zipfr.r-forge.r-project.org/materials/inside-zipfr.pdf}{Inside \emph{zipfR}} for further details and references.
 
 }
 
@@ -139,9 +154,9 @@ productivity.measures(obj, measures, data.frame=TRUE, ...)
 
 \seealso{
 
-  \code{\link{lnre.bootstrap}} and \code{\link{bootstrap.confint}} for parametric bootstrapping experiments,
-  which can be used to estimate expectations and sampling distributions for all productivity measures.
-  
+  \code{\link{lnre.productivity.measures}} for parametric bootstrapping and approximate expectations 
+  of productivity measures in random samples from a LNRE population.
+
 }
 
 \keyword{ methods }

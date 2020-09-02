@@ -1,7 +1,7 @@
 productivity.measures.spc <- function (obj, measures, data.frame=TRUE, ...)
 {
-  supported <- qw("V TTR R C k U W P Hapax H S alpha2 K D")
-  if (missing(measures)) measures <- supported
+  supported <- qw("V TTR R C k U W P Hapax H S alpha2 K D Entropy eta")
+  if (missing(measures) || is.null(measures)) measures <- supported
   measures <- sapply(measures, match.arg, choices=supported)
   res <- numeric(length(measures))
 
@@ -27,7 +27,7 @@ productivity.measures.spc <- function (obj, measures, data.frame=TRUE, ...)
            C = log( V(obj) ) / log( N(obj) ),
            k = log( V(obj) ) / log(log( N(obj) )),
            U = log( N(obj) )^2 / ( log(N(obj)) - log(V(obj)) ),
-           W = N(obj) ^ (V(obj) ^ 0.172),
+           W = N(obj) ^ (V(obj) ^ -0.172),
            ## measures based on hapax count (V1)
            P = Vm(obj, 1) / N(obj),
            Hapax = Vm(obj, 1) / V(obj),
@@ -39,13 +39,25 @@ productivity.measures.spc <- function (obj, measures, data.frame=TRUE, ...)
            K = {
              m <- as.numeric(obj$m)
              Vm <- as.numeric(obj$Vm)
-             10e3 * (sum(m * m * Vm) - N(obj)) / (N(obj) ^ 2)
+             10e4 * (sum(m * m * Vm) - N(obj)) / (N(obj) ^ 2)
            },
            D = {
              m <- as.numeric(obj$m)
              Vm <- as.numeric(obj$Vm)
              sum(Vm * (m / N(obj)) * ((m - 1) / (N(obj) - 1)))
-           })
+           },
+           ## same for Entropy and eta (only included for evaluation purposes)
+           Entropy = {
+             m <- as.numeric(obj$m)
+             Vm <- as.numeric(obj$Vm)
+             - sum(Vm * (m / N(obj) * log2(m / N(obj))))
+           },
+           eta = {
+             m <- as.numeric(obj$m)
+             Vm <- as.numeric(obj$Vm)
+             - sum(Vm * (m / N(obj) * log2(m / N(obj)))) / log2(V(obj))
+           },
+           stop("internal error -- measure '", M., "' not implemented yet"))
   })
 
   names(res) <- measures

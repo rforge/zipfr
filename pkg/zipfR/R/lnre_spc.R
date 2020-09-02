@@ -1,7 +1,7 @@
 lnre.spc <- function (model, N=NULL, variances=FALSE, m.max=100)
 {
   if (! inherits(model, "lnre")) stop("first argument must belong to a subclass of 'lnre'")
-  if (missing(N)) N <- N(model)  # if specified as default value, R complains about "recursive reference"
+  if (is.null(N)) N <- N(model)  # if specified as default value, R complains about "recursive reference"
   if (! (is.numeric(N) && length(N) == 1 && all(N > 0)))
     stop("'N' argument must be a single positive number")
   if (variances && missing(m.max)) m.max <- 50
