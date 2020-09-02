@@ -22,78 +22,353 @@
 
 %% \usepackage{pifont}
 %% \usepackage{eucal}
+\usepackage{mathrsfs} % \mathscr
 
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx,rotating}
 \usepackage{array,hhline,booktabs}
 \usepackage{xspace}
-\usepackage{url}
+\usepackage{url,hyperref}
 %% \usepackage{ifthen,calc,hyphenat}
 
 \usepackage{xcolor,tikz}
 \usepackage[textwidth=25mm,textsize=small,colorinlistoftodos,backgroundcolor=orange!80]{todonotes} % [disable] to hide all TODOs
 
 \usepackage{natbib}
-\bibpunct{(}{)}{;}{a}{}{,}
+\bibpunct[:~]{(}{)}{;}{a}{}{,}
 
 \input{lib/math.tex}
 \input{lib/stat.tex}
 \input{lib/lnre.tex}
 
 \title{Inside \emph{zipfR}}
-\author{Stefan Evert\\ \url{http://purl.org/stefan.evert/}}
-\date{Unsorted notes\\typeset on \today}
+\author{Stefan Evert\\ \url{https://zipfR.R-forge.R-project.org/}}
+\date{typeset on \today}
 
 \begin{document}
 \maketitle
 
-\listoftodos
 \tableofcontents
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Notes and ideas}
-\label{sec:notes}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Mathematics and implementation}
-\label{sec:notes:math}
-
-\begin{itemize}
-
-\item LNRE model fit may be affected by a small number of very high-frequency types, esp.\ ``echo'' tokens \citep{Baroni:Evert:07a} or the ``other'' type when modelling vocabulary growth wrt.\ all tokens (\emph{external productivity}).  It would probably be useful to separate the most frequent types, estimate their occurrence probabilities directly (MLE are reliable barring non-randomness effects), and apply the LNRE model only to the remaining vocabulary.  This should present no major mathematical obstacles, but will have to be taken into account throughout the implementation (expectations, variances, chi-squared statistics, etc.).
-
-\item Standard LNRE fitting uses only the low end of the frequency spectrum and may produce an unsatisfactory fit for the ``middle range'' of the Zipf ranking.  If we want to account for these data as well -- esp.\ in connection with mixture models (Sec.~\ref{sec:models:mixtures}) and gZM (Sec.~\ref{sec:models:gzm}) -- a different goodness-of-fit goal function will be needed for parameter estimation.  
-
-  One possibility is to pool multiple frequency classes together, e.g.\ on a logarithmic scale: $m=1,\ldots,10$, $m=11\ldots 14$, $m=15\ldots 20$, $m=21\ldots 50$, $m=51\ldots 100$, $m=101\ldots 1000$, etc.; granularity will have to be adjusted to the available data, of course.  Assuming the usual multivariate Gaussian joint distriubtion for the original frequency spectrum, the pooled frequency spectrum should also be multivariate Gaussian as a linear map of the original spectrum.  Expectations, variances and covariances should be straightforward, although care has to be taken to avoid performance and/or numerical accuracy issues.\todo{Are there simplified equations for expectations and (co)variances of a pooled frequency spectrum?}
-
-\item Sometimes it would be useful to fit a LNRE model to multiple frequency spectra. E.g.\ for Gordon Pipa's neural spiking data, where it is plausible that trials for the same condition follow the same Zipfian distribution, but data cannot be pooled directly; or to avoid overfitting of non-random data by parallel parameter estimation from frequency spectra at different sample sizes.  Such \emph{co-estimation} \todo{Is ``co-estimation'' an appropriate term?} should be relatively straightforward to implement by adding up cost functions (perhaps with suitable scaling to account for different sample sizes), but custom estimators available for some of the models can no longer be used.
-
-\item One problem of the fZM implementation may be numerical accuracy due to cancellation when ``short'' Gamma integrals are calculated as differences between incomplete Gamma functions, esp.\ on very small or otherwise extreme samples.  This will become much more virulent for gZM models with many components.  Suggest a two-step strategy:
-  \begin{enumerate}
-  \item Encapsulate finite Gamma integrals into a helper function, which estimates cancellation errors and collects statistics.  This should be controlled by a global \texttt{debug} option for \emph{zipfR} (set with \texttt{zipfR.par()}).
-  \item Implement more accurate algorithm for finite Gamma integrals.  So far, the only solution seems to be numeric integration, which is easy and accurate for monotonic functions (possibly splitting integrand into monotonic parts).  Code might be implemented in R (using standard numeric integration functions) for preliminary testing.
-  \item Reimplement numeric integration in C; for better efficiency and accuracy on ``long'' Gamma integrals, might compute incomplete Gamma function first and run numeric integration only when estimated cancellation error exceeds a pre-defined threshold (also set with \texttt{zipfR.par()}).
-  \end{enumerate}
-
-\end{itemize}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Thoughts on goals and applications of LNRE modelling}
-\label{sec:notes:goals-applications}
-
-\begin{itemize}
-
-\item Most research on Zipf's law (both Zipf himself and more recent work by physicists) focuses on middle-range frequency ranks, which are highlighted in a logarithmic rank-frequency graph.  By contrast, LNRE models \citep{Khmaladze:87,Baayen:01} based on truncated frequency spectra are only interested in the lowest-frequency types.  Note that for typical applications -- productivity, vocabulary growth, estimation of vocabulary diversity, adjusted significance tests -- only such lowest-frequency types are of major concern, as probability estimates for middle- and high-frequency data can be obtained directly from any sizable corpus.  This is explains why most LNRE models find Zipf slows $a \gg 1$ rather than $a\approx 1$ as observed by Zipf and related work.
-
-\end{itemize}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The mathematics of LNRE modelling}
 \label{sec:lnre}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Notation}
+\label{sec:lnre:notation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Sampling distribution}
+\label{sec:lnre:expectation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{LNRE models}
+\label{sec:lnre:model}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Parameter estimation}
+\label{sec:lnre:estimation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Posterior distribution \& Good-Turing}
+\label{sec:lnre:posterior}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Productivity \& lexical diversity}
+\label{sec:prod}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Overview of productivity measures}
+\label{sec:prod:measures}
+
+\begin{equation}
+  \label{eq:prod:ttr}
+  \text{TTR} = \frac{V}{N}
+\end{equation}
+
+\begin{equation}
+  \label{eq:prod:guiraud-R}
+  \text{Guiraud's } R = \frac{V}{\sqrt{N}} = \sqrt{N} \cdot \text{TTR}
+\end{equation}
+
+Carroll's $\text{CTTR} = V / \sqrt{2 N} = R / \sqrt{2}$ is fully equivalent.
+
+\begin{equation}
+  \label{eq:prod:herdan-C}
+  \text{Herdan's } C = \frac{\log V}{\log N} = \frac{\log \text{TTR}}{\log N} + 1 
+\end{equation}
+
+Herdan assumes the general power law $V\sim N^{\alpha}$, with $C\to \alpha$
+for $N\to \infty$. The assumption is met approximately by any infinite
+Zipf-Mandelbrot population and $C\to 1/a$.
+
+\begin{equation}
+  \label{eq:prod:dugast-k}
+  \text{Dugast's } k = \frac{\log V}{\log \log N}
+  = \frac{\log(N \cdot \text{TTR})}{\log \log N}
+\end{equation}
+
+\begin{equation}
+  \label{eq:prod:dugast-U}
+  \text{Dugast's } U = \frac{(\log N)^2}{\log N - \log V}
+  = \frac{\log N}{1 - C}
+\end{equation}
+
+Maas's $a^2 = (\log N - \log V) / (\log N)^2 = 1 / U$ is fully equivalent, but
+formulated as a measure of ``lexical poverty'', i.e.\ low values indicate high
+productivity.
+
+%% Tuldava LN is complete bollocks (formula from Tweedie & Baayen 1998)
+% \begin{equation}
+%   \label{eq:prod:tuldava-LN}
+%   \text{Tuldava's } LN = \frac{1 - V^2}{V^2 \log N}
+%   = \frac{1}{V^2 \log N} - \frac{1}{\log N}
+% \end{equation}
+
+\begin{equation}
+  \label{eq:prod:brunet-W}
+  \text{Brunet's } W = N^{V^{-a}} \text{ with } a = 0.172
+\end{equation}
+which looks less ridiculous in the form $\log W = V^{-a}\cdot \log N$
+
+\begin{equation}
+  \label{eq:prod:summer-S}
+  \text{Summer's } S = \frac{\log \log V}{\log \log N}
+\end{equation}
+is not implemented in \emph{zipfR} because the symbol clashes with Sichel's
+$S$ and because it's taking the double logs to absurdity.
+
+\citet{Baayen:92} proposes the productivity index
+\[
+\mathscr{P} = \frac{V_1}{N}
+\]
+(originially from his PhD thesis, Baayen 1989), which corresponds to the slope
+of the vocabulary growth curve.
+
+\begin{equation}
+  \label{eq:prod:honore-H}
+  \text{Honoré's } H = 100 \frac{\log N}{1 - V_1 / V}
+\end{equation}
+
+\begin{equation}
+  \label{eq:prod:sichel-S}
+  \text{Sichel's } S = \frac{V_2}{V}
+\end{equation}
+
+Michéa's $M = V / V_2 = 1/S$ is a measure of lexical poverty and fully
+equivalent to Sichel's $S$.
+
+For an infinite Zipf-Mandelbrot population, the slope parameter $\alpha = 1/a$
+can directly be estimated from the proportions of hapax
+\citep[130]{Evert:04phd} and dis legomena \citep[127]{Evert:04phd}, which are
+independent of sample size under certain simplifying assumptions and
+large-sample approximations:
+\[
+\text{Stefan's } 
+\alpha_1 = \frac{V_1}{V} \quad\text{and}\quad
+\alpha_2 = 1 - 2\frac{V_2}{V_1} 
+\]
+First experiments show that $\alpha_1$ and $\alpha_2$ work well for random
+samples from a ZM population, but can be very sensitive to deviations, esp.\
+in the form of a finite population.  Of particular interest is the measure
+$\alpha_1$, which is simply the proportion of hapaxes (in analogy to $S$),
+and which has also been suggested as an estimator for the Zipf slope parameter
+by \citet[172]{Rouault:78}.
+
+Also note that Sichel's $S$ can be seen as a combination of the two measures:
+\[
+S = \alpha_1 \frac{1 - \alpha_2}{2}
+\]
+
+Entropy $H$ needs to be distinguished from Honoré's $H$:
+\begin{equation}
+  \label{eq:prod:entropy}
+  H = - \sum_{i=1}^{\infty} \frac{f_i}{N} \log \frac{f_i}{N}
+  = -\sum_{m=1}^{\infty} V_m \frac{m}{N} \log \frac{m}{N}
+\end{equation}
+Maximum value depends on $V$, viz.\ $H\leq \log V$. Hence compute normalized
+entropy (aka evenness or efficiency)
+\begin{equation}
+  \label{eq:prod:evenness}
+  \eta = \frac{H}{\log V}
+\end{equation}
+with $0\leq \eta\leq 1$. (Or better $\eta^{-1}$ as productivity measure?)
+$\eta$ may be problematic due to counter-intuitive scaling with sample size,
+and a quick Web search suggests that unbiased estimation of $H$ is really
+difficult, so we will not pursue $H$ as a productivity measure (but may
+implement it do demonstrate problematic issues).
+
+Yule suggested a measure based on statistical moments of the frequency
+spectrum (which sounds quite absurd but could possibly be motivated in
+terms of sampling random types), leading to
+\begin{equation}
+  \label{eq:prod:yule-K}
+  \text{Yule's } K = 
+  10^4 \left(-\frac1N + \sum_{m=1}^{\infty} V_m \left( \frac{m}{N}\right)^2 \right)
+  = 10^4 \cdot \frac{\sum_{m=1}^{\infty} m^2\cdot V_m - N}{N^2}
+  = 10^4 \cdot \sum_{i=1}^{\infty} \frac{f_i (f_i - 1)}{N^2}
+\end{equation}
+
+Herdan proposed a very similar measure $v_m \approx \sqrt{K}$ based on a different
+mathematical derviation:
+\begin{equation}
+  \label{eq:prod:herdan-vm}
+  \text{Herdan's } v_m =
+  \sqrt{-\frac{1}{V} + \sum_{i=1}^{\infty} V_i \left(\frac{i}{N}\right)^2}
+\end{equation}
+
+Simpson proposed a closely related measure that can be interpreted as an
+unbiased estimator of a population coefficient
+$\delta = \sum_i \pi_i^2$, i.e.\ the probability of drawing the same type
+twice from the population.
+\begin{equation}
+  \label{eq:prod:simpson-D}
+  \text{Simpson's } D = \sum_{m=1}^{\infty} V_m \frac{m}{N} \frac{m - 1}{N - 1}
+  = \sum_{i=1}^{\infty} \frac{f_i}{N} \frac{f_i-1}{N-1}
+\end{equation}
+For a LNRE population, the coefficient $\delta$ corresponds to the second
+moment of type density function:
+\begin{equation}
+  \label{eq:prod:tdf-2nd-moment}
+  \delta = \int_0^{\infty} \pi^2 g(\pi) \dpi
+\end{equation}
+
+\citet[124]{Baayen:vanHalteren:Tweedie:96} already note that ``[t]he values of
+both $D$ and $K$ are primarily determined by the high end of the frequency
+distribution structure''.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Expected values and sampling distribution}
+\label{sec:prod:expectation}
+
+\paragraph{Linear transformations of $V$ or $V_m$}
+Expectations and full sampling distributions can directly be obtained for TTR
+and other measures that are linear transformations of $V$ or a single spectrum
+element $V_m$.  In particular:
+\begin{gather}
+  \Exp{\text{TTR}} = \frac{\Exp{V}}{N}\\
+  \Exp{R} = \frac{\Exp{V}}{\sqrt{N}}\\
+  \Exp{\mathscr{P}} = \frac{\Exp{V_1}}{N}
+\end{gather}
+
+\paragraph{Nonlinear transformations of $V$}
+For a nonlinear transformation $f(V)$, approximate expectations can be obtained
+if the distribution of $V$ covers a region in which $f$ is approximately linear.
+In this case,
+\begin{equation}
+  \label{eq:prod:exp-nonlinear}
+  \Exp{f(V)} \approx f(\Exp{V})
+\end{equation}
+As long as $f$ is monotonic, the corresponding equality for the median is
+always exact. Provided that $V$ has a symmetric distribution (e.g.\ by being
+approximately normal), we obtain
+\begin{equation}
+  \label{eq:prod:median-nonlinear}
+  \text{med}\bigl[ f(V) \bigr] = f( \text{med}\bigl[ V \bigr] )
+  \approx f( \Exp{V} )
+\end{equation}
+We assume that these conditions are met for all productivity measures of this
+form, but may want to check later whether linearity of the transformation is
+always a plausible assumption.
+\begin{gather}
+  \Exp{C} = \frac{\log \Exp{V}}{\log N}\\
+  \Exp{k} = \frac{\log \Exp{V}}{\log \log N}\\
+  \Exp{U} = \frac{(\log N)^2}{\log N - \log \Exp{V}}\\
+  \Exp{\log W} = \Exp{V}^{-a}\cdot \log N \text{ with } a = 0.172
+\end{gather}
+$W$ seems to have (only) slightly larger curvature than $\log W$, so both
+forms are equally viable.
+
+\paragraph{Measures involving ratios of $V$ and $V_m$}
+For such measures, approximate expectations can be obtained from normal
+approximations to $V$ and $V_m$ (which should be very good in the range of
+samples where the measures are reasonable) and the fact that the ratio of two
+independet normal variables
+$X\sim N(\mu_1, \sigma_1^2), Y\sim N(\mu_2, \sigma_2^2)$ can itself be
+approximated by a normal distribution
+\begin{equation}
+  \label{eq:prod:normal-ratio-XY}
+  \frac{X}{Y} \sim N(\mu, \sigma^2)
+  \quad\text{with}\quad
+  \mu = \frac{\mu_1}{\mu_2},\;\;
+  \sigma^2 = \mu^2 \left( \frac{\sigma_1^2}{\mu_1^2} + \frac{\sigma_2^2}{\mu_2^2} \right)
+\end{equation}
+provided that $\mu_i / \sigma_i \gg 1$ \citep[313]{DiazFrances:Rubio:13}.
+This should also hold for correlated variables $X$ and $Y$ with the same $\mu$
+but different $\sigma^2$, as demonstrated for the special case $X / (X+Y)$ by
+\citet[Lemma A.8]{Evert:04phd}.  For nonlinear transformations of such ratios,
+we assume
+\begin{equation}
+  \Expscale{ f\left( \frac{X}{Y} \right) }
+  \approx f\left( \Expscale{\frac{X}{Y}} \right)
+  \approx f\left( \frac{\Exp{X}}{\Exp{Y}} \right)
+\end{equation}
+This yields expectations for:
+\begin{gather}
+  \Exp{S} = \frac{\Exp{V_2}}{\Exp{V}} \\
+  \Exp{\alpha_1} = \frac{\Exp{V_1}}{\Exp{V}} \\
+  \Exp{\alpha_2} = 1 - 2 \frac{\Exp{V_2}}{\Exp{V_1}} \\
+  \Exp{H} = 100 \frac{\log N}{1 - \Exp{V_1} / \Exp{V}}
+\end{gather}
+
+\paragraph{Variance and sampling distribution}
+Except in the case of linear transformations of $V$ or $V_m$, the full
+sampling distributions are much harder to compute.  Approximate variances
+could be determined from normal approximations to $V$ and $V_m$ together with
+(\ref{eq:prod:normal-ratio-XY}) and a linear approximation
+\[
+  f(X) \approx f(\Exp{X}) + f'(\Exp{X})\cdot (X - \Exp{X})
+\]
+Variances would have to be worked out in detail and require a version of
+(\ref{eq:prod:normal-ratio-XY}) for correlated variables, possibly based
+on the proof by \citet[Lemma A.8]{Evert:04phd}.
+
+For the time being, variances and confidence intervals will be determined
+empirically by parametric boostrapping.
+
+\paragraph{Measures based on the full frequency spectrum}
+Expectations for Simpson $D$ and Yule $K$ are derived from the individual
+binomial distributions of $f_i \sim B(N, \pi_i)$; additivity of expected
+values does not required independence of the random variables.  Since
+$\Exp{f_i} = N \pi_i$ and $\Var{f_i} = N \pi_i (1 - \pi_i)$, we find that
+\begin{equation}
+  \label{eq:prod:exp-D-1}
+  \Exp{f_i^2} = \Var{f_i^2} + \Exp{f_i}^2 = N \pi_i (1 - \pi_i) + (N \pi_i)^2
+\end{equation}
+Application to Simpson's $D$ yields
+\begin{align*}
+  \Exp{D} & = \frac1{N(N-1)} \sum_{i=1}^{\infty} \left( \Exp{f_i^2} - \Exp{f_i} \right)\\
+          & = \frac1{N(N-1)} \sum_{i=1}^{\infty} \left( N \pi_i (1 - \pi_i) + (N \pi_i)^2 - N \pi_i \right)\\
+          & = \frac1{N(N-1)} \sum_{i=1}^{\infty} \pi_i^2 (N^2 - N)
+            = \sum_{i=1}^{\infty} \pi_i^2 = \delta
+\end{align*}
+proving the claim that $D$ is an unbiased estimator of the population
+coefficient $\delta$ \citep[688]{Simpson:49}.  
+
+If we approximate the binomial distributions of $f_i$ with Poisson
+distributions (as in the simplified Poisson sampling approach to LNRE models),
+we have $\Exp{f_i} = N \pi_i$ and $\Exp{f_i^2} = N \pi_i + (N \pi_i)^2$. Under
+these assumptions, Yule's $K$ becomes an unbiased estimator:
+\begin{align*}
+  \Exp{K} & = \frac{10^4}{N^2} \cdot \sum_{i=1}^{\infty} \left( \Exp{f_i^2} - \Exp{f_i} \right) \\
+          & = \frac{10^4}{N^2} \cdot \sum_{i=1}^{\infty} N^2 \pi_i^2
+            = 10^4 \cdot \sum_{i=1}^{\infty} \pi_i^2 = 10^4 \cdot \delta
+\end{align*}
+With binomial sampling, the expectation is $\Exp{K} = 10^4 \frac{N - 1}{N} \delta$.
+
+An equation for the variance of $D$ is provided by \citet[688]{Simpson:49} and
+may be accepted without further proof, given that his claim about $\Exp{D}$
+was correct.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% \subsection{}
+% \label{sec:lnre:}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -105,9 +380,35 @@
 \subsection{Zipf-Mandelbrot (ZM)}
 \label{sec:models:zm}
 
+
+The second moment $\delta$ of the tdf (\ref{eq:prod:tdf-2nd-moment}) is easily
+obtained from (\ref{eq:models:fzm:2nd-moment}) by setting $A = 0$ (which also
+applies to the normalizing constant $C$):
+\begin{equation}
+  \label{eq:models:zm:2nd-moment}
+  \delta = \frac{C}{2 - \alpha} B^{2 - \alpha}
+  = \frac{(1 - \alpha) B^{2 - \alpha}}{(2 - \alpha) B^{1 - \alpha}}
+\end{equation}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Finite Zipf-Mandelbrot (fZM)}
 \label{sec:models:fzm}
+
+
+The second moment $\delta$ of the tdf (\ref{eq:prod:tdf-2nd-moment}) is given
+by
+\begin{equation}
+  \label{eq:models:fzm:2nd-moment}
+  \begin{split}
+    \delta & = \int_0^{\infty} \pi^2 g(\pi) \dpi
+    = C \int_A^B \pi^{1-\alpha} \dpi \\
+    & = C \left[ \frac{\pi^{2 - \alpha}}{2 - \alpha} \right]_A^B
+    = \frac{C}{2 - \alpha} \left( B^{2 - \alpha} - A^{2 - \alpha} \right) \\
+    & = \frac{1 - \alpha}{2 - \alpha}\cdot
+    \frac{B^{2 - \alpha} - A^{2 - \alpha}}{B^{1 - \alpha} - A^{1 - \alpha}}
+  \end{split}
+\end{equation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Generalised Zipf-Mandelbrot (gZM)}
@@ -137,11 +438,12 @@ Montemurro's LNRE model can be thought of as a smooth interpolation between two 
 \subsection{Mixture models}
 \label{sec:models:mixtures}
 
+\todo[inline]{Write up mathematics and purpose of mixture models}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Literature review}
+\section{Literature notes}
 \label{sec:literature}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -199,8 +501,51 @@ Montemurro postulates that the two power laws may correspond to ``general'' and 
 There is a completely unfounded claim at the end of the paper that ``it seems quite plausible that there may be a deep connection between differential equation (4) and the actual processes underlying the generation of syntactic language.'' (p.~577).
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Notes and ideas}
+\label{sec:notes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Mathematics and implementation}
+\label{sec:notes:math}
+
+\begin{itemize}
+
+\item LNRE model fit may be affected by a small number of very high-frequency types, esp.\ ``echo'' tokens \citep{Baroni:Evert:07a} or the ``other'' type when modelling vocabulary growth wrt.\ all tokens (\emph{external productivity}).  It would probably be useful to separate the most frequent types, estimate their occurrence probabilities directly (MLE are reliable barring non-randomness effects), and apply the LNRE model only to the remaining vocabulary.  This should present no major mathematical obstacles, but will have to be taken into account throughout the implementation (expectations, variances, chi-squared statistics, etc.).
+
+\item Standard LNRE fitting uses only the low end of the frequency spectrum and may produce an unsatisfactory fit for the ``middle range'' of the Zipf ranking.  If we want to account for these data as well -- esp.\ in connection with mixture models (Sec.~\ref{sec:models:mixtures}) and gZM (Sec.~\ref{sec:models:gzm}) -- a different goodness-of-fit goal function will be needed for parameter estimation.  
+
+  One possibility is to pool multiple frequency classes together, e.g.\ on a logarithmic scale: $m=1,\ldots,10$, $m=11\ldots 14$, $m=15\ldots 20$, $m=21\ldots 50$, $m=51\ldots 100$, $m=101\ldots 1000$, etc.; granularity will have to be adjusted to the available data, of course.  Assuming the usual multivariate Gaussian joint distriubtion for the original frequency spectrum, the pooled frequency spectrum should also be multivariate Gaussian as a linear map of the original spectrum.  Expectations, variances and covariances should be straightforward, although care has to be taken to avoid performance and/or numerical accuracy issues.\todo{Are there simplified equations for expectations and (co)variances of a pooled frequency spectrum?}
+
+\item Sometimes it would be useful to fit a LNRE model to multiple frequency spectra. E.g.\ for Gordon Pipa's neural spiking data, where it is plausible that trials for the same condition follow the same Zipfian distribution, but data cannot be pooled directly; or to avoid overfitting of non-random data by parallel parameter estimation from frequency spectra at different sample sizes.  Such \emph{co-estimation} \todo{Is ``co-estimation'' an appropriate term?} should be relatively straightforward to implement by adding up cost functions (perhaps with suitable scaling to account for different sample sizes), but custom estimators available for some of the models can no longer be used.
+
+\item One problem of the fZM implementation may be numerical accuracy due to cancellation when ``short'' Gamma integrals are calculated as differences between incomplete Gamma functions, esp.\ on very small or otherwise extreme samples.  This will become much more virulent for gZM models with many components.  Suggest a two-step strategy:
+  \begin{enumerate}
+  \item Encapsulate finite Gamma integrals into a helper function, which estimates cancellation errors and collects statistics.  This should be controlled by a global \texttt{debug} option for \emph{zipfR} (set with \texttt{zipfR.par()}).
+  \item Implement more accurate algorithm for finite Gamma integrals.  So far, the only solution seems to be numeric integration, which is easy and accurate for monotonic functions (possibly splitting integrand into monotonic parts).  Code might be implemented in R (using standard numeric integration functions) for preliminary testing.
+  \item Reimplement numeric integration in C; for better efficiency and accuracy on ``long'' Gamma integrals, might compute incomplete Gamma function first and run numeric integration only when estimated cancellation error exceeds a pre-defined threshold (also set with \texttt{zipfR.par()}).
+  \end{enumerate}
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Thoughts on goals and applications of LNRE modelling}
+\label{sec:notes:goals-applications}
+
+\begin{itemize}
+
+\item Most research on Zipf's law (both Zipf himself and more recent work by physicists) focuses on middle-range frequency ranks, which are highlighted in a logarithmic rank-frequency graph.  By contrast, LNRE models \citep{Khmaladze:87,Baayen:01} based on truncated frequency spectra are only interested in the lowest-frequency types.  Note that for typical applications -- productivity, vocabulary growth, estimation of vocabulary diversity, adjusted significance tests -- only such lowest-frequency types are of major concern, as probability estimates for middle- and high-frequency data can be obtained directly from any sizable corpus.  This is explains why most LNRE models find Zipf slows $a \gg 1$ rather than $a\approx 1$ as observed by Zipf and related work.
+
+\end{itemize}
+
 %% \renewcommand{\bibsection}{}    % avoid (or change) section heading 
 \bibliographystyle{natbib-stefan}
 \bibliography{stefan-literature,stefan-publications}  
+
+\newpage
+\listoftodos
 
 \end{document}
