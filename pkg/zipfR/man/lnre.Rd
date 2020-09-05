@@ -277,7 +277,8 @@
   \code{\link{lnre.vgc}}, \code{\link{EV}}, \code{\link{EVm}},
   \code{\link{VV}}, \code{\link{VVm}}.  Suitable implementations of the
   \code{\link{print}} and \code{\link{summary}} methods are also
-  provided (see \code{\link{print.lnre}} for details).  Note that the
+  provided (see \code{\link{print.lnre}} for details), as well as for
+  plotting (see \code{\link{plot.lnre}}).  Note that the
   methods \code{\link{N}}, \code{\link{V}} and \code{\link{Vm}} can be
   applied to LNRE models with estimated parameters and return
   information about the observed frequency spectrum used for parameter

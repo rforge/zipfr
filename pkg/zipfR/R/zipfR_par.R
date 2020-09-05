@@ -4,7 +4,8 @@ zipfR.par <- function (..., bw.mode=FALSE)
   known.pars <- ls(.PAR) 
 
   if (! length(args)) {                 # --> zipfR.par()
-    return(as.list(.PAR))
+    res <- as.list(.PAR)
+    return(res[order(names(res))])
   }
   else if (is.null(names(args))) {      
 

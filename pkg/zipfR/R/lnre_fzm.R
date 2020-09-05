@@ -11,7 +11,7 @@ lnre.fzm <- function (alpha=.8, A=1e-9, B=.01, param=list())
   ## initialize lnre.fzm model object
   self <- list(type="fzm", name="finite Zipf-Mandelbrot",
                param=list(), param2=list(),
-               util=list(update=lnre.fzm.update, transform=lnre.fzm.transform, print=lnre.fzm.print))
+               util=list(update=lnre.fzm.update, transform=lnre.fzm.transform, print=lnre.fzm.print, label=lnre.fzm.label))
   class(self) <- c("lnre.fzm", "lnre", class(self))
 
   ## update model parameters to specified values & compute secondary parameters
@@ -59,8 +59,10 @@ lnre.fzm.update <- function (self, param=list(), transformed=FALSE)
     A <- self$param$A
   }
 
+  self$param2$a <- 1 / alpha  # parameters of Zipf-Mandelbrot law are same as for ZM, only constanct C is different
+  self$param2$b <- (1 - alpha) / (B * alpha)
   
-  C <- (1 - alpha) / ( B ^ (1 - alpha) - A ^ (1 - alpha) ) # Evert (2004), p. ~~ TODO ~~
+  C <- (1 - alpha) / ( B ^ (1 - alpha) - A ^ (1 - alpha) ) # Evert (2004: 128)
   S <- (C / alpha) * ((A ^ -alpha) - (B ^ -alpha))
   self$param2$C <- C
   self$S <- S
@@ -104,3 +106,5 @@ lnre.fzm.print <- function (self)
   cat("   Upper cutoff:       B =", self$param$B, "\n")
   cat(" [ Normalization:      C =", self$param2$C, "]\n")    
 }
+
+lnre.fzm.label <- function (self) sprintf("fZM(alpha=%.5g, A=%.5g, B=%.5g)", self$param$alpha, self$param$A, self$param$B)

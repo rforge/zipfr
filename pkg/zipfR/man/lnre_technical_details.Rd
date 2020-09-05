@@ -120,6 +120,10 @@
 	parameters, and optionally some additional information (invoked
 	internally by \code{print.lnre} and \code{summary.lnre})}
 	
+	    \item{\code{label}:}{returns a string with a short description
+	of the LNRE model, including its subclass and approximate values 
+	for its parameters (e.g. for use in legend text).}
+	
     }
 
   }    
@@ -143,7 +147,7 @@
     example), and make sure that this object also inherits from the
     \code{lnre} class.
 
-    \item Provide the \code{update}, \code{transform} and \code{print}
+    \item Provide the \code{update}, \code{transform}, \code{print} and \code{label}
     utility functions for the LNRE model, which must be returned in the
     \code{util} field of the LNRE model object (see "Value" above).
 

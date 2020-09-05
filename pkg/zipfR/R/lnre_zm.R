@@ -10,7 +10,7 @@ lnre.zm <- function (alpha=.8, B=.01, param=list())
   ## initialize lnre.zm model object
   self <- list(type="zm", name="Zipf-Mandelbrot",
                param=list(), param2=list(),
-               util=list(update=lnre.zm.update, transform=lnre.zm.transform, print=lnre.zm.print))
+               util=list(update=lnre.zm.update, transform=lnre.zm.transform, print=lnre.zm.print, label=lnre.zm.label))
   class(self) <- c("lnre.zm", "lnre", class(self))
 
   ## update model parameters to specified values & compute secondary parameters
@@ -49,7 +49,10 @@ lnre.zm.update <- function (self, param=list(), transformed=FALSE)
     B <- self$param$B
   }
 
-  C <- (1 - alpha) / B^(1 - alpha)      # Evert (2004), p. 126
+  self$param2$a <- 1 / alpha  # parameters of Zipf-Mandelbrot law (Evert 2004: 126)
+  self$param2$b <- (1 - alpha) / (B * alpha)
+  
+  C <- (1 - alpha) / B^(1 - alpha)      # Evert (2004: 126)
   self$param2$C <- C
   self$S <- Inf
 
@@ -86,3 +89,5 @@ lnre.zm.print <- function (self)
   cat("   Upper cutoff:       B =", self$param$B, "\n")
   cat(" [ Normalization:      C =", self$param2$C, "]\n")    
 }
+
+lnre.zm.label <- function (self) sprintf("ZM(alpha=%.5g, B=%.5g)", self$param$alpha, self$param$B)

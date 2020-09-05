@@ -40,6 +40,7 @@ export(productivity.measures, lnre.productivity.measures)
 S3method(plot, spc)
 S3method(plot, tfl)
 S3method(plot, vgc)
+S3method(plot, lnre)
 
 S3method(print, spc)
 S3method(print, tfl)

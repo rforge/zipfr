@@ -17,7 +17,7 @@ plot.tfl <- function (x, y, ...,
   ## check other arguments
   if (length(log) > 1 || log != "") log <- match.arg(log)
   type <- match.arg(type)
-  if (!missing(legend) && length(legend) != n.tfl) stop("'legend' argument must be character or expression vector of same length as number of VGCs")
+  if (!missing(legend) && length(legend) != n.tfl) stop("'legend' argument must be character or expression vector of same length as number of TFLs")
   if (any(sapply(TFLs, function (.TFL) attr(.TFL, "incomplete")))) stop("plotting of incomplete type-frequency lists is not supported")
   x.log <- log == "x" || log == "xy"
   y.log <- log == "y" || log == "xy"
@@ -44,10 +44,10 @@ plot.tfl <- function (x, y, ...,
   f.min <- if (freq) 1 else min(tmp)
     
   ## get default styles unless manually overridden
-  if (missing(pch)) pch <- zipfR.par("pch", bw.mode=bw)
-  if (missing(lty)) lty <- zipfR.par("lty", bw.mode=bw)
-  if (missing(lwd)) lwd <- zipfR.par("lwd", bw.mode=bw)
-  if (missing(col)) col <- zipfR.par("col", bw.mode=bw)
+  if (is.null(pch)) pch <- zipfR.par("pch", bw.mode=bw)
+  if (is.null(lty)) lty <- zipfR.par("lty", bw.mode=bw)
+  if (is.null(lwd)) lwd <- zipfR.par("lwd", bw.mode=bw)
+  if (is.null(col)) col <- zipfR.par("col", bw.mode=bw)
   
   ## choose suitable ranges on the axes, unless specified by user
   if (missing(xlim)) xlim <- c(min.rank, max.rank)

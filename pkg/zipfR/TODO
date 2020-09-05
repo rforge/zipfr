@@ -1,5 +1,6 @@
 For release 0.7:
-  - implement MTLD (and perhaps other measures based on token vector) separately; doesn't fit in API for productivity measures
+  - implement MTLD and "rolling" type counts (for MATTR) separately; doesn't fit in API for productivity measures
+    - written in C for reasonable efficiency; using factor representation and pre-allocated count array seems appropriate
   - add code examples for lnre.bootstrap() (once implementation of confint estimators and productivity measures is complete)
   - add examples for productivity.measures()
 

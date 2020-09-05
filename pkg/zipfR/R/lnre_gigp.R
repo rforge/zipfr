@@ -11,7 +11,7 @@ lnre.gigp <- function (gamma=-.5, B=.01, C=.01, param=list())
   ## initialize lnre.fzm model object
   self <- list(type="gigp", name="Generalized Inverse Gauss-Poisson (GIGP)",
                param=list(), param2=list(),
-               util=list(update=lnre.gigp.update, transform=lnre.gigp.transform, print=lnre.gigp.print))
+               util=list(update=lnre.gigp.update, transform=lnre.gigp.transform, print=lnre.gigp.print, label=lnre.gigp.label))
   class(self) <- c("lnre.gigp", "lnre", class(self))
 
   ## update model parameters to specified values & compute secondary parameters
@@ -103,3 +103,5 @@ lnre.gigp.print <- function (self)
   cat("   Upper decay:        C =", self$param$C, "\n")
   cat(" [ Zipf size:          Z =", self$param2$Z, "]\n")    
 }
+
+lnre.gigp.label <- function (self) sprintf("GIGP(gamma=%.5g, B=%.5g, C=%.5g)", self$param$gamma, self$param$B, self$param$C)

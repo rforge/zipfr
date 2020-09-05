@@ -131,7 +131,7 @@ productivity.measures(obj, measures, data.frame=TRUE, ...)
       A measure of \emph{lexical poverty}, i.e. smaller values correpond to higher productivity.
     }
     \item{\code{eta}:}{
-      Normalised entropy or \emph{evenness} \eqn{\eta = \text{Entropy} / \log_2 V}{eta = Entropy / log2(V)}\cr
+      Normalised entropy or \emph{evenness} \eqn{\eta = \textrm{Entropy} / \log_2 V}{eta = Entropy / log2(V)}\cr
       (only for complete frequency spectrum or type-frequency list) where \eqn{\log_2 V}{log2(V)} is the largest possible value for a sample with the observed vocabulary size (obtained for a uniform distribution).  Therefore, \eqn{0 \le \eta \le 1}.
       Not recommended as a productivity measure because it is expected to produce erratic and counterintuitive results.
     }

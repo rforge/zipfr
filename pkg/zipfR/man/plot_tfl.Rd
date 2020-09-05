@@ -11,14 +11,14 @@
 
 \usage{
 
-  \method{plot}{tfl}(x, y, ...,
-       min.rank=1, max.rank=NA, log="", 
-       type=c("p","l","b","c","o","h","s"),
-       bw=zipfR.par("bw"), cex=1,
-       xlim=NULL, ylim=NULL, freq=TRUE,
-       xlab="rank", ylab="frequency", legend=NULL,
-       main="Type-Frequency List (Zipf ranking)",
-       pch=NULL, lty=NULL, lwd=NULL, col=NULL)
+\method{plot}{tfl}(x, y, ...,
+     min.rank=1, max.rank=NA, log="", 
+     type=c("p","l","b","c","o","h","s"),
+     bw=zipfR.par("bw"), cex=1,
+     xlim=NULL, ylim=NULL, freq=TRUE,
+     xlab="rank", ylab="frequency", legend=NULL,
+     main="Type-Frequency List (Zipf ranking)",
+     pch=NULL, lty=NULL, lwd=NULL, col=NULL)
 
 }
 
@@ -55,7 +55,7 @@
   \item{legend}{optional vector of character strings or expressions,
     specifying labels for a legend box, which will be drawn in the upper
     right-hand corner of the screen.  If \code{legend} is given, its
-    length must correspond to the number of frequency spectra in the
+    length must correspond to the number of type-frequeny lists in the
     plot.}
 
   \item{main}{a character string or expression specifying a main title for the plot}
