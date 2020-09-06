@@ -39,19 +39,18 @@ zipfR.par <- function (..., bw.mode=FALSE)
 .PAR <- new.env()
 
 ## styles for colour plots
-
-.PAR$lty <- rep( c("solid", "solid", "33", "solid", "1232"), 2)
-.PAR$lwd <- rep( c(3,3,3,3,3), 2)
-.PAR$col <- rep( c("black", "#FF0000", "#00AA00", "#4444FF", "black"), 2)
-.PAR$pch <- rep( c(1, 3, 15, 2, 20), 2)
-.PAR$barcol <- rep( c("black", "red", "blue", "yellow", "green"), 2 )
+.PAR$lty <- c(rep("solid", 7), rep("dashed", 7))
+.PAR$lwd <- rep(c(3,3,3,3,3,3,3), 2)
+.PAR$col <- rep(c("#808080", "#D65F5F", "#6ACC65", "#4878CF", "#C4AD66", "#77BEDB", "#B47CC7"), 2) # seaborn muted
+.PAR$pch <- rep(c(1, 3, 15, 2, 20), 3)
+.PAR$barcol <- rep(c("#666666", "#C44E52", "#55A868", "#4C72B0", "#CCB974", "#64B5CD", "#8172B2"), 2) # seaborn normal
 
 ## styles for b/w plots 
-.PAR$lty.bw <- rep( c("solid", "dashed", "12", "solid", "dashed"), 2)
-.PAR$lwd.bw <- rep( c(2,2,3,1,2), 2)
-.PAR$col.bw <- rep( c("grey30", "black", "black", "black", "grey30"), 2)
-.PAR$pch.bw <- rep( c(1, 3, 15, 2, 20), 2)
-.PAR$barcol.bw <- rep( c("black", "grey50", "white", "grey70", "grey20"), 2 )
+.PAR$lty.bw <- rep(c("solid", "dashed", "12", "solid", "dashed"), 2)
+.PAR$lwd.bw <- rep(c(2,2,3,1,2), 2)
+.PAR$col.bw <- rep(c("grey30", "black", "black", "black", "grey30"), 2)
+.PAR$pch.bw <- rep(c(1, 3, 15, 2, 20), 2)
+.PAR$barcol.bw <- rep(c("black", "grey50", "white", "grey70", "grey20"), 2)
 
 ## whether to produce b/w graphics by default
 .PAR$bw <- FALSE
