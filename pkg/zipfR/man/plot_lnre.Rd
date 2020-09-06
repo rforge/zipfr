@@ -10,7 +10,6 @@
 }
 
 \usage{
-
 \method{plot}{lnre}(x, y, ...,
      type=c("density", "cumulative"),
      xlim=c(1e-9, 1), ylim=NULL, steps=200,
@@ -23,7 +22,9 @@
 \arguments{
 
   \item{x, y, ...}{one or more objects of class \code{lnre}, containing trained
-    LNRE models describing the population(s) to be plotted}
+    LNRE models describing the population(s) to be plotted. Alternatively, all
+    models can be passed as a list in the \code{x} argument if the method is
+    called explicitly (see \sQuote{Examples}.}
 
   \item{type}{what type of plot should be drawn, \code{"density"} for the log-transformed
     type density function and \code{"cumulative"} for the cumulative probability distribution.}
@@ -104,18 +105,21 @@
 }
 
 \examples{
- 
-  models <- lapply(c("zm", "fzm", "gigp"), lnre, Dickens.spc)
+## visualise three LNRE models trained on same data
+m1 <- lnre("zm", Dickens.spc)
+m2 <- lnre("fzm", Dickens.spc)
+m3 <- lnre("gigp", Dickens.spc)
+plot(m1, m2, m3, type="density",
+     xlim=c(1e-8, 1e-2), ylim=c(0, 7.5e4), legend=TRUE)
 
-  plot(models[[1]], models[[2]], models[[3]], type="density", 
-       xlim=c(1e-8, 1e-2), ylim=c(0, 7.5e4), legend=TRUE)
+## cumulative probability distribution is not available for GIGP
+plot(m1, m2, type="cumulative", grid=TRUE,
+     xlim=c(1e-8, 1e-2), legend=c("ZM", "fZM"))
 
-  plot(models[[1]], models[[2]], type="cumulative", grid=TRUE,
-       xlim=c(1e-8, 1e-2), legend=c("ZM", "fZM"))
-
-  models <- lapply(seq(.1, .9, .2), function (x) lnre("zm", alpha=x, B=.1))
-  do.call(plot.lnre, models)
-
+## first argument can also be a list of models with explicit call
+models <- lapply(seq(.1, .9, .2), 
+                 function (x) lnre("zm", alpha=x, B=.1))
+plot.lnre(models, type="cum", grid=TRUE, legend=TRUE)
 }
 
 \keyword{ hplot }

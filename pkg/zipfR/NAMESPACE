@@ -41,6 +41,7 @@ S3method(plot, spc)
 S3method(plot, tfl)
 S3method(plot, vgc)
 S3method(plot, lnre)
+export(plot.spc, plot.tfl, plot.vgc, plot.lnre)
 
 S3method(print, spc)
 S3method(print, tfl)

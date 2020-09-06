@@ -10,23 +10,24 @@
 }
 
 \usage{
-
-  \method{plot}{vgc}(x, y, ...,
-       m=NA, add.m=NULL, N0=NULL,
-       conf.level=.95, conf.style=c("ticks", "lines"),
-       log=c("", "x", "y", "xy"),
-       bw=zipfR.par("bw"), 
-       xlim=NULL, ylim=NULL,
-       xlab="N", ylab="V(N)", legend=NULL,
-       main="Vocabulary Growth",
-       lty=NULL, lwd=NULL, col=NULL)
+\method{plot}{vgc}(x, y, ...,
+     m=NULL, add.m=NULL, N0=NULL,
+     conf.level=.95, conf.style=c("ticks", "lines"),
+     log=c("", "x", "y", "xy"),
+     bw=zipfR.par("bw"), 
+     xlim=NULL, ylim=NULL,
+     xlab="N", ylab="V(N)", legend=NULL,
+     main="Vocabulary Growth",
+     lty=NULL, lwd=NULL, col=NULL)
 
 }
 
 \arguments{
 
   \item{x, y, ...}{one or more objects of class \code{vgc}, representing
-    observed or expected vocabulary growth curves to be plotted}
+    observed or expected vocabulary growth curves to be plotted. Alternatively, 
+    all VGCs can be passed as a list in the \code{x} argument if the method is
+    called explicitly (see \sQuote{Examples}.}
 
   \item{m}{a single integer \eqn{m} in the range \eqn{1 \ldots 9}.  If
     specified, graphs will be plotted for \eqn{V_m(N)} instead of
@@ -144,7 +145,6 @@
 
   
 \examples{
-
 ## load Our Mutual Friend spectrum and empirical vgc
 data(DickensOurMutualFriend.emp.vgc)
 data(DickensOurMutualFriend.spc)
@@ -211,4 +211,8 @@ BrownAdj.bin.vgc <- vgc.interp(BrownAdj.spc,(1:100)*800,m.max=5)
 ## plot with V and 5 spectrum elements
 plot(BrownAdj.bin.vgc,add.m=c(1:5))
 
+## can pass list of VGCs in first argument with explicit call
+plot.vgc(lapply(EvertLuedeling2001, vec2vgc), 
+         xlim=c(0, 30000), ylim=c(0, 1200),
+         legend=names(EvertLuedeling2001))
 }

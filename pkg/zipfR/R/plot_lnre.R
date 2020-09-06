@@ -6,9 +6,12 @@ plot.lnre <- function (x, y, ...,
                       lty=NULL, lwd=NULL, col=NULL, bw=zipfR.par("bw"))
 {
   ## collect all specified LNRE models in single list
-  Models <- list(x)   # this is a bit complicated because of the plot() prototype
-  if (! missing(y)) {
-    Models <- c(Models, list(y), list(...))
+  if (is.list(x) && inherits(x[[1]], "lnre")) {
+    if (!missing(y)) stop("only a single list of LNRE models may be specified")
+    Models <- x
+  } else {
+    Models <- list(x)   # this is a bit complicated because of the plot() prototype
+    if (! missing(y)) Models <- c(Models, list(y), list(...))
   }
   n.mod <- length(Models)
   

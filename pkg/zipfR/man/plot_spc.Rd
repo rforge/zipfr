@@ -11,22 +11,23 @@
 }
 
 \usage{
-
-  \method{plot}{spc}(x, y, ...,
-       m.max=if (log=="") 15 else 50, 
-       log="", conf.level=.95,
-       bw=zipfR.par("bw"), points=TRUE,
-       xlim=NULL, ylim=NULL,
-       xlab="m", ylab="V_m", legend=NULL,
-       main="Frequency Spectrum",
-       barcol=NULL, pch=NULL, lty=NULL, lwd=NULL, col=NULL)
+\method{plot}{spc}(x, y, ...,
+     m.max=if (log=="") 15 else 50, 
+     log="", conf.level=.95,
+     bw=zipfR.par("bw"), points=TRUE,
+     xlim=NULL, ylim=NULL,
+     xlab="m", ylab="V_m", legend=NULL,
+     main="Frequency Spectrum",
+     barcol=NULL, pch=NULL, lty=NULL, lwd=NULL, col=NULL)
 
 }
 
 \arguments{
 
   \item{x, y, ...}{one or more objects of class \code{spc}, representing
-    observed or expected frequency spectra to be plotted}
+    observed or expected frequency spectra to be plotted. Alternatively, all
+    spectra can be passed as a list in the \code{x} argument if the method is
+    called explicitly (see \sQuote{Examples}.}
 
   \item{m.max}{number of frequency classes that will be shown in plot.
     The default is 15 on linear scale and 50 when using any type of
@@ -117,7 +118,6 @@
 }
 
 \examples{
- 
 ## load Italian ultra- prefix data
 data(ItaUltra.spc)
 
@@ -155,6 +155,8 @@ plot(zm.spc, log="x")
 plot(zm.spc, log="x", main="Expected Spectrum with Confidence Interval",
      xlab="spectrum elements", ylab="expected type counts")
 
+## can pass list of spectra in first argument with explicit call
+plot.spc(Baayen2001[1:7], m.max=6, legend=names(Baayen2001)[1:7])
 }
 
 \keyword{ hplot }

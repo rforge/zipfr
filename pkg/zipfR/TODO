@@ -1,10 +1,10 @@
 For release 0.7:
-  - implement MTLD and "rolling" type counts (for MATTR) separately; doesn't fit in API for productivity measures
-    - written in C for reasonable efficiency; using factor representation and pre-allocated count array seems appropriate
   - add code examples for lnre.bootstrap() (once implementation of confint estimators and productivity measures is complete)
   - add examples for productivity.measures()
 
 Upcoming:
+  - implement MTLD and "rolling" type counts (for MATTR) separately; doesn't fit in API for productivity measures
+    - written in C for reasonable efficiency; using factor representation and pre-allocated count array seems appropriate
   - posterior distribution functions using LNRE models as a Bayesian prior,
     with type density postdlnre(), log-transformed density postldlnre(), as well as
     cumulative probability postplnre() and quantiles postqlnre() for selected models
@@ -13,7 +13,6 @@ Upcoming:
   - Good-Turing estimates with gtlnre()
 
 Further tasks:  
-  - implement plot method for LNRE models (log type or probability density)?
   - consider mixture models
     - two or more LNRE models with specified mixing factors
     - parameter estimation may become quite tricky

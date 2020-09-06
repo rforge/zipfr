@@ -8,26 +8,29 @@ plot.spc <- function(x, y, ...,
                      barcol=NULL, pch=NULL, lty=NULL, lwd=NULL, col=NULL)
 {
   ## collect all specified frequency spectra in single list
-  spectra <- list(x)   # this is a bit complicated because of the plot() prototype
-  if (! missing(y)) {
-    spectra <- c(spectra, list(y), list(...))
+  if (is.list(x) && inherits(x[[1]], "spc")) {
+    spectra <- x
+    if (!missing(y)) stop("only a single list of frequency spectra may be specified")
+  } else {
+    spectra <- list(x)   # this is a bit complicated because of the plot() prototype
+    if (!missing(y)) spectra <- c(spectra, list(y), list(...))
   }
   n.spc <- length(spectra)
   
   ## check other arguments & collect some statistics 
   if (! (log %in% c("", "x", "y", "xy"))) stop("allowed values for 'log' argument are '', 'x', 'y' and 'xy'")
   V.max <- max(sapply(spectra, function (.S) max(Vm(.S, 1:m.max))))
-  if (!missing(legend) && length(legend) != n.spc)
+  if (!is.null(legend) && length(legend) != n.spc)
     stop("'legend' argument must be character or expression vector of same length as number of spectra")
   x.log <- log == "x" || log == "xy"
   y.log <- log == "y" || log == "xy"
   
   ## get default styles unless manually overridden
-  if (missing(barcol)) barcol <- zipfR.par("barcol", bw.mode=bw)
-  if (missing(pch)) pch <- zipfR.par("pch", bw.mode=bw)
-  if (missing(lty)) lty <- zipfR.par("lty", bw.mode=bw)
-  if (missing(lwd)) lwd <- zipfR.par("lwd", bw.mode=bw)
-  if (missing(col)) col <- zipfR.par("col", bw.mode=bw)
+  if (is.null(barcol)) barcol <- zipfR.par("barcol", bw.mode=bw)
+  if (is.null(pch)) pch <- zipfR.par("pch", bw.mode=bw)
+  if (is.null(lty)) lty <- zipfR.par("lty", bw.mode=bw)
+  if (is.null(lwd)) lwd <- zipfR.par("lwd", bw.mode=bw)
+  if (is.null(col)) col <- zipfR.par("col", bw.mode=bw)
 
   ## typeset default label on y-axis, depending on whether spectra are observed or expected
   expected <- sapply(spectra, function (.S) attr(.S, "expected"))
@@ -44,11 +47,11 @@ plot.spc <- function(x, y, ...,
   }
 
   ## choose suitable ranges on the axes, unless specified by user
-  if (missing(xlim)) xlim <- c(1, m.max)
-  if (missing(ylim)) ylim <- if (y.log) c(0.1, 2 * V.max) else c(0, 1.05 * V.max)
+  if (is.null(xlim)) xlim <- c(1, m.max)
+  if (is.null(ylim)) ylim <- if (y.log) c(0.1, 2 * V.max) else c(0, 1.05 * V.max)
 
   ## default: non-logarithmic barplot (log parameter not specified)
-  if (missing(log)) {
+  if (log == "") {
     my.data <- sapply(spectra, function (.S) Vm(.S, 1:m.max))
     barplot(t(my.data), beside=TRUE, ylim=ylim,
             col=barcol[1:n.spc], names.arg = 1:m.max,
@@ -81,8 +84,7 @@ plot.spc <- function(x, y, ...,
       if (points) {                     # overplot points and thin lines
         points(x.values, y.values, type="o",
                pch=pch[i], lty="solid", col=col[i])
-      }
-      else {                            # lines only, with different styles
+      } else {                          # lines only, with different styles
         lines(x.values, y.values, lty=lty[i], lwd=lwd[i], col=col[i])
       }
     }
@@ -90,8 +92,7 @@ plot.spc <- function(x, y, ...,
     if (!missing(legend)) {             # add legend if specified by user
       if (points) {
         legend("topright", inset=.02, bg="white", legend=legend, pch=pch, col=col)
-      }
-      else {
+      } else {
         legend("topright", inset=.02, bg="white", legend=legend, lty=lty, lwd=lwd, col=col)
       }
     }
