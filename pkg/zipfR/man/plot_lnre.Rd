@@ -5,13 +5,13 @@
 \description{
 
   Visualisation of LNRE population distribution, showing either the (log-transformed)
-  type density function or the cumulative probability distribution function.
+  type or probability density function or the cumulative probability distribution function.
 
 }
 
 \usage{
 \method{plot}{lnre}(x, y, ...,
-     type=c("density", "cumulative"),
+     type=c("types", "probability", "cumulative"),
      xlim=c(1e-9, 1), ylim=NULL, steps=200,
      xlab=NULL, ylab=NULL, legend=NULL, grid=FALSE,
      main="LNRE Population Distribution",
@@ -26,8 +26,9 @@
     models can be passed as a list in the \code{x} argument if the method is
     called explicitly (see \sQuote{Examples}.}
 
-  \item{type}{what type of plot should be drawn, \code{"density"} for the log-transformed
-    type density function and \code{"cumulative"} for the cumulative probability distribution.}
+  \item{type}{what type of plot should be drawn, \code{"types"} for the log-transformed
+    type density function, \code{"probability"} for the log-transformed probability 
+    density function, and \code{"cumulative"} for the cumulative probability distribution.}
 
   \item{xlim, ylim}{visible range on x- and y-axis.  The default \code{ylim} is \eqn{[0, 1]}
     for \code{type="cumulative"} and automatically chosen to fit the selected density curves  
@@ -64,12 +65,21 @@
   \code{type} argument:
 
   \describe{
-    \item{\code{density}}{
+    \item{\code{types}}{
       A plot of the type density function \eqn{g(\pi)} over the type probability \eqn{\pi}
       on a log-transformed scale (so that the number of types corresponds to an integral over
       \eqn{\log_{10} \pi}, see \code{\link{ltdlnre}}). 
       The log transformation is essential so that the density function
       remains in a reasonable range; a logarithmic y-axis would be very counter-intuitive.
+      Note that density values correspond to the number of types per order of magnitude
+      on the x-axis.
+    }
+    \item{\code{probability}}{
+      A plot of the probability density function \eqn{\pi g(\pi)} over the type probability \eqn{\pi}
+      on a log-transformed scale (so that probability mass corresponds to an integral over
+      \eqn{\log_{10} \pi}, see \code{\link{ldlnre}}). 
+      Note that density values correspond to the total probability mass of types across one
+      order of magnitude on the x-axis.
     }
     \item{\code{cumulative}}{
       A plot of the cumulative probability distribution, i.e. the distribution function 
@@ -109,8 +119,10 @@
 m1 <- lnre("zm", Dickens.spc)
 m2 <- lnre("fzm", Dickens.spc)
 m3 <- lnre("gigp", Dickens.spc)
-plot(m1, m2, m3, type="density",
+plot(m1, m2, m3, type="types",
      xlim=c(1e-8, 1e-2), ylim=c(0, 7.5e4), legend=TRUE)
+plot(m1, m2, m3, type="probability", 
+     xlim=c(1e-8, 1e-2), grid=TRUE, legend=TRUE)
 
 ## cumulative probability distribution is not available for GIGP
 plot(m1, m2, type="cumulative", grid=TRUE,
@@ -120,6 +132,7 @@ plot(m1, m2, type="cumulative", grid=TRUE,
 models <- lapply(seq(.1, .9, .2), 
                  function (x) lnre("zm", alpha=x, B=.1))
 plot.lnre(models, type="cum", grid=TRUE, legend=TRUE)
+plot.lnre(models, type="prob", grid=TRUE, legend=TRUE)
 }
 
 \keyword{ hplot }

@@ -14,7 +14,7 @@
      min.rank=1, max.rank=NULL, log="", 
      type=c("p", "l", "b", "o", "s"),
      xlim=NULL, ylim=NULL, freq=TRUE,
-     xlab="rank", ylab="frequency", legend=NULL,
+     xlab="rank", ylab="frequency", legend=NULL, grid=FALSE,
      main="Type-Frequency List (Zipf ranking)",
      bw=zipfR.par("bw"), cex=1, steps=200,
      pch=NULL, lty=NULL, lwd=NULL, col=NULL)
@@ -60,6 +60,9 @@
     right-hand corner of the screen.  If \code{legend} is given, its
     length must correspond to the number of type-frequeny lists in the
     plot.}
+
+  \item{grid}{whether to display a suitable grid in the background of the plot 
+    (only for logarithmic axis)}
 
   \item{main}{a character string or expression specifying a main title for the plot}
 
@@ -131,15 +134,16 @@ plot(tfl1, tfl2, legend=c("bar", "lein"))
 ## realistic type-frequency lists (type="s" recommended for efficiency)
 tfl1 <- spc2tfl(BrownImag.spc)
 tfl2 <- spc2tfl(BrownInform.spc)
-plot(tfl1, tfl2, log="xy", type="s", legend=c("fiction", "prose"))
+plot(tfl1, tfl2, log="xy", type="s", 
+     legend=c("fiction", "prose"), grid=TRUE)
 ## always use freq=FALSE to compare samples of different size
 plot(tfl1, tfl2, log="xy", type="s", freq=FALSE,
-     legend=c("fiction", "prose"))
+     legend=c("fiction", "prose"), grid=TRUE)
 
 ## show Zipf-Mandelbrot law fitted to low end of frequency spectrum
 m1 <- lnre("zm", BrownInform.spc)
 m2 <- lnre("fzm", BrownInform.spc)
-plot(tfl1, tfl2, m1, m2, log="xy", type="s", freq=FALSE, 
+plot(tfl1, tfl2, m1, m2, log="xy", type="s", freq=FALSE, grid=TRUE,
      legend=c("fiction", "prose", "ZM", "fZM"))
 
 ## call plot.tfl explicitly if only LNRE populations are displayed

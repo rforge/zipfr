@@ -2,7 +2,7 @@ plot.tfl <- function (x, y, ...,
                       min.rank=1, max.rank=NULL, log=c("", "x", "y", "xy"), 
                       type=c("p", "l", "b", "o", "s"),
                       xlim=NULL, ylim=NULL, freq=TRUE,
-                      xlab="rank", ylab="frequency", legend=NULL,
+                      xlab="rank", ylab="frequency", legend=NULL, grid=FALSE,
                       main="Type-Frequency List (Zipf ranking)",
                       bw=zipfR.par("bw"), cex=1, steps=200,
                       pch=NULL, lty=NULL, lwd=NULL, col=NULL)
@@ -98,6 +98,13 @@ plot.tfl <- function (x, y, ...,
   plot(1, 1, type="n", xlim=xlim, ylim=ylim, log=log, xaxs="r", yaxs="i",
        xlab=xlab, ylab=ylab, main=main)
 
+  ## display grid (orders of magnitude) on any logarithmic axis
+  if (grid) {
+    log.steps <- function (x) 10 ^ seq(floor(log10(min(x))), ceiling(log10(max(x))))
+    if (x.log) abline(v=log.steps(xlim), lwd=.5)
+    if (y.log) abline(h=log.steps(ylim), lwd=.5)
+  }
+  
   ## go through all specified TFLs / LNRE models and plot the pre-computed coordinates
   for (i in seq_len(n.tfl)) {
     .XY <- coord[[i]]
