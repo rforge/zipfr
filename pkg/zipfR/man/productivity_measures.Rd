@@ -181,7 +181,7 @@ stopifnot(all.equal(bar1, bar3))
 ## sample-size dependency of productivity measures in Brown corpus
 ## (note that only a subset of the measures can be computed)
 n <- c(10e3, 50e3, 100e3, 200e3, 500e3, 1e6)
-idx <- N(Brown.emp.vgc) %in% n
+idx <- N(Brown.emp.vgc) \%in\% n
 my.vgc <- vgc(N=N(Brown.emp.vgc)[idx],
               V=V(Brown.emp.vgc)[idx],
               Vm=list(Vm(Brown.emp.vgc, 1)[idx]))
