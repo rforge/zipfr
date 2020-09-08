@@ -308,7 +308,6 @@
 \keyword{ models }
 
 \examples{
-
 ## load Dickens dataset
 data(Dickens.spc)
 
@@ -382,5 +381,15 @@ lnre.spc(m, N=1000, m.max=10)
 m <- lnre("gigp", gamma=-.5, B=.01, C=.01)
 lnre.spc(m, N=1000, m.max=10)
 
+## bootstrapped confidence intervals for model parameters
+\dontrun{
+model <- lnre("fzm", spc=BrownAdj.spc, bootstrap=40)
+confint(model, "alpha") # Zipf slope
+confint(model, "S")     # population diversity
+confint(model, "S", method="normal") # Gaussian approx works well in this case
+
+## speed up with parallelisation (see ?lnre.bootstrap for more information)
+model <- lnre("fzm", spc=BrownAdj.spc, bootstrap=40, 
+              parallel=8) # on Linux / MacOS with 8 available cores}
 }
 

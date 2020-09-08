@@ -163,7 +163,37 @@ productivity.measures(obj, measures, data.frame=TRUE, ...)
 \keyword{ univar }
 
 \examples{
+rbind(
+  AllTexts=productivity.measures(Brown.spc),
+  Fiction=productivity.measures(BrownImag.spc),
+  NonFiction=productivity.measures(BrownInform.spc))
 
-## TODO
+## can be applied to token vector, type-frequency list, or frequency spectrum
+bar.vec <- EvertLuedeling2001$bar
+bar1 <- productivity.measures(bar.vec)          # token vector
+bar2 <- productivity.measures(vec2tfl(bar.vec)) # type-frequency list
+bar3 <- productivity.measures(vec2spc(bar.vec)) # frequency spectrum
+print(rbind(tokens=bar1, tfl=bar2, spc=bar3))
+\dontshow{
+stopifnot(all.equal(bar1, bar2)) # hidden unit test
+stopifnot(all.equal(bar1, bar3))
+}
+## sample-size dependency of productivity measures in Brown corpus
+## (note that only a subset of the measures can be computed)
+n <- c(10e3, 50e3, 100e3, 200e3, 500e3, 1e6)
+idx <- N(Brown.emp.vgc) %in% n
+my.vgc <- vgc(N=N(Brown.emp.vgc)[idx],
+              V=V(Brown.emp.vgc)[idx],
+              Vm=list(Vm(Brown.emp.vgc, 1)[idx]))
+print(my.vgc) # since we don't have a subset method for VGCs yet
+productivity.measures(my.vgc)
 
+productivity.measures(my.vgc, measures=c("TTR", "P")) # selected measures
+
+## parametric bootstrapping to obtain sampling distribution of measures
+## (much easier with ?lnre.productivity.measures)
+model <- lnre("zm", spc=ItaRi.spc) # realistic LNRE model
+res <- lnre.bootstrap(model, 1e6, ESTIMATOR=identity,
+                      STATISTIC=productivity.measures)
+bootstrap.confint(res, method="normal")
 }

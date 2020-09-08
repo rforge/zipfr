@@ -132,7 +132,7 @@ lnre.bootstrap(model, N, ESTIMATOR, STATISTIC,
 
 \seealso{
 
-  \code{\link{lnre}} for more information about LNRE models.  The high-level estimator function \code{\link{lnre}} uses \code{lnre.bootstrap} to collect data for approximate confidence intervals.
+  \code{\link{lnre}} for more information about LNRE models.  The high-level estimator function \code{\link{lnre}} uses \code{lnre.bootstrap} to collect data for approximate confidence intervals; \code{\link{lnre.productivity.measures}} uses it to approximate the sampling distributions of productivity measures.
   
 }
 
@@ -140,8 +140,45 @@ lnre.bootstrap(model, N, ESTIMATOR, STATISTIC,
 \keyword{ distribution }
   
 \examples{
+## parametric bootstrapping from realistic LNRE model
+model <- lnre("zm", spc=ItaRi.spc) # has quite a good fit
 
-## TODO
+## estimate distribution of V, V1, V2 for sample size N=1000
+res <- lnre.bootstrap(model, N=1000, replicates=400,
+                      ESTIMATOR=identity,
+                      STATISTIC=function (x) c(V=V(x), V1=Vm(x,1), V2=Vm(x,2)))
+bootstrap.confint(res, method="normal")
+## compare with theoretical expectations (EV/EVm = center, VV/VVm = spread^2)
+lnre.spc(model, 1000, m.max=2, variances=TRUE)
 
+## lnre.bootstrap() also captures and ignores occasional failures
+res <- lnre.bootstrap(model, N=1000, replicates=400,
+                      ESTIMATOR=function (x) if (runif(1) < .2) stop() else x,
+                      STATISTIC=function (x) c(V=V(x), V1=Vm(x,1), V2=Vm(x,2)))
+
+## empirical confidence intervals for vocabulary growth curve
+## (this may become expensive because token-level samples have to be generated)
+res <- lnre.bootstrap(model, N=1000, replicates=400, sample="tokens",
+                      ESTIMATOR=vec2vgc, stepsize=100, # extra args passed to ESTIMATOR
+                      STATISTIC=V) # extract vocabulary sizes at equidistant N
+bootstrap.confint(res, method="normal")
+
+## parallel processing is highly recommended for expensive bootstrapping
+library(parallel)
+## adjust number of processes according to available cores on your machine
+cl <- makeCluster(2) # PSOCK cluster, should work on all platforms
+res <- lnre.bootstrap(model, N=1e4, replicates=400, sample="tokens",
+                      ESTIMATOR=vec2vgc, stepsize=1000, STATISTIC=V,
+                      parallel=cl) # use cluster for parallelisation
+bootstrap.confint(res, method="normal")
+stopCluster(cl)
+
+## on MacOS / Linux, simpler fork-based parallelisation also works well
+\dontrun{
+res <- lnre.bootstrap(model, N=1e5, replicates=400, sample="tokens",
+                      ESTIMATOR=vec2vgc, stepsize=1e4, STATISTIC=V,
+                      parallel=8) # if you have enough cores ...
+bootstrap.confint(res, method="normal")
+}
 }
 

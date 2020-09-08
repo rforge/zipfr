@@ -135,16 +135,16 @@ plot(tfl1, tfl2, legend=c("bar", "lein"))
 tfl1 <- spc2tfl(BrownImag.spc)
 tfl2 <- spc2tfl(BrownInform.spc)
 plot(tfl1, tfl2, log="xy", type="s", 
-     legend=c("fiction", "prose"), grid=TRUE)
+     legend=c("fiction", "non-fiction"), grid=TRUE)
 ## always use freq=FALSE to compare samples of different size
 plot(tfl1, tfl2, log="xy", type="s", freq=FALSE,
-     legend=c("fiction", "prose"), grid=TRUE)
+     legend=c("fiction", "non-fiction"), grid=TRUE)
 
 ## show Zipf-Mandelbrot law fitted to low end of frequency spectrum
 m1 <- lnre("zm", BrownInform.spc)
 m2 <- lnre("fzm", BrownInform.spc)
 plot(tfl1, tfl2, m1, m2, log="xy", type="s", freq=FALSE, grid=TRUE,
-     legend=c("fiction", "prose", "ZM", "fZM"))
+     legend=c("fiction", "non-fiction", "ZM", "fZM"))
 
 ## call plot.tfl explicitly if only LNRE populations are displayed
 plot.tfl(m1, m2, max.rank=1e5, freq=FALSE, log="xy")

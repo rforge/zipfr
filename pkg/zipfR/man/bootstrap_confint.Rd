@@ -10,7 +10,6 @@
 }
 
 \usage{
-
 bootstrap.confint(x, level=0.95, 
                   method=c("normal", "mad", "empirical"),
                   data.frame=FALSE)
@@ -74,26 +73,28 @@ bootstrap.confint(x, level=0.95,
     \item an estimate of spread on a scale comparable to standard deviaton (labelled \code{spread})
   }
   
-  If \code{data.frame=TRUE}, the matrix is converted to a data frame.
+  If \code{data.frame=TRUE}, the matrix is converted to a data frame for convenient printing and access in interactive sessions.
   
 }
 
 \seealso{
 
   \code{bootstrap.confint} is usually applied to the output of \code{\link{lnre.bootstrap}} with \code{simplify=TRUE}.
-  In particual, \code{\link{confint.lnre}} uses this function to obtain bootstrapped confidence intervals for LNRE model parameters and other coefficients.
+  In particual, \code{\link{confint.lnre}} uses this function to obtain bootstrapped confidence intervals for LNRE model parameters and other coefficients; \code{\link{lnre.productivity.measures}} (with \code{bootstrap=TRUE}) uses it to determine approximate sampling distributions of productivity measures for a LNRE population.
 
 }
 
 \examples{
-M <- cbind(alpha=rnorm(200, 10, 5),      # alpha has Gaussian distribution around mean = 10
-           beta=rlnorm(200, log(10), 1)) # beta has log-normal distribution around median = 10
+M <- cbind(alpha=rnorm(200, 10, 5),      # Gaussian distribution around mean = 10
+           beta=rlnorm(200, log(10), 1)) # log-normal distribution around median = 10
 
 summary(M) # overview of the distribution
 
-bootstrap.confint(M, method="normal") # normal approximation
-bootstrap.confint(M, method="mad")    # robust asymmetric MAD estimates
-bootstrap.confint(M, method="empirical")
+bootstrap.confint(M, method="normal")    # normal approximation
+bootstrap.confint(M, method="mad")       # robust asymmetric MAD estimates
+bootstrap.confint(M, method="empirical") # empirical confidence interval
+
+bootstrap.confint(M, method="normal", data.frame=TRUE) # as data frame
 }
 
 \keyword{ univar }

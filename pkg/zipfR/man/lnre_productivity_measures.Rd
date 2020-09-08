@@ -11,7 +11,6 @@
 }
 
 \usage{
-
 lnre.productivity.measures(model, N=NULL, measures, data.frame=TRUE, 
                            bootstrap=FALSE, method="normal", conf.level=.95,
                            replicates=1000, parallel=1L, verbose=TRUE, seed=NULL)
@@ -115,8 +114,15 @@ Measurement of diversity.
 \keyword{ univar }
 
 \examples{
+## plausible model for an author's vocabulary
+model <- lnre("fzm", alpha=0.4, B=0.06, A=1e-12)
 
-## TODO
+## approximate expectation for different sample sizes
+lnre.productivity.measures(model, N=c(1000, 10000, 50000))
+
+## estimate sampling distribution: 95% interval, mean, s.d.
+## (using parametric bootstrapping, only one sample size at a time)
+lnre.productivity.measures(model, N=1000, bootstrap=TRUE)
 
 }
 

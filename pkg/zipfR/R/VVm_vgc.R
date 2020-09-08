@@ -9,5 +9,5 @@ VVm.vgc <- function (obj, m, N=NA, ...)
   varname <- paste("VV", m, sep="")
   if (m > attr(obj, "m.max"))
     stop("spectrum variances '",varname,"' not included in vocabulary growth curve")
-  obj[[ varname ]]
+  structure(obj[[ varname ]], names=obj$N)
 }

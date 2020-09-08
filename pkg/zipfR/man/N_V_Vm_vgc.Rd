@@ -73,6 +73,8 @@
   \eqn{\mathop{Var}[V_m(N)]}{Var[V_m(N)]} for the selected frequency
   class \eqn{m}.
   
+  Except for \code{N.vgc}, the vector returned will be labelled with
+  corresponding sample sizes.
 }
 
 \seealso{

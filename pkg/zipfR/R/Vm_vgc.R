@@ -7,5 +7,5 @@ Vm.vgc <- function (obj, m, ...)
   varname <- paste("V", m, sep="")
   if (m > attr(obj, "m.max"))
     stop("spectrum element '",varname,"' not included in vocabulary growth curve")
-  obj[[ varname ]]
+  structure(obj[[ varname ]], names=obj$N)
 }

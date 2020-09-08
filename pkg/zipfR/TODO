@@ -1,8 +1,5 @@
-For release 0.7:
-  - add code examples for lnre.bootstrap() (once implementation of confint estimators and productivity measures is complete)
-  - add examples for productivity.measures()
-
 Upcoming:
+  - subset() method for VGCs; should also support reducing to certain number of steps or approximate given N value
   - implement MTLD and "rolling" type counts (for MATTR) separately; doesn't fit in API for productivity measures
     - written in C for reasonable efficiency; using factor representation and pre-allocated count array seems appropriate
   - posterior distribution functions using LNRE models as a Bayesian prior,
