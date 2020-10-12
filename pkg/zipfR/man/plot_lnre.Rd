@@ -24,7 +24,7 @@
   \item{x, y, ...}{one or more objects of class \code{lnre}, containing trained
     LNRE models describing the population(s) to be plotted. Alternatively, all
     models can be passed as a list in the \code{x} argument if the method is
-    called explicitly (see \sQuote{Examples}.}
+    called explicitly (see \sQuote{Examples}).}
 
   \item{type}{what type of plot should be drawn, \code{"types"} for the log-transformed
     type density function, \code{"probability"} for the log-transformed probability 

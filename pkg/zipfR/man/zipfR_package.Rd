@@ -21,7 +21,7 @@ in R.
 The best way to get started with zipfR is to read the tutorial, which
 you can find as a package vignettte via the HTML documentation;
 you can also download it from
-\url{http://zipfr.r-forge.r-project.org/#start}
+\url{https://zipfr.r-forge.r-project.org/#start}
 
 zipfR is released under the GNU General Public License
 (\url{http://www.gnu.org/copyleft/gpl.html})
@@ -32,7 +32,7 @@ zipfR is released under the GNU General Public License
 \seealso{
 
   The zipfR tutorial: available as a package vignette and online from
-  \url{http://zipfr.r-forge.r-project.org/#start}.
+  \url{https://zipfr.r-forge.r-project.org/#start}.
 
   Some good entry points into the zipfR documentation are
   be \code{\link{spc}}, \code{\link{vgc}}, \code{\link{tfl}},
@@ -42,7 +42,8 @@ zipfR is released under the GNU General Public License
   \code{\link{plot.vgc}}
 
   Harald Baayen's LEXSTATS tools, which implement a wider range of LNRE models:
-  \url{http://extras.springer.com/2001/978-0-7923-7017-8/lexstats-2.0}
+  \url{https://www.springer.com/de/book/9780792370178}
+
 
   Stefan Evert's UCS tools for collocation analysis, which include
   functions that have been integrated into \bold{zipfR}:
@@ -58,7 +59,7 @@ Maintainer: Stefan Evert <\email{stefan.evert@fau.de}>
 
 \references{
 
-  zipfR Website: \url{http://zipfR.r-forge.r-project.org/}
+  zipfR Website: \url{https://zipfR.r-forge.r-project.org/}
 
   Baayen, R. Harald (2001). \emph{Word Frequency Distributions.} Kluwer,
   Dordrecht.
@@ -73,7 +74,7 @@ Maintainer: Stefan Evert <\email{stefan.evert@fau.de}>
   Evert, Stefan (2004b). \emph{The Statistics of Word Cooccurrences: Word
     Pairs and Collocations.} PhD Thesis, IMS, University of Stuttgart.
   URN urn:nbn:de:bsz:93-opus-23714
-  \url{http://elib.uni-stuttgart.de/opus/volltexte/2005/2371/}
+  \url{http://dx.doi.org/10.18419/opus-2556}
   
   Evert, Stefan and Baroni, Marco (2006). Testing the extrapolation
   quality of word frequency models. \emph{Proceedings of Corpus

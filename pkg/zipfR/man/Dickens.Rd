@@ -76,9 +76,9 @@
 
 \references{
 
-	Project Gutenberg: \url{http://www.gutenberg.org/}
+	Project Gutenberg: \url{https://www.gutenberg.org/}
 
-	Charles Dickens on Wikipedia: \url{http://en.wikipedia.org/wiki/Charles_Dickens}
+	Charles Dickens on Wikipedia: \url{https://en.wikipedia.org/wiki/Charles_Dickens}
 
   
 }

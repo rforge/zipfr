@@ -58,7 +58,7 @@ This document provides a tutorial introduction to the zipfR package
 modeling of lexical distributions \citep{Baayen:2001}. We assume that
 R is installed on your computer and that you have basic familiarity
 with it. If this is not the case, please start by visiting the R page
-at \url{http://www.r-project.org/}. The page provides links to
+at \url{https://www.r-project.org/}. The page provides links to
 download sites, documentation and introductory material, as well as a
 wide selection of textbooks on R programming.
 
@@ -1059,7 +1059,7 @@ different LNRE models and exploring other zipfR datasets. Of course,
 it is probably more interesting for you to work with your own data. As
 long as you can convert them to a plain frequency list format, you
 will be able to import them into zipfR using \texttt{read.tfl}. On the
-zipfR website (\url{http:/zipfR.r-forge.r-project.org/}) you can also
+zipfR website (\url{https:/zipfR.r-forge.r-project.org/}) you can also
 find a script to compute empirical vocabulary growth curves from plain
 tokenized corpus data.
 

@@ -1,10 +1,14 @@
 lnre.productivity.measures <- function (model, N=NULL, measures, data.frame=TRUE, 
-                                        bootstrap=FALSE, method="normal", conf.level=.95,
+                                        bootstrap=FALSE, method="normal", conf.level=.95, sample=NULL,
                                         replicates=1000, parallel=1L, verbose=TRUE, seed=NULL)
 {
   if (! inherits(model, "lnre")) stop("first argument must belong to a subclass of 'lnre'")
   if (is.null(N)) N <- N(model)
   if (! (is.numeric(N) && all(N > 0))) stop("'N' must be a positive integer vector")
+  if (is.null(sample))
+    sample <- "spc"
+  else
+    if (!is.function(sample)) stop("'sample' must be a callback function suitable for lnre.bootstrap()")
 
   supported <- qw("V TTR R C k U W P Hapax H S alpha2 K D")
   if (bootstrap) supported <- c(supported, qw("Entropy eta"))
@@ -15,7 +19,7 @@ lnre.productivity.measures <- function (model, N=NULL, measures, data.frame=TRUE
   if (bootstrap) {
     if (length(N) > 1L) stop("only a single 'N' value is allowed with bootstrap=TRUE")
     res <- lnre.bootstrap(model, N, ESTIMATOR=productivity.measures, measures=measures,
-                          STATISTIC=identity, sample="spc", simplify=TRUE,
+                          STATISTIC=identity, sample=sample, simplify=TRUE,
                           replicates=replicates, parallel=parallel, seed=seed, verbose=verbose)
     return(bootstrap.confint(res, level=conf.level, method=method, data.frame=data.frame))
   }

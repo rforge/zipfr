@@ -12,21 +12,26 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
   user.param <- list(...)               # model parameters passed by user
   user.pnames <- names(user.param)
   method <- match.arg(method)
-  cost <- match.arg(cost)
   
   if (sampling == "multinomial") {
     warning("multinomial sampling not yet implemented, falling back to Poisson sampling")
     sampling <- "Poisson"
   }
 
-  cost.function <- switch(cost,         # implementation of chosen cost function
-                          gof=lnre.cost.gof,
-                          chisq=lnre.cost.chisq,
-                          linear=lnre.cost.linear,
-                          smooth.linear=lnre.cost.smooth.linear,
-                          mse=lnre.cost.mse,
-                          exact=lnre.cost.mse, # use MSE cost with adjusted value for m.max
-                          stop("internal error - can't find suitable cost function"))
+  if (!is.function(cost)) {
+    cost <- match.arg(cost)
+    cost.function <- switch(cost,         # implementation of chosen cost function
+                            gof=lnre.cost.gof,
+                            chisq=lnre.cost.chisq,
+                            linear=lnre.cost.linear,
+                            smooth.linear=lnre.cost.smooth.linear,
+                            mse=lnre.cost.mse,
+                            exact=lnre.cost.mse, # use MSE cost with adjusted value for m.max
+                            stop("internal error - can't find suitable cost function"))
+  } else {
+    cost.function <- cost
+    cost <- "User"
+  }
 
   constructor <- switch(type,           # select appropriate constructor function
                         zm = lnre.zm,
@@ -34,7 +39,7 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
                         gigp = lnre.gigp,
                         stop("internal error - can't find suitable LNRE model constructor"))
 
-  model <- constructor(param=user.param) # initialize model with user-specifid parameter values
+  model <- constructor(param=user.param) # initialize model with user-specified parameter values
   model$exact <- exact
   model$multinomial <- sampling == "multinomial"
   

@@ -73,7 +73,7 @@ summary(TigerPP.emp.vgc)
 \references{
 
 	Tiger Project:
-	\url{http://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/tiger.html}
+	\url{https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/tiger/}
   
 }
 

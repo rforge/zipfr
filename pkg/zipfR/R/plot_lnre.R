@@ -18,7 +18,7 @@ plot.lnre <- function (x, y, ...,
   ## check other arguments
   type <- match.arg(type)
   if (isTRUE(legend)) legend <- sapply(Models, function (.M) .M$util$label(.M))
-  if (!missing(legend) && length(legend) != n.mod) stop("'legend' argument must be character or expression vector of same length as number of LNRE models")
+  if (!is.null(legend) && length(legend) != n.mod) stop("'legend' argument must be character or expression vector of same length as number of LNRE models")
   if (is.null(xlab)) xlab <- expression(pi)
   if (is.null(ylab)) ylab <- switch(type, types="type density", probability="probability density", cumulative="cumulative probability")
 

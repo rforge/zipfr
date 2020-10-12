@@ -12,7 +12,7 @@
 
 \usage{
 lnre.productivity.measures(model, N=NULL, measures, data.frame=TRUE, 
-                           bootstrap=FALSE, method="normal", conf.level=.95,
+                           bootstrap=FALSE, method="normal", conf.level=.95, sample=NULL,
                            replicates=1000, parallel=1L, verbose=TRUE, seed=NULL)
 
 }
@@ -44,6 +44,9 @@ lnre.productivity.measures(model, N=NULL, measures, data.frame=TRUE,
   \item{method, conf.level}{type of confidence interval to be estimated by parametric
     bootstrapping and the requested confidence level; 
     see \code{\link{bootstrap.confint}} for details.}
+
+  \item{sample}{optional callback function to generate bootstrapping samples;
+    see \code{\link{lnre.bootstrap}} for details and applications.}
 
   \item{replicates, parallel, seed, verbose}{if \code{bootstrap=TRUE}, these parameters
     are passed on to \code{lnre.bootstrap} to control the bootstrapping procedure; 

@@ -9,6 +9,8 @@ tfl2spc <- function (tfl)
     f <- as.integer(f)
   }
 
-  x <- rle(sort(tfl$f))
+  idx <- tfl$f > 0
+  f <- if (!all(idx)) tfl$f[idx] else tfl$f
+  x <- rle(sort(f))
   spc(Vm=x$lengths, m=x$values)
 }

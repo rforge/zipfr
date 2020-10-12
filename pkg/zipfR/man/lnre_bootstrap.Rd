@@ -144,7 +144,7 @@ lnre.bootstrap(model, N, ESTIMATOR, STATISTIC,
 model <- lnre("zm", spc=ItaRi.spc) # has quite a good fit
 
 ## estimate distribution of V, V1, V2 for sample size N=1000
-res <- lnre.bootstrap(model, N=1000, replicates=400,
+res <- lnre.bootstrap(model, N=1000, replicates=200,
                       ESTIMATOR=identity,
                       STATISTIC=function (x) c(V=V(x), V1=Vm(x,1), V2=Vm(x,2)))
 bootstrap.confint(res, method="normal")
@@ -152,13 +152,13 @@ bootstrap.confint(res, method="normal")
 lnre.spc(model, 1000, m.max=2, variances=TRUE)
 
 ## lnre.bootstrap() also captures and ignores occasional failures
-res <- lnre.bootstrap(model, N=1000, replicates=400,
+res <- lnre.bootstrap(model, N=1000, replicates=200,
                       ESTIMATOR=function (x) if (runif(1) < .2) stop() else x,
                       STATISTIC=function (x) c(V=V(x), V1=Vm(x,1), V2=Vm(x,2)))
 
 ## empirical confidence intervals for vocabulary growth curve
 ## (this may become expensive because token-level samples have to be generated)
-res <- lnre.bootstrap(model, N=1000, replicates=400, sample="tokens",
+res <- lnre.bootstrap(model, N=1000, replicates=200, sample="tokens",
                       ESTIMATOR=vec2vgc, stepsize=100, # extra args passed to ESTIMATOR
                       STATISTIC=V) # extract vocabulary sizes at equidistant N
 bootstrap.confint(res, method="normal")
@@ -167,7 +167,7 @@ bootstrap.confint(res, method="normal")
 library(parallel)
 ## adjust number of processes according to available cores on your machine
 cl <- makeCluster(2) # PSOCK cluster, should work on all platforms
-res <- lnre.bootstrap(model, N=1e4, replicates=400, sample="tokens",
+res <- lnre.bootstrap(model, N=1e4, replicates=200, sample="tokens",
                       ESTIMATOR=vec2vgc, stepsize=1000, STATISTIC=V,
                       parallel=cl) # use cluster for parallelisation
 bootstrap.confint(res, method="normal")

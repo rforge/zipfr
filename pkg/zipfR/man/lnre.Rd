@@ -36,7 +36,8 @@
   \item{cost}{cost function for measuring the "distance" between
     observed and expected vocabulary size and frequency spectrum.
     Parameters are estimated by minimizing this cost function (see "Cost
-    Functions" below for a listing of available cost functions).}
+    Functions" below for a list of built-in cost functions and details
+    on user-defined cost functions).}
   
   \item{m.max}{number of spectrum elements considered by the cost
     function (see "Cost Functions" below for more information). If
@@ -207,6 +208,11 @@
       be matched exactly.}
 
   }
+  
+  Alternatively a user-defined cost function can be passed as a function object
+  with signature `cost(model, spc, m.max)`, which compares the LNRE model `model`
+  against the observed frequency spectrum `spc` and returns a cost value
+  (i.e. lower cost indicates a better fit).
   
 }
 

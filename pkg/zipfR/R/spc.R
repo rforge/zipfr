@@ -16,6 +16,7 @@ spc <- function (Vm, m=1:length(Vm), VVm=NULL, N=NA, V=NA, VV=NA,
     if (any(m != floor(m))) stop("class sizes 'm' must be integer values")
     m <- floor(m)
   }
+  if (any(m < 1)) stop("frequency classes 'm' must be >= 1")
 
   m <- as.double(m)         # make sure there are no integer overflows
   Vm <- as.double(Vm)

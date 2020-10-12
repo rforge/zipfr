@@ -1,5 +1,7 @@
 RECENT CHANGES to the 'zipfR' package:
 
+Development version:
+
 Version 0.6-70:
 
   - parallelization of lnre.bootstrap(), using forked processed on Unix-like platforms
@@ -14,6 +16,10 @@ Version 0.6-70:
     density function or the distribution function for a quick visualisation
   - all plot methods accept list of objects in first argument to avoid do.call() trickery,
     but need to be called explicitly rather than via method dispatch in this case 
+  - lnre() now allows a user-defined cost function in parameter estimation (e.g to fit
+    against Zipf ranking = top part of TFL, or to set parameters based on implicit constraints)
+  - bug fix: tfl2spc() no longer includes types with f = 0 in frequency spectrum, and
+    spc() now complains in such cases
   - new default colour scheme and line styles
 
 Version 0.6-66:

@@ -147,7 +147,7 @@ productivity.measures(obj, measures, data.frame=TRUE, ...)
   Evert, Stefan (2004b). \emph{The Statistics of Word Cooccurrences: Word
   Pairs and Collocations.} PhD Thesis, IMS, University of Stuttgart.
   URN urn:nbn:de:bsz:93-opus-23714
-  \url{http://elib.uni-stuttgart.de/opus/volltexte/2005/2371/}
+  \url{http://dx.doi.org/10.18419/opus-2556}
 
 }
 

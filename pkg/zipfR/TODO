@@ -1,7 +1,8 @@
 Upcoming:
-  - subset() method for VGCs; should also support reducing to certain number of steps or approximate given N value
-  - implement MTLD and "rolling" type counts (for MATTR) separately; doesn't fit in API for productivity measures
-    - written in C for reasonable efficiency; using factor representation and pre-allocated count array seems appropriate
+  - subset() methods for all basic data structures, returnig object of appropriate class
+    - for TFL and SPC as wrappers around data.frame() subset; document to use these instead of [] indexing
+    - for VGCs: should also support reducing to certain number of steps or approximate given N value
+    - perhaps also define head() methods that do someting sensible or throw an error
   - posterior distribution functions using LNRE models as a Bayesian prior,
     with type density postdlnre(), log-transformed density postldlnre(), as well as
     cumulative probability postplnre() and quantiles postqlnre() for selected models
@@ -10,6 +11,9 @@ Upcoming:
   - Good-Turing estimates with gtlnre()
 
 Further tasks:  
+  - implement MTLD and "rolling" type counts (for MATTR) separately; doesn't fit in API for productivity measures
+    - written in C for reasonable efficiency; using factor representation and pre-allocated count array seems appropriate
+    - but means that we need to write kludgy interface code or pull in expensive Rcpp dependency
   - consider mixture models
     - two or more LNRE models with specified mixing factors
     - parameter estimation may become quite tricky
