@@ -24,7 +24,7 @@
         <li><a href="#aux">Auxiliary scripts</a></li>
         <li><a href="#contact">Contact information &amp; mailing list</a></li>
         <li><a href="#refs">Background reading</a></li>
-        <li><a href="#versions">Old versions</a></li>
+        <li><a href="#versions">Change log &amp; old versions</a></li>
         <li><a href="http://r-forge.r-project.org/projects/zipfr/" target="_blank">R-Forge project page</a> <img src="link_external_blue.png" alt="external link" /></li>
         <li>CRAN download: <a href="https://cran.r-project.org/web/packages/zipfR/" target="_blank">zipfR</a> <img src="link_external_blue.png" alt="external link" /></li>
       </ul>
@@ -226,7 +226,7 @@ The mathematics behind <b>zipfR</b> are described in the technical report <a hre
 
 <hr size="2" noshade="noshade"/> <!-- ============================================================ -->
 
-<a name="versions"><h2>Old versions</h2></a>
+<a name="versions"><h2>Change log &amp; old version downloads</h2></a>
 
 <p>
   Whenever possible, you should use the most recent version of the <b>zipfR</b> package from <a href="http://cran.r-project.org/">CRAN</a> or <a href="https://r-forge.r-project.org/">R-Forge</a> (see <a href="#obtain">installation instructions</a>).  Here, we provide source code packages of old versions as a fallback in case there are any incompatibilities with legacy platforms or existing <strong>R</strong> scripts.
@@ -234,35 +234,72 @@ The mathematics behind <b>zipfR</b> are described in the technical report <a hre
 
 <ul>
   <li>
-    Version 0.6-70 (October 2020)<br />
+    Version <b>0.6-70</b> (October 2020)<br />
     <a href="software/zipfR_0.6-70.tar.gz">source code</a> (Linux) &ndash; <a href="software/zipfR_0.6-70.tgz">Mac OS X</a> (R 4.0.2) &ndash; <a href="software/zipfR_0.6-70.zip">Windows</a> (R 4.0.2)
+    <ul>
+      <li>parallelization of <code>lnre.bootstrap()</code> for efficient parametric bootstrapping, especially  confidence intervals for LNRE model parameters</li>
+      <li>additional productivity measures and some other improvements</li>
+      <li><code>lnre.productivity.measures()</code> computes approximate expectations or bootstrapped confidence intervals for productivity measures</li>
+      <li><code>plot()</code> method for LNRE models (log type density or cumulative probability distribution) and improved plots of type frequency lists (relative frequencies, LNRE distributions)</li>
+      <li>all plot methods accept list of objects in first argument to avoid <code>do.call()</code> trickery</li>
+      <li><code>lnre()</code> constructor supports user-defined cost function for parameter estimation</li>
+      <li>bug fix: <code>tfl2spc()</code> no longer includes types with <i>f</i> = 0 in frequency spectrum</li>
+      <li>new default colour scheme and line styles</li>
+    </ul>
   </li>
   <li>
-    Version 0.6-66 (July 2019)<br />
+    Version <b>0.6-66</b> (July 2019)<br />
     <a href="software/zipfR_0.6-66.tar.gz">source code</a> (Linux) &ndash; <a href="software/zipfR_0.6-66.tgz">Mac OS X</a> (R 3.6.0) &ndash; <a href="software/zipfR_0.6-66.zip">Windows</a> (R 3.6.0)
+    <ul>
+      <li>parameter estimation now performs multiple runs with different random start values for improved robustness</li>
+      <li>efficient parametric boostrapping from LNRE model with <code>lnre.bootstrap()</code> and <code>bootstrap.confint()</code></li>
+      <li><code>rlnre()</code> can directly generate type-frequency lists (essential for large samples)</li>
+    </ul>
   </li>
   <li>
-    Version 0.6-44 (July 2018)<br />
+    Version <b>0.6-44</b> (July 2018)<br />
     <a href="software/zipfR_0.6-44.tar.gz">source code</a> (Linux) &ndash; <a href="software/zipfR_0.6-44.tgz">Mac OS X</a> (R 3.5.0) &ndash; <a href="software/zipfR_0.6-44.zip">Windows</a> (R 3.5.0)
+    <ul>
+      <li>compute various productivity measures from observed frequency spectrum, type-frequency list, vocabulary growth curve or token vector</li>
+      <li>default minimization algorithm changed to Nelder-Mead (<code>Custom</code> often failed to converge on problematic data sets)</li>
+      <li>new default cost function <code>gof</code> based on multivariate chi-squared statistic, closely related to maximum likelihood estimation</li>
+      <li><code>confint()</code> method for LNRE models</li>
+      <li><code>merge() method for two or more type frequency lists</code></li>
+      <li>new example data sets from Evert &amp; Lüdeling (2001) and Baayen (2001)</li>      
+    </ul>
   </li>
   <li>
-    Version 0.6-42 (May 2018)<br />
-    <a href="software/zipfR_0.6-42.tar.gz">source code</a> (Linux) &ndash; <a href="software/zipfR_0.6-42.tgz">Mac OS X</a> (R 3.5.0) &ndash; <a href="software/zipfR_0.6-42.zip">Windows</a> (R 3.5.0)
-  </li>
-  <li>
-    Version 0.6-10 (August 2017)<br />
+    Version <b>0.6-10</b> (August 2017)<br />
     <a href="software/zipfR_0.6-10.tar.gz">source code</a> (Linux)
+    <ul>
+      <li>maintenance release for compatibility with new CRAN checks and restrictions</li>
+      <li>plotting utilities (<code>zipfR.begin.plot()</code>, <code>zipfR.end.plot()</code>, etc.) are deprecated</li>
+      <li><i>zipfR</i> tutorial has been rewritten as genuine package vignette</li>
+      <li>reading and writing type frequency lists is more robust and allows character encoding of the disk file to be declared</li>
+      <li>Zipf-ranking plots for type-frequency lists</li>
+      <li>removed <code>zipfR.legend()</code> function</li>
+      <li>added package citation details, and upgraded license to GPL v3</li>
+    </ul>
   </li>
   <li>
-    Version 0.6-3 (January 2007)<br />
+    Version <b>0.6-4</b> (January 2007)<br />
     <a href="software/zipfR_0.6-4.tar.gz">source code</a> (Linux)
+    <ul>
+      <li>various bug fixes and improvements</li>
+      <li>new convenience function <code>read.multiple.objects()</code></li>
+    </ul>
   </li>
   <li>
-    Version 0.6 (first public release, August 2006)<br />
+    Version <b>0.6</b> (first public release, August 2006)<br />
     <a href="software/zipfR_0.6-0.tar.gz">source code</a> (Linux)
+    <ul>
+      <li>first public release on CRAN</li>
+      <li>improved parameter estimation, can be fine-tuned by users  with choice of cost functions and minimization algorithms</li>
+      <li>default settings tuned to work well for most data sets</li>
+      <li>minor bug fixes and improved documentation, updated version of tutorial</li>
+    </ul>
   </li>
 </ul>
-
 
 <p align="right"><small>
     <a href="#top">Back to the top</a>
