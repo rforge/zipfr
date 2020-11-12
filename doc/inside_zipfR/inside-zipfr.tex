@@ -138,7 +138,7 @@ which looks less ridiculous in the form $\log W = V^{-a}\cdot \log N$
 
 \begin{equation}
   \label{eq:prod:summer-S}
-  \text{Summer's } S = \frac{\log \log V}{\log \log N}
+  \text{Somers's } S = \frac{\log \log V}{\log \log N}
 \end{equation}
 is not implemented in \emph{zipfR} because the symbol clashes with Sichel's
 $S$ and because it's taking the double logs to absurdity.
@@ -188,14 +188,14 @@ S = \alpha_1 \frac{1 - \alpha_2}{2}
 Entropy $H$ needs to be distinguished from Honoré's $H$:
 \begin{equation}
   \label{eq:prod:entropy}
-  H = - \sum_{i=1}^{\infty} \frac{f_i}{N} \log \frac{f_i}{N}
-  = -\sum_{m=1}^{\infty} V_m \frac{m}{N} \log \frac{m}{N}
+  H = - \sum_{i=1}^{\infty} \frac{f_i}{N} \log_2 \frac{f_i}{N}
+  = -\sum_{m=1}^{\infty} V_m \frac{m}{N} \log_2 \frac{m}{N}
 \end{equation}
-Maximum value depends on $V$, viz.\ $H\leq \log V$. Hence compute normalized
+Maximum value depends on $V$, viz.\ $H\leq \log_2 V$. Hence compute normalized
 entropy (aka evenness or efficiency)
 \begin{equation}
   \label{eq:prod:evenness}
-  \eta = \frac{H}{\log V}
+  \eta = \frac{H}{\log_2 V}
 \end{equation}
 with $0\leq \eta\leq 1$. (Or better $\eta^{-1}$ as productivity measure?)
 $\eta$ may be problematic due to counter-intuitive scaling with sample size,
@@ -246,7 +246,7 @@ distribution structure''.
 \subsection{Expected values and sampling distribution}
 \label{sec:prod:expectation}
 
-\paragraph{Linear transformations of $V$ or $V_m$}
+\paragraph*{Linear transformations of $V$ or $V_m$}
 Expectations and full sampling distributions can directly be obtained for TTR
 and other measures that are linear transformations of $V$ or a single spectrum
 element $V_m$.  In particular:
@@ -256,7 +256,7 @@ element $V_m$.  In particular:
   \Exp{\mathscr{P}} = \frac{\Exp{V_1}}{N}
 \end{gather}
 
-\paragraph{Nonlinear transformations of $V$}
+\paragraph*{Nonlinear transformations of $V$}
 For a nonlinear transformation $f(V)$, approximate expectations can be obtained
 if the distribution of $V$ covers a region in which $f$ is approximately linear.
 In this case,
@@ -284,7 +284,7 @@ always a plausible assumption.
 $W$ seems to have (only) slightly larger curvature than $\log W$, so both
 forms are equally viable.
 
-\paragraph{Measures involving ratios of $V$ and $V_m$}
+\paragraph*{Measures involving ratios of $V$ and $V_m$}
 For such measures, approximate expectations can be obtained from normal
 approximations to $V$ and $V_m$ (which should be very good in the range of
 samples where the measures are reasonable) and the fact that the ratio of two
@@ -316,7 +316,7 @@ This yields expectations for:
   \Exp{H} = 100 \frac{\log N}{1 - \Exp{V_1} / \Exp{V}}
 \end{gather}
 
-\paragraph{Variance and sampling distribution}
+\paragraph*{Variance and sampling distribution}
 Except in the case of linear transformations of $V$ or $V_m$, the full
 sampling distributions are much harder to compute.  Approximate variances
 could be determined from normal approximations to $V$ and $V_m$ together with
@@ -331,7 +331,7 @@ on the proof by \citet[Lemma A.8]{Evert:04phd}.
 For the time being, variances and confidence intervals will be determined
 empirically by parametric boostrapping.
 
-\paragraph{Measures based on the full frequency spectrum}
+\paragraph*{Measures based on the full frequency spectrum}
 Expectations for Simpson $D$ and Yule $K$ are derived from the individual
 binomial distributions of $f_i \sim B(N, \pi_i)$; additivity of expected
 values does not required independence of the random variables.  Since
@@ -438,7 +438,120 @@ Montemurro's LNRE model can be thought of as a smooth interpolation between two 
 \subsection{Mixture models}
 \label{sec:models:mixtures}
 
-\todo[inline]{Write up mathematics and purpose of mixture models}
+A mixture model describes the LNRE population as a mixture of $K\geq 2$
+\textbf{component} models $M\ind{k}$ with weights $w\ind{k}$ such that
+$\sum_{k=1}^K w\ind{k} = 1$.  The individual $M\ind{k}$ are usually standard LNRE
+distributions like ZM or fZM.  Mixtures can be defined in three different
+ways:
+
+\begin{enumerate}
+\item A weighted sum of type density functions, so that
+  \begin{equation}
+    \label{eq:models:mixtures:type1}
+    g(\pi) = w_1 g_1(\pi) + \ldots + w_K g_K(\pi)
+  \end{equation}
+  This approach corresponds most closely to standard statistical
+  mixture distributions.
+\item Each component $M\ind{k}$ represents a distinct set of types that
+  account for a total proportion $w_k$ of the probability mass (and a
+  corresponding percentage of the tokens in a sample drawn from the
+  population). This approach is intuitively appealing and plausible for
+  real-life data: components might represent the different distributions of
+  nouns, verbs, adjectives, \ldots{} or the different subpatterns of a
+  morphological suffix \citep[cf.][Sec.~4.3]{Baayen:01}.  Since each
+  component accounts for a part of the tokens only, type probabilities have
+  to be shifted accordingly in the mixture density:
+  \begin{equation}
+    \label{eq:models:mixtures:type2}
+    g(\pi) = g_1(w_1 \pi) + \ldots + g_K(w_K \pi)
+  \end{equation}
+\item All components cover the same set of type, representing their
+  distributions in different parts of a sample.  While this is a realistic
+  situation, e.g.\ components for written and spoken language in a reference
+  corpus, it is mathematically complicated. Since the types will usually
+  not be ranked in the same order in the different components, the
+  mixture distribution can only be derived from a $K$-dimensional joint type
+  density of the form:
+  \begin{equation}
+    \label{eq:models:mixtures:type3}
+    g(\pi\ind{1}, \ldots, \pi\ind{K})
+  \end{equation}
+\end{enumerate}
+
+Mixture types 1 and 2 are fully equivalent and lead to a mixture type density
+in the form of a weighted sum.  They differ only in how the individual
+component densities are re-scaled in the combination.%
+\footnote{Type 1: thinning out types in theoriginal probability range; type 2:
+  keeping the same number of types but down-scaling their probabilities.} %
+Mixture type 3 is impractical, since the multidimensional joint type density
+can only be estimated from very large samples and may require entirely
+different strategies than standard LNRE models.
+
+Following \citet[Sec.~4]{Baayen:01}, we adopt approach 2, which has a more
+intuitive interpretation than approach 1: each component describes the
+``internal'' probability distribution of a subset of the types, and random
+samples of size $N$ can be generated by sampling $\approx w_k N$ tokens
+from $M\ind{k}$.
+
+\todo[inline]{Spell out mathematics of type 2 mixture models in detail, then
+ experimental implementation in \emph{zipfR}.}
+
+\begin{itemize}
+\item r.v.\ $f_i\ind{k}$ for type frequencies in subsamples from the different
+  components are distinct and mutually independent (because the subsamples are
+  independent)
+\item hence the partial spectrum elements $\mathring{V}_m\ind{k}$ and vocabulary sizes
+  $\mathring{V}\ind{k}$ are also independent, so we have simple additivity for
+  expectations, variances and covariances, e.g.\
+  \begin{equation}
+    \label{eq:models:mixtures:partial-additive}
+    \Exp{V} = \sum_{k=1}^K \Exp{\mathring{V}\ind{k}} \quad\text{and}\quad
+    \Var{V} = \sum_{k=1}^K \Var{\mathring{V}\ind{k}}
+  \end{equation}
+\item component $M\ind{k}$ accounts for an expected number $w_k N$ of tokens
+  in a sample of size $N$, so expectation and variances for the partial
+  vocabulary size and spectrum elements are
+  \begin{align}
+    \label{eq:models:mixtures:partial-V-Vm}
+    \Exp{\mathring{V}\ind{k}} & = \Exp{V\ind{k}(w_k N)} &
+    \Exp{\mathring{V}_m\ind{k}} & = \Exp{V_m\ind{k}(w_k N)} \\
+    \Var{\mathring{V}\ind{k}} & = \Var{V\ind{k}(w_k N)} &
+    \Var{\mathring{V}_m\ind{k}} & = \Var{V_m\ind{k}(w_k N)} 
+  \end{align}
+\item confidence/prediction intervals, goodness-of-fit tests, etc.\ can be
+  computed based on these expectations, variances and covariances
+\item type and probability densities, cumulative type and probability
+  distribution, quantiles and the posterior distribution can be determined
+  from the mixture type density (\ref{eq:models:mixtures:type2}); quantiles,
+  and MAP will often be a little tricky (because they have to take the
+  overlapping component densities into account); $\Exp{\Vmr}$ and $\Exp{\VmR}$
+  for given $\rho$ are additive, though
+\item population diversity is additive because the type mass of each component
+  is not rescaled in the mixture, i.e.\
+  \begin{equation}
+    \label{eq:models:mixtures:population-diversity}
+    S = S\ind{1} + \ldots + S\ind{K}
+  \end{equation}
+\item generating random samples is particularly easy for type-2 mixtures; for
+  a sample of $N$ tokens, draw component sizes from a multinomial distribution
+  \begin{equation}
+    \label{eq:models:mixtures:subsample-multinom}
+    (N\ind{1}, \ldots, N\ind{K}) \sim
+    \text{Mult}(N, w_1, \ldots, w_K)
+  \end{equation}
+  then sample $N\ind{k}$ tokens from component $M\ind{k}$ and aggregate the
+  results
+\item parameter estimation for mixture models can in principle follow the same
+  approach as for standard LNRE models, especially if component weights are
+  pre-determined (otherwise they have to be constrained to add up to 1);
+  however, the much larger number of parameters will require a large sample
+  and inclusion of more spectrum elements; \citet[Ch.~4]{Baayen:01} doesn't
+  address the issue at all
+\item in many cases, it might be better to pre-split the training data, e.g.\
+  by part of speech or into non-overlapping frequency bands, and estimate
+  component models separately; this approach could even be used to capture
+  lexicalised types with a fZM with very small population diversity $S$
+\end{itemize}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
