@@ -39,7 +39,7 @@ productivity.measures.spc <- function (obj, measures, data.frame=TRUE, ...)
            K = {
              m <- as.numeric(obj$m)
              Vm <- as.numeric(obj$Vm)
-             10e4 * (sum(m * m * Vm) - N(obj)) / (N(obj) ^ 2)
+             10e3 * (sum(m * m * Vm) - N(obj)) / (N(obj) ^ 2)
            },
            D = {
              m <- as.numeric(obj$m)

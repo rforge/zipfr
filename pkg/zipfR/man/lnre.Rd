@@ -28,16 +28,19 @@
   \item{type}{class of LNRE model to use (see "LNRE Models" below)}
 
   \item{spc}{observed frequency spectrum used to estimate model
-    parameters}
+    parameters. After parameter optimisation, goodness-of-fit of 
+    the final model is tested again \code{spc}. Can be omitted if
+    all model parameters are set explicitly or if not needed by a
+    user-defined cost function (see \sQuote{Cost Functions} for details).}
 
   \item{debug}{if \code{TRUE}, detailed debugging information will be
     printed during parameter estimation}
 
   \item{cost}{cost function for measuring the "distance" between
     observed and expected vocabulary size and frequency spectrum.
-    Parameters are estimated by minimizing this cost function (see "Cost
-    Functions" below for a list of built-in cost functions and details
-    on user-defined cost functions).}
+    Parameters are estimated by minimizing this cost function (see 
+    \sQuote{Cost Functions} below for a list of built-in cost functions
+    and details on user-defined cost functions).}
   
   \item{m.max}{number of spectrum elements considered by the cost
     function (see "Cost Functions" below for more information). If
@@ -212,7 +215,10 @@
   Alternatively a user-defined cost function can be passed as a function object
   with signature `cost(model, spc, m.max)`, which compares the LNRE model `model`
   against the observed frequency spectrum `spc` and returns a cost value
-  (i.e. lower cost indicates a better fit).
+  (i.e. lower cost indicates a better fit).  User-defined cost functions are also
+  convenient for setting model parameters based on implicit constraints (such as 
+  a desired population diversity \eqn{S}).  In this case, pass \code{spc=NULL}
+  explicitly as a dummy frequency spectrum, skipping the final goodness-of-fit test.
   
 }
 

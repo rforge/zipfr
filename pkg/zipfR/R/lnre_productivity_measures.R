@@ -63,7 +63,7 @@ lnre.productivity.measures <- function (model, N=NULL, measures, data.frame=TRUE
            S = .EV2 / .EV,
            alpha2 = 1 - 2 * .EV2 / .EV1,
            ## Yule K and Simpson D can only be computed from full spectrum
-           K = 10e4 * (N - 1) / N * delta(model),
+           K = 10e3 * (N - 1) / N * delta(model),
            D = rep(delta(model), length(N)),
            stop("internal error -- measure '", M., "' not implemented yet"))
   })

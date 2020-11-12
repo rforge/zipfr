@@ -98,7 +98,7 @@ estimate.model.lnre <- function (model, spc, param.names,
   P.estimate <- res.list[[idx]]
   
   model <- model$util$update(model, P.estimate, transformed=TRUE)
-  model$gof <- lnre.goodness.of.fit(model, spc, n.estimated=length(param.names))
+  if (!is.null(spc)) model$gof <- lnre.goodness.of.fit(model, spc, n.estimated=length(param.names))
     
   model
 }

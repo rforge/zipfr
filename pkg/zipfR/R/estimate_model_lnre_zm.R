@@ -4,7 +4,7 @@ estimate.model.lnre.zm <- function (model, spc, param.names,
 {
   if (! inherits(model, "lnre.zm")) stop("argument must be object of class 'lnre.zm'")
   if (runs > 1) warning("multiple estimation runs not yet implemented for Custom method (please set runs=1)")
-
+  
   ## root function used to solve implicit equation E[V(N)] = V for B
   B.root.function <- function (B, N, V, model) {
     B <- B

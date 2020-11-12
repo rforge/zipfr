@@ -1,6 +1,11 @@
 RECENT CHANGES to the 'zipfR' package:
 
 Development version:
+  - embarrassing bug fix: Yule K was implemented with constant 10e4 = 100,000
+    instead of 10e3 = 10,000
+  - lnre() accepts explicit spc=NULL to estimate parameters based on implicit 
+    constraints (e.g. on population diversity S) or other sample data (e.g. VGC);
+    requires a suitable user-defined cost function
 
 Version 0.6-70:
 

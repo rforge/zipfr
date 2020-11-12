@@ -63,7 +63,7 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
       ## adjust m.max for "exact" parameter estimation (to match V and first V_m exactly)
       m.max <- max(length(missing.param) - 1, 1)
     }
-    else if (missing(m.max)) {
+    else if (missing(m.max) && !is.null(spc)) {
       ## otherwise auto-adjust unspecified m.max to avoid low-frequency spectrum elements with poor normal approximation
       keep <- Vm(spc, 1:m.max) >= 5
       if (!all(keep)) {
@@ -74,6 +74,7 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
     }
       
     if (method == "Custom") { # custom estimation uses method call to fall back on default automatically
+      if (is.null(spc)) stop("method='Custom' requires a non-NULL observed frequency spectrum")
       model <- estimate.model(model, spc=spc, param.names=missing.param, debug=debug,
                               method=method, cost.function=cost.function, m.max=m.max, runs=runs)
     }
@@ -92,7 +93,7 @@ lnre <- function (type=c("zm", "fzm", "gigp"),
   }
   else {
     ## all parameters specified -> no estimation necessary
-    if (! missing(spc)) warning("no use for observed frequency spectrum 'spc' (ignored)")
+    if (!is.null(spc)) warning("no use for observed frequency spectrum 'spc' (ignored)")
     if (bootstrap > 0) warning("can't bootstrap fully specified model (skipped)")
     ## parameter values have already been set in constructor call above
   }
