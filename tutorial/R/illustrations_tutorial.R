@@ -69,6 +69,32 @@ dev.copy2pdf(file="plots/tutorial_brown_vgc.pdf", out.type="cairo")
 
 
 ##
+## First steps with zipfR
+##
+
+adv <- readLines("data/brown_adverbs.txt", encoding="UTF-8")
+
+adv.tfl <- vec2tfl(adv)
+adv.tfl
+
+dev.set(WidePlot)
+plot(adv.tfl, log="xy") # plot Zipf ranking
+dev.copy2pdf(file="plots/brown_adverbs_tfl.pdf", out.type="cairo")
+
+adv.spc <- tfl2spc(adv.tfl)
+adv.spc
+
+plot(adv.spc)
+dev.copy2pdf(file="plots/brown_adverbs_spc.pdf", out.type="cairo")
+
+adv.vgc <- vec2vgc(adv, m.max = 2)
+adv.vgc
+
+plot(adv.vgc, add.m = 1:2)
+dev.copy2pdf(file="plots/brown_adverbs_vgc.pdf", out.type="cairo")
+
+
+##
 ## Type density function of LNRE models
 ##
 
